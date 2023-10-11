@@ -9,20 +9,17 @@ X description of bug (X means resolved, > means in progress, - means recorded)
     (who fixed the bug)
 --------------------
 EXAMPLES: (we can delete this later)
-(bug that was recorded)
-- bits aren't shifting correctly
+- bits aren't shifting correctly (bug that was recorded)
     (Alexandra)
   * colors are messed up
   * I think the bug is in level 2 of the octree
 
-(bug currently being worked on)
-> LEDs only display the 1st digit
+> LEDs only display the 1st digit (bug currently being worked on)
     (Ben)
   * not reading the packet correctly
   * I am changing the bitmask (Kevin)
 
-(bug that was resolved)
-X time not showing correctly
+X time not showing correctly (bug that was resolved)
     (Jack)
   * time counting down in reverse
   * I think something is wrong when converting the hex number
