@@ -34,7 +34,12 @@ _tss:
     .endr
 tss_bottom:
 
+
+gdt_desc_ptr:
+    .word gdt_bottom - gdt - 1
+    .long gdt
     .align  16
+    
 gdt:
 _gdt:
 
@@ -85,6 +90,8 @@ ldt_desc_ptr:
 gdt_bottom:
 
     .align 16
+
+
 ldt:
     .rept 4
     .quad 0
@@ -93,10 +100,11 @@ ldt_bottom:
 
 .align 4
     .word 0 # Padding
+
+
 idt_desc_ptr:
     .word idt_bottom - idt - 1
     .long idt
-
 
     .align  16
 idt:
