@@ -28,8 +28,9 @@ continue:
     lgdt    gdt_desc
 
     # Load Idt
+    lidt idt_desc_ptr
 
-
+    # initialize idt
 
     # Load CS with the new descriptor value
     ljmp    $KERNEL_CS, $keep_going
