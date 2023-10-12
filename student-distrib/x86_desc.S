@@ -113,4 +113,7 @@ _idt:
     .quad 0
     .endr
 
+# set up a “system call handler” IDT entry at index 0x80
+
+
 idt_bottom:

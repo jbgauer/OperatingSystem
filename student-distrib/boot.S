@@ -31,6 +31,7 @@ continue:
     lidt idt_desc_ptr
 
     # initialize idt
+    # make a c file that will initialize the idt, and call it here
 
     # Load CS with the new descriptor value
     ljmp    $KERNEL_CS, $keep_going
