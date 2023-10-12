@@ -1,0 +1,30 @@
+--------------------
+FORMATTING:
+X description of bug (X means resolved, > means in progress, - means recorded)
+    (who recorded the bug)
+  * bullet points list notes about bug
+  * if you add notes, put your name like this (Name)
+  ~ how long it took to solve bug, and how many lines were changed
+  ~ type of bug and how it was fixed
+    (who fixed the bug)
+--------------------
+EXAMPLES: (we can delete this later)
+- bits aren't shifting correctly (bug that was recorded)
+    (Alexandra)
+  * colors are messed up
+  * I think the bug is in level 2 of the octree
+
+> LEDs only display the 1st digit (bug currently being worked on)
+    (Ben)
+  * not reading the packet correctly
+  * I am changing the bitmask (Kevin)
+
+X time not showing correctly (bug that was resolved)
+    (Jack)
+  * time counting down in reverse
+  * I think something is wrong when converting the hex number
+  ~ 30 mins, 1 line change
+  ~ algorithmic, was inputting the time wrong, display function was fine
+    (Jack)
+--------------------
+DEBUG LOG 3.1:
