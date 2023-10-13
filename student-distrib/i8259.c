@@ -15,26 +15,26 @@ uint8_t slave_mask; /* IRQs 8-15 */
 void i8259_init(void) {
 
     /*set interupt masks*/
-    master_mask = inb(MASTER_8259_IMR);
-    slave_mask = inb(SLAVE_8259_IMR);
+    master_mask = 0xFB;     //cascading has to be on (2nd bit is low)
+    slave_mask = 0xFF;
     /*mask all of master/slave PIC*/
     outb(0xFF, MASTER_8259_IMR);
     outb(0xFF, SLAVE_8259_IMR);
 
     /*master PIC control words*/
     outb(ICW1, MASTER_8259_PORT);
-    outb(ICW2_MASTER, MASTER_8259_PORT);
-    outb(ICW3_MASTER, MASTER_8259_PORT);
-    outb(ICW4, MASTER_8259_PORT);
+    outb(ICW2_MASTER, MASTER_8259_IMR);
+    outb(ICW3_MASTER, MASTER_8259_IMR);
+    outb(ICW4, MASTER_8259_IMR);
     
     /*slave PIC control words*/
     outb(ICW1, SLAVE_8259_PORT);
-    outb(ICW2_SLAVE, SLAVE_8259_PORT);
-    outb(ICW3_SLAVE, SLAVE_8259_PORT);
-    outb(ICW4, SLAVE_8259_PORT);
+    outb(ICW2_SLAVE, SLAVE_8259_IMR);
+    outb(ICW3_SLAVE, SLAVE_8259_IMR);
+    outb(ICW4, SLAVE_8259_IMR);
     /*restore PICs*/
-    outb(master_mask, MASTER_8259_PORT);
-    outb(slave_mask, MASTER_8259_PORT);
+    outb(master_mask, MASTER_8259_IMR);
+    outb(slave_mask, SLAVE_8259_IMR);
     
 
 }
@@ -45,12 +45,12 @@ void enable_irq(uint32_t irq_num) {
     if(irq_num & 8) {
         /*Slave PIC*/
         irq_num -= 8;
-        slave_mask = inb(SLAVE_8259_PORT) & ~(1 << irq_num);
-        outb(slave_mask, SLAVE_8259_PORT);
+        slave_mask = inb(SLAVE_8259_IMR) & ~(1 << irq_num);
+        outb(slave_mask, SLAVE_8259_IMR);
     } else {
         /*Master PIC*/
-        master_mask = inb(MASTER_8259_PORT) & ~(1 << irq_num);
-        outb(master_mask,MASTER_8259_PORT);
+        master_mask = inb(MASTER_8259_IMR) & ~(1 << irq_num);
+        outb(master_mask,MASTER_8259_IMR);
     }
 }
 
@@ -60,12 +60,12 @@ void disable_irq(uint32_t irq_num) {
     if(irq_num & 8) {
         /*Slave PIC*/
         irq_num -= 8;
-        slave_mask = inb(SLAVE_8259_PORT) | (1 << irq_num);
-        outb(slave_mask, SLAVE_8259_PORT);
+        slave_mask = inb(SLAVE_8259_IMR) | (1 << irq_num);
+        outb(slave_mask, SLAVE_8259_IMR);
     } else {
         /*Master PIC*/
-        master_mask = inb(MASTER_8259_PORT) | (1 << irq_num);
-        outb(master_mask,MASTER_8259_PORT);
+        master_mask = inb(MASTER_8259_IMR) | (1 << irq_num);
+        outb(master_mask,MASTER_8259_IMR);
     }
 }
 
