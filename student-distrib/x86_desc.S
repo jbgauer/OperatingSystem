@@ -117,3 +117,26 @@ _idt:
 
 
 idt_bottom:
+
+
+# need to allocate memory for paging in this file
+; enable_paging:
+;     pushl %EAX
+
+;     # get page_directory pointer from "paging.c"
+;     # put the page directory starting addr into CR3
+;     movl %EAX, page_directory
+;     # addl %EAX, $0x400000    # kernel starts at 4MB
+;     movl %CR3, %EAX
+
+;     # set paging (PG) and set protection (PE) bits in CR0
+;     movl %EAX, %CR0
+;     orl %EAX, $0x80000001
+;     movl %CR0, %EAX
+    
+;     # set bit 4 of CR4 (PSE) to 1 to allow mixed page sizes
+;     movl %EAX, %CR4
+;     orl %EAX, $0x00000010
+;     movl %CR4, %EAX
+    
+;     popl %EAX
