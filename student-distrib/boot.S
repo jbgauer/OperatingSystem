@@ -27,8 +27,40 @@ continue:
     # Load the GDT
     lgdt    gdt_desc
 
-    # initialize idt
+load_page_directory:
+    pushl %EAX
+    # get page_directory pointer from "paging.c"
+    pushfl
+    push %EBX 
+    push %ECX 
+    push %EDX 
+    push %EDI 
+    push %ESI 
+    call page_init     # in paging.c
+    pop %ESI 
+    pop %EDI 
+    pop %EDX 
+    pop %ECX
+    pop %EBX 
+    popfl 
+    # put the page directory starting addr into CR3
+    movl %EAX, %CR3
+
+enable_paging:
+    # set paging (PG) and set protection (PE) bits in CR0
+    movl %CR0, %EAX
+    orl $0x80000001, %EAX
+    movl %EAX, %CR0
     
+    # set bit 4 of CR4 (PSE) to 1 to allow mixed page sizes
+    movl %CR4, %EAX
+    orl $0x00000010, %EAX
+    movl %EAX, %CR4
+    
+    popl %EAX
+
+initialize_idt:
+    # initialize idt
     pushfl
     pushal
     call init_idt     # in idt.c
