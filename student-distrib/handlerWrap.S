@@ -30,7 +30,7 @@
         addl $4, %esp                           ;\
         popal                                   ;\
         popfl                                   ;\
-        addl $4, %esp                           ;\  
+        addl $4, %esp                           ;\
         iret
 
 
