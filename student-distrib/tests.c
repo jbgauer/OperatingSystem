@@ -45,6 +45,20 @@ int idt_test(){
 	return result;
 }
 
+void divideByZero_test(){
+	int i;
+	int j = 0;
+	i = 1/j;
+}
+
+void syscall_test(){
+	asm("INT $0x80");                                  
+}
+
+void rtc_test(){
+	
+}
+
 // add more tests here
 
 /* Checkpoint 2 tests */
@@ -55,6 +69,8 @@ int idt_test(){
 
 /* Test suite entry point */
 void launch_tests(){
-	TEST_OUTPUT("idt_test", idt_test());
+	//TEST_OUTPUT("idt_test", idt_test());
 	// launch your tests here
+	//divideByZero_test();
+	// syscall_test();
 }

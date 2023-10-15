@@ -1,7 +1,9 @@
 
 #include "idt.h"
 
-
+#include "lib.h"
+//#include "lib.c"
+ 
 void init_idt(){
     int i;
     for (i=0; i<NUM_VEC; i++){
@@ -27,13 +29,42 @@ void init_idt(){
 
     // also handle interrupts and system calls with set idt entry 
     
+    SET_IDT_ENTRY(idt[0x00], divide_by_zero); //sets present bit to 1 as well
+    SET_IDT_ENTRY (idt[0x01], debug);
+    SET_IDT_ENTRY (idt[0x02], non_maskable_interrupt);
+    SET_IDT_ENTRY (idt[0x03], breakpoint);
+    SET_IDT_ENTRY (idt[0x04], overflow);
+    SET_IDT_ENTRY (idt[0x05], bound_range_exceeded);
+    SET_IDT_ENTRY (idt[0x06], invalid_opcode);
+    SET_IDT_ENTRY (idt[0x07], device_not_available);
+    SET_IDT_ENTRY (idt[0x09], coprocessor_segment_overrun);
+    // xF reserved
+    SET_IDT_ENTRY (idt[0x10], x87_floatingpoint_exception);
+    SET_IDT_ENTRY (idt[0x12], machine_check);
+    SET_IDT_ENTRY (idt[0x13], SIMD_floatingpoint_exception);
+
+    SET_IDT_ENTRY (idt[0x08], double_fault);
+    SET_IDT_ENTRY (idt[0x0a], invalid_tss);
+    SET_IDT_ENTRY (idt[0x0b], segment_not_present);
+    SET_IDT_ENTRY (idt[0x0c], stacksegment_fault);
+    SET_IDT_ENTRY (idt[0x0d], general_protection_fault);
+    SET_IDT_ENTRY (idt[0x0e], page_fault);
+    SET_IDT_ENTRY (idt[0x11], alignnment_check);
+    
+    SET_IDT_ENTRY(idt[0x21], keyboard_handler); 
+
+    SET_IDT_ENTRY(idt[0x28], test_interrupts);  // rtc
+
+    SET_IDT_ENTRY(idt[0x80], syscall_handler); // system call 
+    
 }
 
 // /* Sets runtime parameters for an IDT entry */
-// #define SET_IDT_ENTRY(str, handler)                              \
-// do {                                                             \
-//     str.offset_31_16 = ((uint32_t)(handler) & 0xFFFF0000) >> 16; \
-//     str.offset_15_00 = ((uint32_t)(handler) & 0xFFFF);           \
+// #define SET_IDT_ENTRY(str, handler)                              
+// do { 
+//     str.present = 1;                                                            
+//     str.offset_31_16 = ((uint32_t)(handler) & 0xFFFF0000) >> 16; 
+//     str.offset_15_00 = ((uint32_t)(handler) & 0xFFFF);           
 // } while (0)
 
 
@@ -59,3 +90,5 @@ void init_idt(){
 
 // /* The IDT itself (declared in x86_desc.S */
 // extern idt_desc_t idt[NUM_VEC];
+
+

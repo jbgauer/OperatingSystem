@@ -28,15 +28,12 @@ continue:
     lgdt    gdt_desc
 
     # initialize idt
+    
     pushfl
-    pushl %eax
-    pushl %ecx
-    pushl %edx
-    call init_idt     # made a c file that will initialize the idt, and call it here
-    popl %edx
-    popl %ecx
-    popl %eax
-    popfl
+    pushal
+    call init_idt     # in idt.c
+    popal
+    popfl 
     
     # Load Idt
     lidt idt_desc_ptr
