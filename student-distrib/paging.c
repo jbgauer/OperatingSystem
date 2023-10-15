@@ -3,11 +3,13 @@
 */
 
 #include "paging.h"
+#include "lib.h"
 
 //directory is array of pointers to page tables
 //table is array of pointers to pages
 //offset is into the page itself (NOT the page table)
 uint32_t pagedir[1024] __attribute__((aligned(4096)));
+uint32_t first_pagetable[1024] __attribute__((aligned(4096)));
 
 //these functions take all the separate variables of the struct
 // and combine them into one 32 bit (4 byte) value
@@ -28,14 +30,11 @@ uint32_t combine_table_entry(ptable_entry_t pte);
  *   SIDE EFFECTS: creates page table
  */
 uint32_t* page_init(){
-
     //return the pointer to the start of page directory
     // [PD index, PT index, pageoffset]
     // ^ this is what the virtual address will look like
     // pageddir[PDindex] = pagetable
     // pagetable[PTindex] = pageoffset
-
-    uint32_t kernel_pagetable[1024] __attribute__((aligned(4096)));
 
     //initialize the page directory
     int i;
@@ -46,17 +45,25 @@ uint32_t* page_init(){
         pagedir[i] = 0x00000002;
     }
 
-    //want to start mapping  KERNEL pages at 4MB
+    //initialize the first page table
     for(i=0; i < 1024; i++){
-        //or with 011 to set r/w and set page IS present
-        kernel_pagetable[i] = ((i+1024) * 0x1000) | 3;
+        //set supervisor level (only kernel can access)
+        //set r/w to 1 to allow writing
+        //set table is not present
+        first_pagetable[i] = 0x00000002;
     }
 
-    //put this table into the directory
-    pagedir[1] = ((unsigned int)kernel_pagetable) | 3;
+    //page table entry for the video memory, 4kB, with w/r and present bits on
+    first_pagetable[0xB8] = 0xB8000003;
+
+    //put video memory table into the directory
+    pagedir[0] = ((unsigned int)first_pagetable) | 3;
     //do this cast ^ to get the addr of the page table
 
-    return &pagedir[1];
+    //page directory entry for the Kernel map, 4MB, with w/r and present bits on
+    pagedir[1] = 0x00400083;
+
+    return &pagedir[0];
  }
 
 /*
