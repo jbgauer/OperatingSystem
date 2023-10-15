@@ -140,3 +140,5 @@ idt_bottom:
 #     movl %CR4, %EAX
     
     # popl %EAX
+
+# load_pagedir:
