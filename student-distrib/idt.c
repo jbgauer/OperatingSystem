@@ -3,7 +3,15 @@
 
 #include "lib.h"
 //#include "lib.c"
- 
+
+/*
+ * init_idt
+ *   DESCRIPTION: initializes the interrupt descriptor table
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+ */
 void init_idt(){
     int i;
     for (i=0; i<NUM_VEC; i++){
