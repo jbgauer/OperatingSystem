@@ -8,6 +8,7 @@
 #include "i8259.h"
 #include "debug.h"
 #include "tests.h"
+#include "enable_paging.h"
 
 #include "devices.h"
 
@@ -145,6 +146,10 @@ void entry(unsigned long magic, unsigned long addr) {
      * PIC, any other initialization stuff... */
     keyboard_init();
     rtc_init();
+
+    /* Initialize Paging Structure */
+    //enable_paging();
+    //load_page_directory();
 
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your
