@@ -20,12 +20,26 @@ char scancodeTranslator[NUM_SCANCODES] =       // only putting alphabet and numb
 };
 
 
-
+/*
+ * keyboard_init
+ *   DESCRIPTION: initializes the keyboard
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+ */
 void keyboard_init(){
     enable_irq(1);     //1 is keyboard irq number
 }
 
-
+/*
+ * keyboard_handler
+ *   DESCRIPTION: handler for keyboard
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: prints alphanumeric characters when keys are pressed
+ */
 void keyboard_handler(){
     cli();
 
@@ -39,11 +53,16 @@ void keyboard_handler(){
     sti();
 }
 
-
-
-// code modified from OSDEV wiki on RTC
+/*
+ * rtc_init
+ *   DESCRIPTION: initializes the RTC
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+ */
 void rtc_init(){
-    cli();
+    cli();                          // code modified from OSDEV wiki on RTC
     outb(REG_B, INDEX_PORT);		// select register B, and disable NMI
     char prev=inb(RW_PORT);	// read the current value of register B
     outb(REG_B, INDEX_PORT);		// set the index again (a read will reset the index to register D)
@@ -56,7 +75,14 @@ void rtc_init(){
     sti();
 }
 
-
+/*
+ * rtc_handler
+ *   DESCRIPTION: handler for RTC
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: executes test interrupts function
+ */
 void rtc_handler(){
 
     cli();
