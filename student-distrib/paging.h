@@ -36,4 +36,4 @@ typedef struct {
 } ptable_entry_t;
 
 
-uint32_t* page_init();
+void page_init();

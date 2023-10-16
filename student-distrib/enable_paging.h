@@ -4,8 +4,7 @@
 #ifndef _ENABLE_PAGING_H
 #define _ENABLE_PAGING_H
 
-#include "paging.h"
-
 void enable_paging();
+void load_page_directory(uint32_t*);
 
 #endif
