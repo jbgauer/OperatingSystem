@@ -70,15 +70,18 @@ void disable_irq(uint32_t irq_num) {
 }
 
 /* Send end-of-interrupt signal for the specified IRQ */
+
 void send_eoi(uint32_t irq_num) {
     
-    if(irq_num & 8 ) {
+    if(irq_num & 8) {
         /*Slave PIC*/
-        outb((irq_num|EOI), SLAVE_8259_PORT);
+        outb(((irq_num-8)|EOI), SLAVE_8259_PORT);     // send EOI to slave
+        outb((2|EOI), MASTER_8259_PORT);            // send EOI to master, 2 is the IRQ port slave sits on master
     } else {
         /*Master PIC*/
         outb((irq_num|EOI), MASTER_8259_PORT);
     }
 
 }
+
 
