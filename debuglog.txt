@@ -60,3 +60,9 @@ X rtc handler does not execute
   ~ algorithmic, wrong video memory address
   (Ben)
 
+X pic not sending correct EOI 
+  (Jack)
+  ~15 minutes, two line changes
+  ~algorithmic, had to change number that was being written as well as 
+  adding always sending a signal to the master port
+  (Kevin)
