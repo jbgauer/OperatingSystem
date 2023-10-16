@@ -3,6 +3,7 @@
 */
 
 #include "paging.h"
+#include "enable_paging.h"
 #include "lib.h"
 
 //directory is array of pointers to page tables
@@ -29,7 +30,7 @@ uint32_t combine_table_entry(ptable_entry_t pte);
  *   RETURN VALUE: pointer to start of page directory
  *   SIDE EFFECTS: creates page table
  */
-uint32_t* page_init(){
+void page_init(){
     //return the pointer to the start of page directory
     // [PD index, PT index, pageoffset]
     // ^ this is what the virtual address will look like
@@ -63,7 +64,9 @@ uint32_t* page_init(){
     //page directory entry for the Kernel map, 4MB, with w/r and present bits on
     pagedir[1] = 0x00400083;
 
-    return &pagedir[0];
+    load_page_directory(&pagedir[0]);
+    enable_paging();
+
  }
 
 /*

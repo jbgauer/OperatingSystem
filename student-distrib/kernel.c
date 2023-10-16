@@ -8,7 +8,7 @@
 #include "i8259.h"
 #include "debug.h"
 #include "tests.h"
-#include "enable_paging.h"
+#include "paging.h"
 
 #include "devices.h"
 
@@ -148,7 +148,7 @@ void entry(unsigned long magic, unsigned long addr) {
     rtc_init();
 
     /* Initialize Paging Structure */
-    enable_paging();
+    page_init();
 
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your
