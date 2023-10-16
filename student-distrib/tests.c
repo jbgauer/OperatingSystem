@@ -56,7 +56,7 @@ void syscall_test(){
 }
 
 void rtc_test(){
-	
+	asm("INT $0x28");
 }
 
 // add more tests here
@@ -71,6 +71,9 @@ void rtc_test(){
 void launch_tests(){
 	//TEST_OUTPUT("idt_test", idt_test());
 	// launch your tests here
-	//divideByZero_test();
+	// divideByZero_test();
 	// syscall_test();
+	//rtc_test();
+	
+
 }
