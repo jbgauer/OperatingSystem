@@ -58,4 +58,5 @@ X rtc handler does not execute
   * the print statement runs and sti() runs, just no text shows up
   ~ 1 hours, 1 line change
   ~ algorithmic, wrong video memory address
+  (Ben)
 
