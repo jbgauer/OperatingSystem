@@ -28,3 +28,27 @@ X time not showing correctly (bug that was resolved)
     (Jack)
 --------------------
 DEBUG LOG 3.1:
+
+X nothing is being updated in the OS after doing make dep and sudo make
+  (Kevin)
+  * warning compiler said after sudo make execution was 
+  * cp: cannot remove ‘./mp3.img’: Text file busy
+  ~ 10 mins
+  ~ algorithmic, was not closing test_debug when executing make commands
+    (Kevin)
+
+X divide by zero exception is not triggered
+  (Kevin)
+  ~ 20 min, 1 line change
+  ~ algorithmic, did not change present bit to 1 for idt entry
+
+X keyboard outputting wrong values per key press
+  (Kevin)
+  ~ 30 mins, 3 line change
+  ~ algorithmic, misunderstood keyboard documentation
+
+X rtc handler does not execute
+  (Kevin)
+  ~ 1 hour, 20 line change
+  ~ algorithmic, had to use inline assembly to wrap rtc handler
+
