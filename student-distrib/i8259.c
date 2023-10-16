@@ -10,7 +10,14 @@ uint8_t master_mask; /* IRQs 0-7  */
 uint8_t slave_mask; /* IRQs 8-15 */
 
 
-
+/*
+ * i8259_init
+ *   DESCRIPTION: initializes the PIC
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+ */
 /* Initialize the 8259 PIC */
 void i8259_init(void) {
 
@@ -39,6 +46,14 @@ void i8259_init(void) {
 
 }
 
+/*
+ * enable_irq
+ *   DESCRIPTION: Enables the specified IRQ
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+ */
 /* Enable (unmask) the specified IRQ */
 void enable_irq(uint32_t irq_num) {
     /*Master or Slave PIC?*/
@@ -54,6 +69,14 @@ void enable_irq(uint32_t irq_num) {
     }
 }
 
+/*
+ * disable_irq
+ *   DESCRIPTION: disables the specified IRQ
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+ */
 /* Disable (mask) the specified IRQ */
 void disable_irq(uint32_t irq_num) {
     /*Master or Slave PIC?*/
@@ -69,8 +92,15 @@ void disable_irq(uint32_t irq_num) {
     }
 }
 
+/*
+ * send_eoi
+ *   DESCRIPTION: Sends end-of-interrupt signal for the specified IRQ
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+ */
 /* Send end-of-interrupt signal for the specified IRQ */
-
 void send_eoi(uint32_t irq_num) {
     
     if(irq_num & 8) {
