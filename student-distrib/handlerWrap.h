@@ -4,6 +4,7 @@
 #define _HANDLERWRAP_H
 
 #include "handlers.h"
+#include "devices.h"
 
 void divide_by_zero();
 void debug();
@@ -24,6 +25,10 @@ void stacksegment_fault();
 void general_protection_fault();
 void page_fault();
 void alignnment_check();
+
+void rtc_interrupt_handler();
+
+void keyboard_interrupt_handler();
 
 
 

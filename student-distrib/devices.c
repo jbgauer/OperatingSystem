@@ -41,11 +41,40 @@ void keyboard_handler(){
 
 
 
-
-
-
-
-
+// code from OSDEV wiki on RTC
 void rtc_init(){
-    enable_irq(8);     //1 is rtc irq number
+    cli();
+    outb(0x8B, 0x70);		// select register B, and disable NMI
+    char prev=inb(0x71);	// read the current value of register B
+    outb(0x8B, 0x70);		// set the index again (a read will reset the index to register D)
+    outb(prev | 0x40, 0x71);	// write the previous value ORed with 0x40. This turns on bit 6 of register B
+
+    outb(0x8A, 0x70);       // set frequency to 0
+    outb(0x0, 0x71);
+
+    enable_irq(8);     //8 is rtc interrupt number
+    sti();
 }
+
+
+void rtc_handler(){
+
+    cli();
+
+    // printf("RTC ");
+    outb(0x8A, 0x70);       
+    outb(0x06, 0x71);       // set default frequency: 1024 Hz
+
+    test_interrupts();
+
+    //from osdev wiki RTC, code to periodically send interrupts
+    outb(0x8C, 0x70);	// select register C
+    inb(0x71);		// just throw away contents
+
+    send_eoi(8);
+    sti();
+
+
+}
+
+

@@ -51,9 +51,9 @@ void init_idt(){
     SET_IDT_ENTRY (idt[0x0e], page_fault);
     SET_IDT_ENTRY (idt[0x11], alignnment_check);
     
-    SET_IDT_ENTRY(idt[0x21], keyboard_handler); 
+    SET_IDT_ENTRY(idt[0x21], keyboard_interrupt_handler); 
 
-    SET_IDT_ENTRY(idt[0x28], test_interrupts);  // rtc
+    SET_IDT_ENTRY(idt[0x28], rtc_interrupt_handler);  // rtc
 
     SET_IDT_ENTRY(idt[0x80], syscall_handler); // system call 
     

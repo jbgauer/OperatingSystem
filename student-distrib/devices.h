@@ -12,4 +12,7 @@ void keyboard_handler();
 
 void rtc_init();
 
+void rtc_handler();
+
+
 #endif 
