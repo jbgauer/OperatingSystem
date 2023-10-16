@@ -51,6 +51,13 @@ void divideByZero_test(){
 	i = 1/j;
 }
 
+void bound_range_exceeded_test(){
+	// unsigned int i[1];
+	// i[0] = 5;
+	// i[1] = 2;
+	asm("INT $0x05");
+}
+
 void syscall_test(){
 	asm("INT $0x80");                                  
 }
@@ -58,6 +65,8 @@ void syscall_test(){
 void rtc_test(){
 	asm("INT $0x28");
 }
+
+
 
 // add more tests here
 
@@ -72,8 +81,9 @@ void launch_tests(){
 	//TEST_OUTPUT("idt_test", idt_test());
 	// launch your tests here
 	// divideByZero_test();
+	// bound_range_exceeded_test();
 	// syscall_test();
-	//rtc_test();
+	// rtc_test();
 	
 
 }
