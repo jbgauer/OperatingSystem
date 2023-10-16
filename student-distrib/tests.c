@@ -65,8 +65,11 @@ void syscall_test(){
 void rtc_test(){
 	asm("INT $0x28");
 }
-
-
+/*
+void deref_test() {
+	int
+}
+*/
 
 // add more tests here
 

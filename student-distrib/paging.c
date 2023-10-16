@@ -55,7 +55,7 @@ void page_init(){
     }
 
     //page table entry for the video memory, 4kB, with w/r and present bits on
-    first_pagetable[0xB8] = 0xB8000003;
+    first_pagetable[0xB8] = 0x000B8003;
 
     //put video memory table into the directory
     pagedir[0] = ((unsigned int)first_pagetable) | 3;
@@ -66,6 +66,7 @@ void page_init(){
 
     load_page_directory(&pagedir[0]);
     enable_paging();
+
 
  }
 
