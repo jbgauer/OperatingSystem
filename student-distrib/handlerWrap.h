@@ -6,6 +6,8 @@
 #include "handlers.h"
 #include "devices.h"
 
+
+// handler wrappers for exceptions
 void divide_by_zero();
 void debug();
 void non_maskable_interrupt();
@@ -26,8 +28,10 @@ void general_protection_fault();
 void page_fault();
 void alignnment_check();
 
+// handler wrapper for rtc interrupts
 void rtc_interrupt_handler();
 
+// handler wrapper for keyboard interrupts
 void keyboard_interrupt_handler();
 
 
