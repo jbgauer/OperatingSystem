@@ -52,7 +52,7 @@ X rtc handler does not execute
   ~ 1 hour, 20 line change
   ~ algorithmic, had to use inline assembly to wrap rtc handler
 
-> "Enabling Interrupts" won't print after page_init
+X "Enabling Interrupts" won't print after page_init
   (Alexandra)
   * when stepping thru in gdb everything looks fine
   * the print statement runs and sti() runs, just no text shows up
@@ -62,7 +62,15 @@ X rtc handler does not execute
 
 X pic not sending correct EOI 
   (Jack)
-  ~15 minutes, two line changes
+  ~15 minutes, 2 line changes
   ~algorithmic, had to change number that was being written as well as 
   adding always sending a signal to the master port
   (Kevin)
+
+X boot looping
+  (Ben)
+  ~ 3 hours, 50 line change
+  ~ doing page initialization in wrong order,
+    have to load directory first, then enable paging,
+    also had to change the assembly functions
+  (Ben)

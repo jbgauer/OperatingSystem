@@ -3,6 +3,13 @@
 .globl load_page_directory
 #define ASM     1
 
+#  enable_paging
+# DESCRIPTION: sets the control registers (CR4 and CR0) to allow mixed page sizes
+#  and to set paging
+# INPUTS: none
+# OUTPUTS: none
+# RETURN VALUE: none
+# SIDE EFFECTS: changes bits in the control registers C4 and C0
 enable_paging:
     pushl %EBP
     movl %esp, %ebp
@@ -33,6 +40,12 @@ enable_paging:
     ret
 
 
+#  load_page_directory
+# DESCRIPTION:  move the page directory pointer into CR3
+# INPUTS: pointer to page directory
+# OUTPUTS: none
+# RETURN VALUE: none
+# SIDE EFFECTS: changes CR3 to be the page directory pointer
 load_page_directory:                        
     pushl %EBP
     movl %esp, %ebp
