@@ -148,8 +148,7 @@ void entry(unsigned long magic, unsigned long addr) {
     rtc_init();
 
     /* Initialize Paging Structure */
-    //enable_paging();
-    //load_page_directory();
+    enable_paging();
 
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your
