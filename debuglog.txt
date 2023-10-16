@@ -52,3 +52,8 @@ X rtc handler does not execute
   ~ 1 hour, 20 line change
   ~ algorithmic, had to use inline assembly to wrap rtc handler
 
+> "Enabling Interrupts" won't print after page_init
+  (Alexandra)
+  * when stepping thru in gdb everything looks fine
+  * the print statement runs and sti() runs, just no text shows up
+
