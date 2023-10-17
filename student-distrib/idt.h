@@ -6,6 +6,7 @@
 #include "handlerWrap.h"
 #include "handlers.h"
 #include "devices.h"
+#include "rtc.h"
 
 void init_idt();
 
