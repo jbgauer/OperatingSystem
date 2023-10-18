@@ -8,12 +8,12 @@
 char scancodeTranslator[NUM_SCANCODES] =       // only putting alphabet and numbers for now, mapping all other keys to show nothing (0x0)
 // 83 is all entries included lowercase and all numbers
 
-{0x0,  27, '1', '2', '3', '4', '5', '6', '7', '8',  //27 is escape character
- '9', '0', '-', '=',  8 ,  9 , 'q', 'w', 'e', 'r',  //8 is backspace char, 9 is TAB
- 't', 'y', 'u', 'i', 'o', 'p', '[', ']',  13,  17,  // 13 is enter, 17 is left ctrl
+{0x0, 0x0, '1', '2', '3', '4', '5', '6', '7', '8',  //27 is escape character
+ '9', '0', '-', '=', 0x0, 0x0, 'q', 'w', 'e', 'r',  //8 is backspace char, 
+ 't', 'y', 'u', 'i', 'o', 'p', '[', ']',  13, 0x0,  // 13 is enter, 
  'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', 
- '\'','`', 0x0, 0x0, 'z', 'x', 'c', 'v', 'b', 'n', 
- 'm', 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, ' ', 0x0, 0x0, 
+ '\'','`', 0x0, '\\','z', 'x', 'c', 'v', 'b', 'n', 
+ 'm', ',', '.', '/', 0x0, '*', 0x0, ' ', 0x0, 0x0, 
  0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
  0x0, '7', '8', '9', 0x0, '4', '5', '6', 0x0, '1', 
  '2', '3', '0' 
