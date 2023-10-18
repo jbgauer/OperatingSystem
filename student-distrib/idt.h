@@ -5,7 +5,7 @@
 #include "x86_desc.h"
 #include "handlerWrap.h"
 #include "handlers.h"
-#include "devices.h"
+#include "keyboard.h"
 #include "rtc.h"
 
 void init_idt();

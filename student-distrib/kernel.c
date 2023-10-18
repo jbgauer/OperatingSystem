@@ -10,7 +10,7 @@
 #include "tests.h"
 #include "paging.h"
 
-#include "devices.h"
+#include "keyboard.h"
 #include "rtc.h"
 
 #define RUN_TESTS

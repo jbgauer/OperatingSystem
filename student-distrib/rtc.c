@@ -25,7 +25,7 @@ void rtc_init(){
 void rtc_handler(){
     // printf("RTC ");
 
-    test_interrupts();
+    // test_interrupts();
 
     //from osdev wiki RTC, code to periodically send interrupts
     outb(REG_C, INDEX_PORT);	// select register C
