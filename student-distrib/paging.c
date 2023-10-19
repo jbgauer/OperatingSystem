@@ -6,6 +6,11 @@
 #include "enable_paging.h"
 #include "lib.h"
 
+// [PD index, PT index, pageoffset]
+// ^ this is what the virtual address will look like
+// pageddir[PDindex] = pagetable
+// pagetable[PTindex] = pageoffset
+
 //directory is array of pointers to page tables
 //table is array of pointers to pages
 //offset is into the page itself (NOT the page table)
@@ -31,14 +36,37 @@ uint32_t combine_table_entry(ptable_entry_t pte);
  *   SIDE EFFECTS: creates page table
  */
 void page_init(){
-    //return the pointer to the start of page directory
-    // [PD index, PT index, pageoffset]
-    // ^ this is what the virtual address will look like
-    // pageddir[PDindex] = pagetable
-    // pagetable[PTindex] = pageoffset
-
-    //initialize the page directory
     int i;
+    uint32_t vidf, kernf;
+    //video memory ptable entry
+    ptable_entry_t vidmem;
+    //kernel pdir entry
+    pdir_entry_t kerntry;
+
+    vidmem.m_addr = 0xB8;
+    vidmem.g = 0;
+    vidmem.pat = 0;
+    vidmem.d = 0;
+    vidmem.a = 0;
+    vidmem.pcd = 0;
+    vidmem.pwt = 0;
+    vidmem.us = 0;
+    vidmem.rw = 1;
+    vidmem.p = 1;
+
+    kerntry.p_addr = 0x400;
+    kerntry.ps = 1;
+    kerntry.a = 0;
+    kerntry.pcd = 0;
+    kerntry.pwt = 0;
+    kerntry.us = 0;
+    kerntry.rw = 1;
+    kerntry.p = 1;
+
+    vidf = combine_table_entry(vidmem);
+    kernf = combine_dir_entry(kerntry);
+    
+    //initialize the page directory
     for(i=0; i < 1024; i++){
         //set supervisor level (only kernel can access)
         //set r/w to 1 to allow writing
@@ -55,19 +83,17 @@ void page_init(){
     }
 
     //page table entry for the video memory, 4kB, with w/r and present bits on
-    first_pagetable[0xB8] = 0x000B8003;
+    first_pagetable[0xB8] = vidf; //0x000B8003;
 
     //put video memory table into the directory
     pagedir[0] = ((unsigned int)first_pagetable) | 3;
     //do this cast ^ to get the addr of the page table
 
     //page directory entry for the Kernel map, 4MB, with w/r and present bits on
-    pagedir[1] = 0x00400083;
+    pagedir[1] = kernf; //0x00400083;
 
     load_page_directory(&pagedir[0]);
     enable_paging();
-
-
  }
 
 /*
