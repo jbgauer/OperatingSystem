@@ -35,7 +35,7 @@ int32_t safe_strncpy(int8_t* dest, const int8_t* src, int32_t n);
 
 
 void update_cursor();
-
+void scroll_down();
 /* Port read functions */
 /* Inb reads a byte and returns its value as a zero-extended 32-bit
  * unsigned int */

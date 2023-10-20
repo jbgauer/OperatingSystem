@@ -28,13 +28,38 @@ void clear(void) {
  * Return Value: none
  * Function: updates cursor to new x,y */
 void update_cursor() {
-    uint16_t pos = screen_y * 80 + screen_x;
+    uint16_t pos = screen_y * NUM_COLS + screen_x;
 
     outb(0x0F, 0x3D4);
     outb((uint8_t) (pos & 0xFF), 0x3D5);
     outb(0x0E, 0x3D4);
     outb((uint8_t) ((pos >> 8) & 0xFF), 0x3D5);
 }
+
+
+/*
+ * scroll_down
+ *   DESCRIPTION: scrolls the screen down one line
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: shifts the video memory by 80 to shift down.
+ */
+// void
+// scroll_down() {
+//     uint8_t *vidMemory = (char *)VIDEO;
+//     int i;
+//     for(i = 80; i < NUM_ROWS * NUM_COLS; i++) {
+//         *(uint8_t *)(vidMemory+((i-80) << 1)) = *(uint8_t *)(vidMemory+(i << 1));
+//         *(uint8_t *)(vidMemory+((i-80) << 1) + 1) = *(uint8_t *)(vidMemory+(i << 1) + 1);
+//     }  
+//     //clear last line
+//     for(i = 3839; i < 4000; i += 2) {
+//         vidMemory[i] = ' ';
+//         vidMemory[i+1] = ATTRIB;
+//     }
+// }
+
 
 /* Standard printf().
  * Only supports the following format strings:
