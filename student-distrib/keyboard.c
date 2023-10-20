@@ -47,11 +47,16 @@ char shifted_scancodeTranslator[NUM_SCANCODES] = // only putting alphabet and nu
  *   SIDE EFFECTS: none
  */
 void keyboard_init(){
+    int i;
     enable_irq(1);     //1 is keyboard irq number
     left_shift_flag = 0;
     right_shift_flag = 0;
     caps_flag = 0;
     ctrl_flag = 0;
+    keyboard_buf_index = 0;
+    for(i = 0; i < 128; i++) {
+        keyboard_buf[i] = 0;
+    }
 }
 
 /*
@@ -65,18 +70,29 @@ void keyboard_init(){
 void keyboard_handler(){
     uint8_t scan_code = inb(0x60); // port to receive scancodes
     int i;
+    // If keyboard buffer is at end
+    if(keyboard_buf_index == 128) {
+        keyboard_buf_index = 0;
+    }
+
     switch(scan_code) {
         case 0x0E: 
             // Backspace pressed
+            keyboard_buf_index--;
+            keyboard_buf[keyboard_buf_index] = ' ';
             break;
         case 0x0F:
             // Tab pressed
             for(i = 0; i < 5; i++) {
+                keyboard_buf[keyboard_buf_index] = ' ';
+                keyboard_buf_index++;
                 putc(' ');
             }
             break;
         case 0x1C: 
             // Enter Pressed
+            keyboard_buf[keyboard_buf_index] = '\n';
+            keyboard_buf_index++;
             putc('\n');
             break;
         case 0x1D:
@@ -108,17 +124,29 @@ void keyboard_handler(){
             // Right Shift released
             right_shift_flag = 0;
             break;
-    }
-    // If shifted character
-    if(left_shift_flag || right_shift_flag || caps_flag) {
-        if((scan_code < NUM_SCANCODES) && (scancodeTranslator[scan_code] != 0x0)){     // 0x0 is not mapped entry
-            putc(shifted_scancodeTranslator[scan_code]);
+        default:
+            // If ctrl+l or ctrl+L
+            if(ctrl_flag && scancodeTranslator[scan_code] == 'l') {
+                clear();
+                screen_x = 0;
+                screen_y = 0;
+            }
+            // If shifted character
+            else if((left_shift_flag || right_shift_flag) != caps_flag) {
+                if((scan_code < NUM_SCANCODES) && (scancodeTranslator[scan_code] != 0x0)){     // 0x0 is not mapped entry
+                    keyboard_buf[keyboard_buf_index] = shifted_scancodeTranslator[scan_code];
+                    keyboard_buf_index++;
+                    putc(shifted_scancodeTranslator[scan_code]);
+                }
+            }
+            // If non shifted character
+            else if((scan_code < NUM_SCANCODES) && (scancodeTranslator[scan_code] != 0x0)){     // 0x0 is not mapped entry
+                keyboard_buf[keyboard_buf_index] = scancodeTranslator[scan_code];
+                keyboard_buf_index++;
+                putc(scancodeTranslator[scan_code]);
+            }
         }
-    }
-    // If non shifted character
-    else if((scan_code < NUM_SCANCODES) && (scancodeTranslator[scan_code] != 0x0)){     // 0x0 is not mapped entry
-        putc(scancodeTranslator[scan_code]);
-    }
+    
 
     send_eoi(1);
 }
