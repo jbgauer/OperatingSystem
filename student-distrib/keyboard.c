@@ -54,6 +54,7 @@ void keyboard_init(){
     caps_flag = 0;
     ctrl_flag = 0;
     keyboard_buf_index = 0;
+    update_cursor();
     for(i = 0; i < 128; i++) {
         keyboard_buf[i] = 0;
     }
@@ -94,6 +95,7 @@ void keyboard_handler(){
             keyboard_buf[keyboard_buf_index] = '\n';
             keyboard_buf_index++;
             putc('\n');
+            update_cursor(screen_x, screen_y);
             break;
         case 0x1D:
             // Control pressed
@@ -130,13 +132,17 @@ void keyboard_handler(){
                 clear();
                 screen_x = 0;
                 screen_y = 0;
+                update_cursor();
             }
             // If shifted character
             else if((left_shift_flag || right_shift_flag) != caps_flag) {
                 if((scan_code < NUM_SCANCODES) && (scancodeTranslator[scan_code] != 0x0)){     // 0x0 is not mapped entry
                     keyboard_buf[keyboard_buf_index] = shifted_scancodeTranslator[scan_code];
                     keyboard_buf_index++;
+                    
                     putc(shifted_scancodeTranslator[scan_code]);
+                    update_cursor();
+
                 }
             }
             // If non shifted character
@@ -144,6 +150,7 @@ void keyboard_handler(){
                 keyboard_buf[keyboard_buf_index] = scancodeTranslator[scan_code];
                 keyboard_buf_index++;
                 putc(scancodeTranslator[scan_code]);
+                update_cursor();
             }
         }
     

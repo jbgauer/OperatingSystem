@@ -23,6 +23,19 @@ void clear(void) {
     }
 }
 
+/* void update_cursor()
+ * Inputs: void
+ * Return Value: none
+ * Function: updates cursor to new x,y */
+void update_cursor() {
+    uint16_t pos = screen_y * 80 + screen_x;
+
+    outb(0x0F, 0x3D4);
+    outb((uint8_t) (pos & 0xFF), 0x3D5);
+    outb(0x0E, 0x3D4);
+    outb((uint8_t) ((pos >> 8) & 0xFF), 0x3D5);
+}
+
 /* Standard printf().
  * Only supports the following format strings:
  * %%  - print a literal '%' character
