@@ -2,6 +2,8 @@
 #include "x86_desc.h"
 #include "lib.h"
 
+//#include "rtc.h"
+
 #define PASS 1
 #define FAIL 0
 
@@ -191,4 +193,5 @@ void launch_tests(){
 	// deref_test_vid_mem();
 	// deref_test_kernel();
 	// deref_test_after_kernel();
+	//rtc_open();
 }

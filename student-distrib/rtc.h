@@ -14,6 +14,11 @@ void rtc_init();
 
 void rtc_handler();
 
+int rtc_read();
+int rtc_write();
+
+int rtc_open();
+int rtc_close();
 
 
 #endif 

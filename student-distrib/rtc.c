@@ -25,13 +25,50 @@ void rtc_init(){
 void rtc_handler(){
     // printf("RTC ");
 
-    // test_interrupts();
+    test_interrupts();
 
     //from osdev wiki RTC, code to periodically send interrupts
     outb(REG_C, INDEX_PORT);	// select register C
     inb(RW_PORT);		// just throw away contents
 
     send_eoi(8);
+}
+
+
+
+int rtc_read(){
+    
+    
+    
+    return 0;
+
+}
+
+
+int rtc_write(){
+    
+    
+    
+    return 0;
+
+}
+
+
+int rtc_open(){
+    
+    outb(REG_A, INDEX_PORT);       
+    outb(2, RW_PORT);               // set frequency to 2 Hz
+    
+    return 0;
+
+}
+
+int rtc_close(){
+    
+    
+    
+    return 0;
+
 }
 
 
