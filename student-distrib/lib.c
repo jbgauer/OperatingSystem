@@ -36,7 +36,6 @@ void update_cursor() {
     outb((uint8_t) ((pos >> 8) & 0xFF), 0x3D5);
 }
 
-
 /*
  * scroll_down
  *   DESCRIPTION: scrolls the screen down one line
@@ -184,6 +183,7 @@ format_char_switch:
         }
         buf++;
     }
+    update_cursor();
     return (buf - format);
 }
 
@@ -197,6 +197,7 @@ int32_t puts(int8_t* s) {
         putc(s[index]);
         index++;
     }
+    update_cursor();
     return index;
 }
 
@@ -215,6 +216,7 @@ void putc(uint8_t c) {
         screen_x %= NUM_COLS;
         screen_y = (screen_y + (screen_x / NUM_COLS)) % NUM_ROWS;
     }
+    update_cursor();
 }
 
 /* int8_t* itoa(uint32_t value, int8_t* buf, int32_t radix);
