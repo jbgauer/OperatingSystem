@@ -79,7 +79,11 @@ void keyboard_handler(){
         case 0x0E: 
             // Backspace pressed
             keyboard_buf_index--;
-            keyboard_buf[keyboard_buf_index] = ' ';
+            keyboard_buf[keyboard_buf_index] = 0;
+            screen_x--;
+            putc(' ');
+            screen_x--;
+            update_cursor();
             break;
         case 0x0F:
             // Tab pressed
@@ -93,6 +97,7 @@ void keyboard_handler(){
             // Enter Pressed
             keyboard_buf[keyboard_buf_index] = '\n';
             keyboard_buf_index++;
+            // scroll_down();
             putc('\n');
             break;
         case 0x1D:
@@ -146,8 +151,8 @@ void keyboard_handler(){
                 keyboard_buf_index++;
                 putc(scancodeTranslator[scan_code]);
             }
+
         }
-    
 
     send_eoi(1);
 }
