@@ -2,7 +2,7 @@
 #include "x86_desc.h"
 #include "lib.h"
 
-//#include "rtc.h"
+#include "rtc.h"
 
 #define PASS 1
 #define FAIL 0
@@ -19,6 +19,8 @@ static inline void assertion_failure(){
 	asm volatile("int $15");
 }
 
+#define NUM_COLS    80
+#define NUM_ROWS    25
 
 /* Checkpoint 1 tests */
 
@@ -176,6 +178,44 @@ void deref_test_vid_mem() {
 // add more tests here
 
 /* Checkpoint 2 tests */
+
+void rtc_open_test(){
+	rtc_open(NULL);
+	clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
+
+	while(1){
+		rtc_read(NULL, NULL, NULL);
+		if(screen_x == NUM_COLS-1){
+			putc('\n');
+		}
+		putc('1');
+	}
+}
+void rtc_driver_test(){
+	
+	rtc_open(NULL);
+	int i,j;
+	clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
+
+	while(1){
+		for(i=2; i<=1024; i*=2){	//include frequencies up to the max frequency
+			clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
+			printf("\nfrequency: %dHz\n", i);
+			
+			rtc_write(NULL, (void*)&i, 4);
+
+			for(j=0; j<i; j++){
+				rtc_read(NULL, NULL, NULL);
+				if(screen_x == NUM_COLS-1){
+					putc('\n');
+				}
+				putc('1');
+			}
+		}
+	}
+	rtc_close(NULL);
+}
+
 /* Checkpoint 3 tests */
 /* Checkpoint 4 tests */
 /* Checkpoint 5 tests */
@@ -193,5 +233,6 @@ void launch_tests(){
 	// deref_test_vid_mem();
 	// deref_test_kernel();
 	// deref_test_after_kernel();
-	//rtc_open();
+	// rtc_open_test();
+	// rtc_driver_test();
 }
