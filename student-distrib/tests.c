@@ -216,6 +216,27 @@ void rtc_driver_test(){
 	rtc_close(NULL);
 }
 
+
+void rtc_virt_test(int freq){
+	
+	rtc_virt_open(NULL);
+
+	clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
+	
+	rtc_virt_write(NULL, (void*)&freq, 4);
+
+	while(1){
+		rtc_virt_read(NULL, NULL, NULL);
+		if(screen_x == NUM_COLS-1){
+			putc('\n');
+		}
+		putc('1');
+	}
+
+	rtc_virt_close(NULL);
+}
+
+
 /* Checkpoint 3 tests */
 /* Checkpoint 4 tests */
 /* Checkpoint 5 tests */
@@ -235,4 +256,5 @@ void launch_tests(){
 	// deref_test_after_kernel();
 	// rtc_open_test();
 	// rtc_driver_test();
+	// rtc_virt_test(80);
 }

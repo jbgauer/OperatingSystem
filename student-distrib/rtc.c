@@ -8,6 +8,10 @@ volatile int interrupt_flag;
 
 static int32_t log(int32_t n);
 
+//global vars for virtualization
+volatile int32_t count;
+int32_t num_ticks; 
+
 /*
  * rtc_init
  *   DESCRIPTION: initializes the rtc
@@ -27,6 +31,9 @@ void rtc_init(){
     // default frequency set
     
     interrupt_flag = 1;     // set high
+    
+    count = 0;
+    num_ticks = 1;
 
     enable_irq(8);     //8 is rtc interrupt number
     sti();
@@ -51,6 +58,8 @@ void rtc_handler(){
     inb(RW_PORT);		// just throw away contents
 
     interrupt_flag = 0; // clear flag
+
+    count += 1;
 
     send_eoi(8);
 }
@@ -119,4 +128,43 @@ int32_t log(int32_t n){
         i++;
     }
     return i;
+}
+
+
+//////////////////////////////////////////////
+// VIRTUALIZATON CODE:                      //
+//////////////////////////////////////////////
+
+
+int32_t rtc_virt_open (const uint8_t* filename){
+
+    rtc_change_freq(1024); // set frequency to maximum
+    num_ticks = 1;
+    
+    return 0;
+}
+
+int32_t rtc_virt_close (int32_t fd){
+    return 0;
+}
+
+int32_t rtc_virt_read (int32_t fd, void* buf, int32_t nbytes){
+    count = 0;
+    while(count != num_ticks);
+    return 0;
+}
+
+int32_t rtc_virt_write (int32_t fd, const void* buf, int32_t nbytes){
+    
+    //parameter validation
+    if(buf == 0) return -1;
+
+    int32_t frequency;
+    frequency = *((int*) buf);
+
+    if(frequency > 1024 || frequency < 2) return -1;
+
+    num_ticks = 512/frequency; // 512: max frequency divided by 2
+
+    return 0;
 }
