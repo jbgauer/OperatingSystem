@@ -44,20 +44,25 @@ void update_cursor() {
  *   RETURN VALUE: none
  *   SIDE EFFECTS: shifts the video memory by 80 to shift down.
  */
-// void
-// scroll_down() {
-//     uint8_t *vidMemory = (char *)VIDEO;
-//     int i;
-//     for(i = 80; i < NUM_ROWS * NUM_COLS; i++) {
-//         *(uint8_t *)(vidMemory+((i-80) << 1)) = *(uint8_t *)(vidMemory+(i << 1));
-//         *(uint8_t *)(vidMemory+((i-80) << 1) + 1) = *(uint8_t *)(vidMemory+(i << 1) + 1);
-//     }  
-//     //clear last line
-//     for(i = 3839; i < 4000; i += 2) {
-//         vidMemory[i] = ' ';
-//         vidMemory[i+1] = ATTRIB;
-//     }
-// }
+void
+scroll_down() {
+    int8_t *vidMemory = (char *)VIDEO;
+    int i;
+    for(i = 80; i < NUM_ROWS * NUM_COLS; i++) {
+        *(uint8_t *)(vidMemory+((i-80) << 1)) = *(uint8_t *)(vidMemory+(i << 1));
+        *(uint8_t *)(vidMemory+((i-80) << 1) + 1) = *(uint8_t *)(vidMemory+(i << 1) + 1);
+    }  
+    //clear last line
+    // for(i = 3839; i < 4000; i += 2) {
+    //     vidMemory[i] = ' ';
+    //     vidMemory[i+1] = ATTRIB;
+    // }
+
+    for (i = ((NUM_ROWS-1) * NUM_COLS); i < NUM_ROWS * NUM_COLS; i++) {
+        *(uint8_t *)(video_mem + (i << 1)) = ' ';
+        *(uint8_t *)(video_mem + (i << 1) + 1) = ATTRIB;
+    }
+}
 
 
 /* Standard printf().
@@ -207,17 +212,27 @@ int32_t puts(int8_t* s) {
  *  Function: Output a character to the console */
 void putc(uint8_t c) {
     if(c == '\n' || c == '\r') {
-        screen_y++;
-        screen_x = 0;
+        if(screen_y == 24) {
+            scroll_down();
+        }
+        else {
+            screen_y++;
+        }
+       screen_x = 0;
     } else {
         *(uint8_t *)(video_mem + ((NUM_COLS * screen_y + screen_x) << 1)) = c;
         *(uint8_t *)(video_mem + ((NUM_COLS * screen_y + screen_x) << 1) + 1) = ATTRIB;
         screen_x++;
         if(screen_x >= NUM_COLS) {
-            screen_y++;
+            if(screen_y == 24) {
+                scroll_down();
+            }
+            else {
+                screen_y++;
+            }
             screen_x = 0;
         }
-        screen_y = (screen_y + (screen_x / NUM_COLS)) % NUM_ROWS;
+        //screen_y = (screen_y + (screen_x / NUM_COLS)) % NUM_ROWS;
     }
     update_cursor();
 }
