@@ -12,6 +12,7 @@
 
 #include "keyboard.h"
 #include "rtc.h"
+#include "filesys_driver.h"
 
 #define RUN_TESTS
 
@@ -24,6 +25,9 @@
 void entry(unsigned long magic, unsigned long addr) {
 
     multiboot_info_t *mbi;
+
+    //starting memory address
+    uint32_t memstart;
 
     /* Clear the screen. */
     clear();
@@ -55,7 +59,10 @@ void entry(unsigned long magic, unsigned long addr) {
     if (CHECK_FLAG(mbi->flags, 3)) {
         int mod_count = 0;
         int i;
-        module_t* mod = (module_t*)mbi->mods_addr;
+        module_t* mod = (module_t*)mbi->mods_addr; //this is where the memory starts
+        //get the start of memory
+        memstart = mod->mod_start;
+
         while (mod_count < mbi->mods_count) {
             printf("Module %d loaded at address: 0x%#x\n", mod_count, (unsigned int)mod->mod_start);
             printf("Module %d ends at address: 0x%#x\n", mod_count, (unsigned int)mod->mod_end);
@@ -147,6 +154,9 @@ void entry(unsigned long magic, unsigned long addr) {
      * PIC, any other initialization stuff... */
     keyboard_init();
     rtc_init();
+
+    //initialize file system (before paging)
+    filesys_init(memstart);
 
     /* Initialize Paging Structure */
     page_init();
