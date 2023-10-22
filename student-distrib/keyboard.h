@@ -10,6 +10,7 @@
 
 char keyboard_buf[keyboard_buf_size];
 uint8_t keyboard_buf_index;
+uint8_t enter_flag;
 
 void keyboard_init();
 

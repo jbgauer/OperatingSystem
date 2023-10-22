@@ -12,7 +12,7 @@ uint8_t left_shift_flag;
 uint8_t right_shift_flag;
 uint8_t caps_flag;
 uint8_t ctrl_flag;
-uint8_t enter_flag;
+
 
 char scancodeTranslator[NUM_SCANCODES] =       // only putting alphabet and numbers for now, mapping all other keys to show nothing (0x0)
 // 83 is all entries included lowercase and all numbers

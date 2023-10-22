@@ -3,6 +3,8 @@
 #include "lib.h"
 
 #include "rtc.h"
+#include "terminal.h"
+#include "keyboard.h"
 
 #define PASS 1
 #define FAIL 0
@@ -253,6 +255,56 @@ void rtc_virt_test(int freq){
 }
 
 
+/* term_read_test
+ * 
+ * Test for terminal read 
+ * Inputs: None
+ * Outputs: None
+ * Side Effects: None
+ * Coverage: rtc device functions
+ * Files: term.c
+ */
+void term_read_test() {
+	int i;
+	int hold = 0;
+	char* buf;
+	term_open(NULL);
+	while(!enter_flag) {
+		;
+	}
+	for(i = 0; i < 128; i++) {
+		printf("i = %d ", i);
+		hold = term_read(NULL, buf, i);
+		if(hold == -1) {
+			printf("Error -1");
+		} else {
+			printf("User buff: %s", buf);
+		}
+		
+	}
+	
+	term_close(NULL);
+}
+
+/* term_write_test
+ * 
+ * Test for terminal read 
+ * Inputs: None
+ * Outputs: None
+ * Side Effects: None
+ * Coverage: rtc device functions
+ * Files: term.c
+ */
+void term_write_test() {
+	int i;
+	char* buf = "Testing";
+	for(i = 0; i < strlen(buf)+3; i++) {
+		printf("bytes = %d. Write: ", i);
+		term_write(NULL, buf, i);
+		printf("\n");
+	}
+}
+
 /* Checkpoint 3 tests */
 /* Checkpoint 4 tests */
 /* Checkpoint 5 tests */
@@ -276,4 +328,6 @@ void launch_tests(){
 	// rtc_open_test();
 	// rtc_driver_test();
 	// rtc_virt_test(10);
+	//term_read_test();
+	//term_write_test();
 }
