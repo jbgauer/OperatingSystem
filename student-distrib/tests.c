@@ -267,7 +267,7 @@ void rtc_virt_test(int freq){
 void term_read_test() {
 	int i;
 	int hold = 0;
-	char* buf;
+	char buf[128];
 	term_open(NULL);
 	for(i = 0; i < 128; i++) {
 		hold = term_read(NULL, buf, i);
@@ -280,6 +280,19 @@ void term_read_test() {
 		
 	}
 	term_close(NULL);
+}
+
+void term_read_ben() {
+	int hold = 0;
+	char buf[128];
+	term_open(NULL);
+	hold = term_read(NULL, buf, 127);
+	if(hold == -1) {
+		printf("Error -1");
+	} else {
+		printf("User buff: %s", buf);
+	}
+ 	term_close(NULL);
 }
 
 /* term_write_test
@@ -326,4 +339,5 @@ void launch_tests(){
 	// rtc_virt_test(10);
 	//term_read_test();
 	//term_write_test();
+	//term_read_ben();
 }

@@ -59,7 +59,7 @@ term_read(int32_t fd, char* buf, int32_t nbytes) {
     }
     //check if last char is \n if not, set it.
     if(buf[nbytes-1] != '\n') {
-        buf[nbytes-1] = '\n';
+        buf[nbytes] = '\n';
     }
     //clear keyboard buf
     for(j = 0; j < 128; j++) {

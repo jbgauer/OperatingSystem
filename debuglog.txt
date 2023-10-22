@@ -96,4 +96,10 @@ X Backspace cursor lagging
   ~ 2 minutes, 1 line change
   ~ Algorithmic, didn't call update cursor function right after backspace changed scroll x 
   (Ben)
-  
+
+X Enter button didn't work
+  (Ben)
+  * User could press enter multiple times even when waiting for terminal read
+  ~ 20 minutes, 1 line change
+  ~ Algorithmic, didn't check for enter flag before enter character sequence
+  (Ben)
