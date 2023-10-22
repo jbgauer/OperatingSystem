@@ -14,6 +14,8 @@
 #define MAX 1024   //maximum frequency
 #define MIN 2      //minimum frequency
 
+#define MAXRATE 15 //maximum frequency
+
 void rtc_init();
 
 void rtc_handler();

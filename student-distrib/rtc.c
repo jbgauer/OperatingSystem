@@ -143,9 +143,9 @@ int32_t rtc_write (int32_t fd, const void* buf, int32_t nbytes){
 // code taken and modified from OSDEV Wiki
 void rtc_change_freq(int32_t frequency){
     int32_t rate;
-
-    rate = 16 - log(frequency);     //getting rate from frequency equation: frequency =  32768 >> (rate-1);
-                                    //rate of 6 gives MAX frequency
+                                        // 15 is max rate, add 1 cuz (rate subtracted by 1 in equation on next line)
+    rate = MAXRATE + 1 - log(frequency);     //getting rate from frequency equation: frequency =  32768 >> (rate-1);
+                                        //rate of 6 gives MAX frequency
     
     rate &= 0x0F;                   // must be less than 15, setting to 15 if greater
     if(rate<3) return;              // must be at least 3, rate of 3 is 8192 (max freq of rtc)
