@@ -82,3 +82,18 @@ X frequency of RTC off
   ~ algorithmic, did not initialize count variable in the log function
   ~ assumed it would be initialized to 0
   (Kevin)
+
+X scroll down visual bug
+  (Ben)
+  * Bottom line didn't clear properly when scroll down happens, filled bottom line with null
+  ~ 15 minutes, 4 line change
+  ~ Algorithmic, didn't fill proper memory locations, for loop bounds were wrong
+  (Ben)
+
+X Backspace cursor lagging
+  (Ben)
+  * When backspace happens, cursor wouldn't update until next key pressed
+  ~ 2 minutes, 1 line change
+  ~ Algorithmic, didn't call update cursor function right after backspace changed scroll x 
+  (Ben)
+  
