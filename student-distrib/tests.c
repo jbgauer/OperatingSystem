@@ -179,6 +179,15 @@ void deref_test_vid_mem() {
 
 /* Checkpoint 2 tests */
 
+/* rtc_open_test
+ * 
+ * Test for rtc_open
+ * Inputs: None
+ * Outputs: None
+ * Side Effects: None
+ * Coverage: rtc device interrupts
+ * Files: rtc.c
+ */
 void rtc_open_test(){
 	rtc_open(NULL);
 	clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
@@ -188,12 +197,21 @@ void rtc_open_test(){
 		putc('1');
 	}
 }
+
+/* rtc_driver_test
+ * 
+ * Test for rtc read and write
+ * Inputs: None
+ * Outputs: None
+ * Side Effects: None
+ * Coverage: rtc device functions
+ * Files: rtc.c
+ */
 void rtc_driver_test(){
 	
 	rtc_open(NULL);
 	int i,j;
 	
-
 	while(1){
 		for(i=2; i<=1024; i*=2){	//include frequencies up to the max frequency
 			clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
@@ -210,7 +228,15 @@ void rtc_driver_test(){
 	rtc_close(NULL);
 }
 
-
+/* rtc_virt_test
+ * 
+ * Test for rtc virtual read and write
+ * Inputs: None
+ * Outputs: None
+ * Side Effects: None
+ * Coverage: rtc device functions
+ * Files: rtc.c
+ */
 void rtc_virt_test(int freq){
 	
 	rtc_virt_open(NULL);
@@ -223,7 +249,6 @@ void rtc_virt_test(int freq){
 		rtc_virt_read(NULL, NULL, NULL);
 		putc('1');
 	}
-
 	rtc_virt_close(NULL);
 }
 
@@ -235,6 +260,7 @@ void rtc_virt_test(int freq){
 
 /* Test suite entry point */
 void launch_tests(){
+	// CHECKPOINT 1:
 	//TEST_OUTPUT("idt_test", idt_test());
 	// launch your tests here
 	// divideByZero_test();
@@ -245,6 +271,8 @@ void launch_tests(){
 	// deref_test_vid_mem();
 	// deref_test_kernel();
 	// deref_test_after_kernel();
+	
+	// CHECKPOINT 2: //
 	// rtc_open_test();
 	// rtc_driver_test();
 	// rtc_virt_test(10);
