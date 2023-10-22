@@ -6,8 +6,9 @@
 #include "lib.h"
 
 #define NUM_SCANCODES 83
+#define keyboard_buf_size 128
 
-char keyboard_buf[128];
+char keyboard_buf[keyboard_buf_size];
 uint8_t keyboard_buf_index;
 
 void keyboard_init();

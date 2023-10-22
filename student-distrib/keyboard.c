@@ -4,10 +4,15 @@
 #include "i8259.h"
 #include "lib.h"
 
+#define TAB_SPACE   5
+#define NUM_COLS    80
+#define NUM_ROWS    25
+
 uint8_t left_shift_flag;
 uint8_t right_shift_flag;
 uint8_t caps_flag;
 uint8_t ctrl_flag;
+uint8_t enter_flag;
 
 char scancodeTranslator[NUM_SCANCODES] =       // only putting alphabet and numbers for now, mapping all other keys to show nothing (0x0)
 // 83 is all entries included lowercase and all numbers
@@ -53,8 +58,9 @@ void keyboard_init(){
     right_shift_flag = 0;
     caps_flag = 0;
     ctrl_flag = 0;
+    enter_flag = 0;
     keyboard_buf_index = 0;
-    for(i = 0; i < 128; i++) {
+    for(i = 0; i < keyboard_buf_size; i++) {
         keyboard_buf[i] = 0;
     }
 }
@@ -71,32 +77,37 @@ void keyboard_handler(){
     uint8_t scan_code = inb(0x60); // port to receive scancodes
     int i;
     // If keyboard buffer is at end
-    if(keyboard_buf_index == 128) {
-        keyboard_buf_index = 0;
-    }
+    // if(keyboard_buf_index == keyboard_buf_size) {
+    //     keyboard_buf_index = 0;
+    // }
 
     switch(scan_code) {
         case 0x0E: 
             // Backspace pressed
-            keyboard_buf_index--;
-            keyboard_buf[keyboard_buf_index] = 0;
-            screen_x--;
-            putc(' ');
-            screen_x--;
-            update_cursor();
+            if(enter_flag == 0) {
+                keyboard_buf_index--;
+                keyboard_buf[keyboard_buf_index] = 0;
+                screen_x--;
+                putc(' ');
+                screen_x--;
+                update_cursor();
+            }
             break;
         case 0x0F:
             // Tab pressed
-            for(i = 0; i < 5; i++) {
-                keyboard_buf[keyboard_buf_index] = ' ';
-                keyboard_buf_index++;
-                putc(' ');
+            if(keyboard_buf_index < (keyboard_buf_size-TAB_SPACE-2)) {
+                for(i = 0; i < TAB_SPACE; i++) {
+                    keyboard_buf[keyboard_buf_index] = ' ';
+                    keyboard_buf_index++;
+                    putc(' ');
+                }   
             }
             break;
         case 0x1C: 
             // Enter Pressed
             keyboard_buf[keyboard_buf_index] = '\n';
-            keyboard_buf_index++;
+            keyboard_buf_index = 128;
+            enter_flag = 1;
             // scroll_down();
             putc('\n');
             break;
@@ -137,8 +148,9 @@ void keyboard_handler(){
                 screen_y = 0;
                 update_cursor();
             }
+            else if(keyboard_buf_index < keyboard_buf_size-1) {
             // If shifted character
-            else if((left_shift_flag || right_shift_flag) != caps_flag) {
+            if((left_shift_flag || right_shift_flag) != caps_flag) {
                 if((scan_code < NUM_SCANCODES) && (scancodeTranslator[scan_code] != 0x0)){     // 0x0 is not mapped entry
                     keyboard_buf[keyboard_buf_index] = shifted_scancodeTranslator[scan_code];
                     keyboard_buf_index++;
@@ -151,7 +163,7 @@ void keyboard_handler(){
                 keyboard_buf_index++;
                 putc(scancodeTranslator[scan_code]);
             }
-
+            }
         }
 
     send_eoi(1);
