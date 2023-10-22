@@ -269,12 +269,9 @@ void term_read_test() {
 	int hold = 0;
 	char* buf;
 	term_open(NULL);
-	while(!enter_flag) {
-		;
-	}
 	for(i = 0; i < 128; i++) {
-		printf("i = %d ", i);
 		hold = term_read(NULL, buf, i);
+		printf("i = %d ", i);
 		if(hold == -1) {
 			printf("Error -1");
 		} else {
@@ -282,7 +279,6 @@ void term_read_test() {
 		}
 		
 	}
-	
 	term_close(NULL);
 }
 

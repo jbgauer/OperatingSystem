@@ -57,14 +57,15 @@ term_read(int32_t fd, char* buf, int32_t nbytes) {
             break;
         }
     }
-    //check if last char is \n if not, set it.
-    if(buf[nbytes-1] != '\n') {
-        buf[nbytes-1] = '\n';
-    }
+    // //check if last char is \n if not, set it.
+    // if(buf[nbytes-1] != '\n') {
+    //     buf[nbytes-1] = '\n';
+    // }
     //clear keyboard buf
     for(j = 0; j < 128; j++) {
         keyboard_buf[j] = 0x0; 
     }
+    keyboard_buf_index = 0;
     /*success*/
     //reset enter_flag
     enter_flag = 0;
