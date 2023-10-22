@@ -185,9 +185,6 @@ void rtc_open_test(){
 
 	while(1){
 		rtc_read(NULL, NULL, NULL);
-		if(screen_x == NUM_COLS-1){
-			putc('\n');
-		}
 		putc('1');
 	}
 }
@@ -195,20 +192,17 @@ void rtc_driver_test(){
 	
 	rtc_open(NULL);
 	int i,j;
-	clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
+	
 
 	while(1){
 		for(i=2; i<=1024; i*=2){	//include frequencies up to the max frequency
 			clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
 			printf("\nfrequency: %dHz\n", i);
 			
-			rtc_write(NULL, (void*)&i, 4);
+			if(rtc_write(NULL, (void*)&i, 4)==-1) return;
 
 			for(j=0; j<i; j++){
 				rtc_read(NULL, NULL, NULL);
-				if(screen_x == NUM_COLS-1){
-					putc('\n');
-				}
 				putc('1');
 			}
 		}
@@ -227,9 +221,6 @@ void rtc_virt_test(int freq){
 
 	while(1){
 		rtc_virt_read(NULL, NULL, NULL);
-		if(screen_x == NUM_COLS-1){
-			putc('\n');
-		}
 		putc('1');
 	}
 
@@ -256,5 +247,5 @@ void launch_tests(){
 	// deref_test_after_kernel();
 	// rtc_open_test();
 	// rtc_driver_test();
-	// rtc_virt_test(80);
+	// rtc_virt_test(10);
 }

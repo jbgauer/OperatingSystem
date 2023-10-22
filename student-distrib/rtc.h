@@ -11,6 +11,9 @@
 #define INDEX_PORT 0x70
 #define RW_PORT 0x71
 
+#define MAX 1024   //maximum frequency
+#define MIN 2      //minimum frequency
+
 void rtc_init();
 
 void rtc_handler();
