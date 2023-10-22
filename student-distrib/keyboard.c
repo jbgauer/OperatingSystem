@@ -84,7 +84,7 @@ void keyboard_handler(){
     switch(scan_code) {
         case 0x0E: 
             // Backspace pressed
-            if(enter_flag == 0) {
+            if(enter_flag == 0 && keyboard_buf_index > 0) {
                 keyboard_buf_index--;
                 keyboard_buf[keyboard_buf_index] = 0;
                 screen_x--;
@@ -105,11 +105,13 @@ void keyboard_handler(){
             break;
         case 0x1C: 
             // Enter Pressed
-            keyboard_buf[keyboard_buf_index] = '\n';
-            keyboard_buf_index = 128;
-            enter_flag = 1;
-            // scroll_down();
-            putc('\n');
+            if(enter_flag == 0) {
+                keyboard_buf[keyboard_buf_index] = '\n';
+                keyboard_buf_index = 128;
+                enter_flag = 1;
+                // scroll_down();
+                putc('\n');
+            }
             break;
         case 0x1D:
             // Control pressed
