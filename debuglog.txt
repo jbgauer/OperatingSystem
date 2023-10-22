@@ -74,3 +74,11 @@ X boot looping
     have to load directory first, then enable paging,
     also had to change the assembly functions
   (Ben)
+
+X frequency of RTC off 
+  (Kevin)
+  * weird frequency when testing the read and write and open functions
+  ~ 2 hours, 1 line change
+  ~ algorithmic, did not initialize count variable in the log function
+  ~ assumed it would be initialized to 0
+  (Kevin)
