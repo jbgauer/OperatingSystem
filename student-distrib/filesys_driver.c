@@ -179,6 +179,14 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
 }
 
 // ~~~~~ FILE FUNCTIONS ~~~~~
+/*
+ * open_file
+ *   DESCRIPTION: set up file to be read
+ *   INPUTS: filename, fd (index in file array)
+ *   OUTPUTS: int to tell success or fail
+ *   RETURN VALUE: always 0
+ *   SIDE EFFECTS: puts file into file array
+ */
 //open always successful
 int32_t open_file(const uint8_t* filename, int fd){
     //must have a counter for each file
@@ -198,6 +206,14 @@ int32_t open_file(const uint8_t* filename, int fd){
     return 0;
 }
 
+/*
+ * close_file
+ *   DESCRIPTION: undo what open file did
+ *   INPUTS: fd
+ *   OUTPUTS: int
+ *   RETURN VALUE: always 0
+ *   SIDE EFFECTS: get rid of file in file array
+ */
 //close always successful
 int32_t close_file(int32_t fd){
     //undo what open did
@@ -207,6 +223,14 @@ int32_t close_file(int32_t fd){
     return 0;
 }
 
+/*
+ * read_file
+ *   DESCRIPTION: read data in a given file
+ *   INPUTS: fd, buf, nbytes
+ *   OUTPUTS: int
+ *   RETURN VALUE: 0 if success, -1 if fail
+ *   SIDE EFFECTS: puts data into buf
+ */
 int32_t read_file(int32_t fd, void* buf, int32_t nbytes){
     dentry_t* fentry = filearray[fd];
     int32_t actualbytes;
@@ -225,6 +249,14 @@ int32_t read_file(int32_t fd, void* buf, int32_t nbytes){
     return actualbytes;
 }
 
+/*
+ * write_file
+ *   DESCRIPTION: does nothing
+ *   INPUTS: fd, buf, nbytes
+ *   OUTPUTS: always fail
+ *   RETURN VALUE: -1
+ *   SIDE EFFECTS: none
+ */
 int32_t write_file(int32_t fd, const void* buf, int32_t nbytes){
     //writes will always fail because read-only system
     return -1;
@@ -232,17 +264,41 @@ int32_t write_file(int32_t fd, const void* buf, int32_t nbytes){
 
 
 // ~~~~~ DIRECTORY FUNCTIONS ~~~~~
+/*
+ * open_dir
+ *   DESCRIPTION: does nothing
+ *   INPUTS: filename
+ *   OUTPUTS: none
+ *   RETURN VALUE: 0
+ *   SIDE EFFECTS: none
+ */
 //there is only 1 directory so don't really care about open and close
 //open always successful
 int32_t open_dir(const uint8_t* filename){
     return 0;
 }
 
+/*
+ * close_dir
+ *   DESCRIPTION: does nothing
+ *   INPUTS: fd
+ *   OUTPUTS: none
+ *   RETURN VALUE: 0
+ *   SIDE EFFECTS: none
+ */
 //close always successful
 int32_t close_dir(int32_t fd){
     return 0;
 }
 
+/*
+ * read_dir
+ *   DESCRIPTION: reads all file names in dir
+ *   INPUTS: fd, buf, nbytes
+ *   OUTPUTS: 0 or -1
+ *   RETURN VALUE: int of success or fail
+ *   SIDE EFFECTS: puts file names into buffer
+ */
 //put all the names of files inside the directory into the buffer
 int32_t read_dir(int32_t fd, uint8_t* buf, int32_t nbytes){
     int i, j;
@@ -285,6 +341,14 @@ int32_t read_dir(int32_t fd, uint8_t* buf, int32_t nbytes){
     return lencounter;
 }
 
+/*
+ * write_dir
+ *   DESCRIPTION: does nothing
+ *   INPUTS: fd, buf, nbytes
+ *   OUTPUTS: none
+ *   RETURN VALUE: always -1
+ *   SIDE EFFECTS: none
+ */
 int32_t write_dir(int32_t fd, const void* buf, int32_t nbytes){
     //writes will always fail because read-only system
     return -1;
