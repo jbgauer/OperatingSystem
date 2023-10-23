@@ -312,7 +312,7 @@ void term_test() {
 		printf("User buf: ");
 		wrote = term_write(NULL, buf1, 129);
 		printf("Bytes written: %d", wrote);
-		printf("Bytes read: %d", hold);
+		printf(" Bytes read: %d\n", hold);
 	}
 	char buf3[128];
 	for(i = 0; i < strlen(buf3); i++) {
@@ -326,7 +326,7 @@ void term_test() {
 		printf("User buf: ");
 		wrote = term_write(NULL, buf3, 128);
 		printf("Bytes written: %d", wrote);
-		printf("Bytes read: %d", hold);
+		printf(" Bytes read: %d\n", hold);
 	}
 
 	char buf2[128];
@@ -341,7 +341,7 @@ void term_test() {
 		printf("User buf: ");
 		wrote = term_write(NULL, buf2, 8);
 		printf("Bytes written: %d", wrote);
-		printf("Bytes read: %d", hold);
+		printf(" Bytes read: %d\n", hold);
 	}
 	char buf4[500];
 	for(i = 0; i < strlen(buf4); i++) {
@@ -355,10 +355,8 @@ void term_test() {
 		printf("User buf: ");
 		wrote = term_write(NULL, buf4, 129);
 		printf("Bytes written: %d", wrote);
-		printf("Bytes read: %d", hold);
-	
+		printf(" Bytes read: %d\n", hold);
 	}
-
  	term_close(NULL);
 }
 
@@ -440,7 +438,7 @@ void launch_tests(){
 	// rtc_open_test();
 	// rtc_driver_test();
 	// rtc_virt_test(10);
-	term_test();
+	//term_test();
 	//term_write_test();
 	//file_test();
 }
