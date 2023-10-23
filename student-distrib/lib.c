@@ -52,11 +52,6 @@ scroll_down() {
         *(uint8_t *)(vidMemory+((i-80) << 1)) = *(uint8_t *)(vidMemory+(i << 1));
         *(uint8_t *)(vidMemory+((i-80) << 1) + 1) = *(uint8_t *)(vidMemory+(i << 1) + 1);
     }  
-    //clear last line
-    // for(i = 3839; i < 4000; i += 2) {
-    //     vidMemory[i] = ' ';
-    //     vidMemory[i+1] = ATTRIB;
-    // }
 
     for (i = ((NUM_ROWS-1) * NUM_COLS); i < NUM_ROWS * NUM_COLS; i++) {
         *(uint8_t *)(video_mem + (i << 1)) = ' ';
