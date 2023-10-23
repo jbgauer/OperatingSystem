@@ -44,6 +44,7 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
 
     //check inputs are valid
     int flen = strlen((char*)fname);
+    //when at 32, it thinks length is actually 35
     if(flen < 0 || flen > MAX_FILENAME_LEN || fname == NULL || dentry == NULL){
         printf("read dentry by name fail");
         return -1;
@@ -159,6 +160,7 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
             //if at the starting block, need to account for offset
             if((i == 0) && ((j+dataoff) < BLOCK_SIZE)){
                 buf[b] = curblock->actualdata[j+dataoff];
+                //putc(buf[b]);
                 //buf[j] = curblock->actualdata[j+dataoff];
             }
             //otherwise get data as normal

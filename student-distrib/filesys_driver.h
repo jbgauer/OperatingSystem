@@ -4,7 +4,7 @@
 //prevent magic nums
 #define MAX_ENTRIES         63      //1 entry is the boot block, so 62 files max
 #define MAX_BLOCKS          1023
-#define MAX_FILENAME_LEN    35      //32 + 3 (3 is end character)
+#define MAX_FILENAME_LEN    32      //32 + 3 (3 is end character)
 
 #define MAX_FILE_SIZE   4190208 //4 MB
 #define BLOCK_SIZE  4096
