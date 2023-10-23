@@ -132,8 +132,8 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
     //if 0, then length less than 1 block, so only read 1 block
     totalblocks += length/BLOCK_SIZE;
 
-    printf("input len: %d ", length);
-    printf("file len: %d\n", itnode->length);
+    //printf("input len: %d ", length);
+    //printf("file len: %d\n", itnode->length);
 
     //get each block to read
     // length is in CHARS
@@ -141,7 +141,7 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
     for(i=0; i < totalblocks; i++){
         //get the data block
         curblock = (data_block_t*)(startblock + (itnode->data_block_num[i+bloff]));
-        printf("got block\n");
+        //printf("got block\n");
         //put each char of curblock into the buf
         for(j=0; j < BLOCK_SIZE; j++){
             //get page fault because file may be smaller than 1 block
@@ -244,32 +244,43 @@ int32_t close_dir(int32_t fd){
 }
 
 //put all the names of files inside the directory into the buffer
-int32_t read_dir(int32_t fd, void* buf, int32_t nbytes){
-    int i;
-    dentry_t curentry;
-    inode_t* curnode;
-    uint32_t lencounter = 0; //keep track of length of all the files
+int32_t read_dir(int32_t fd, uint8_t* buf, int32_t nbytes){
+    int i, j;
+    //dentry_t curentry;
+    //inode_t* curnode;
+    uint32_t lencounter = 0; //keep track of length of all the file names
     //will use this to put file names into the buffer at offsets
     // (so that file names won't overwrite each other)
+    uint8_t* curname;
+    //int8_t* filename = "file_name:"; //10 long
 
     for(i=0; i < bbl->dentry_count; i++){
-        //get the inode of cur entry
-        curentry = bbl->entries[i];
-        curnode = (inode_t*)(startinode + curentry.inode_num);
-        //write to the buf
-        read_data(curentry.inode_num, lencounter, buf, curnode->length);
+        //get the name of current dentry
+        curname = bbl->entries[i].filename;
 
-        //get total length bytes used so far, so know what offset for buf
-        lencounter += curnode->length;
+        //put file_name:
+        //strcpy(buf[lencounter], filename);
+        //lencounter += 10;
 
-        //add a newline after each file
-        //buf[lencounter] = '\n';
+        //33-strlen
+        for(j=0; j < strlen((char*)curname); j++){
+            //dont go over 32 char limit
+            if(j >= 32){
+                break;
+            }
+            buf[lencounter] = curname[j];
+            lencounter++;
+        }
 
-        //lencounter += 1;
+        // buf[lencounter] = ',';
+        // lencounter++;
+        // buf[lencounter] = ' ';
+        // lencounter++;
+        // buf[lencounter] = (char*)(bbl->entries[i].filetype);
+        // lencounter++;
+        buf[lencounter] = '\n';
+        lencounter++;
     }
-    
-    //remove extra new lines
-    lencounter = lencounter - bbl->dentry_count;
 
     return lencounter;
 }

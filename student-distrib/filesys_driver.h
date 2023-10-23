@@ -61,5 +61,5 @@ int32_t write_file(int32_t fd, const void* buf, int32_t nbytes);
 
 int32_t open_dir(const uint8_t* filename);
 int32_t close_dir(int32_t fd);
-int32_t read_dir(int32_t fd, void* buf, int32_t nbytes);
+int32_t read_dir(int32_t fd, uint8_t* buf, int32_t nbytes);
 int32_t write_dir(int32_t fd, const void* buf, int32_t nbytes);
