@@ -265,22 +265,58 @@ void rtc_virt_test(int freq){
  * Coverage: rtc device functions
  * Files: term.c
  */
+// void term_read_test() {
+// 	int i;
+// 	int hold = 0;
+// 	char buf[128];
+// 	term_open(NULL);
+// 	for(i = 0; i < 128; i++) {
+// 		hold = term_read(NULL, buf, i);
+// 		printf("i = %d ", i);
+// 		if(hold == -1) {
+// 			printf("Error -1");
+// 		} else {
+// 			printf("User buff: %s", buf);
+// 		}
+		
+// 	}
+// 	term_close(NULL);
+// }
+
 void term_read_test() {
-	int i;
 	int hold = 0;
+	int i;
 	char buf[128];
+	for(i = 0; i < strlen(buf); i++) {
+		buf[i] = 0;
+	}
 	term_open(NULL);
-	for(i = 0; i < 128; i++) {
-		hold = term_read(NULL, buf, i);
-		printf("i = %d ", i);
-		if(hold == -1) {
-			printf("Error -1");
-		} else {
-			printf("User buff: %s", buf);
-		}
+	hold = term_read(NULL, buf, 0);
+	if(hold == -1) {
+		printf("Error nybtes = 0\n");
+	} else {
+		printf("User buf: ");
+		term_write(NULL, buf, 0);
 		
 	}
-	term_close(NULL);
+	char buf1[128];
+	hold = term_read(NULL, NULL, 127);
+	if(hold == -1) {
+		printf("Error NULL buf\n");
+	} else {
+		printf("User buf: ");
+		term_write(NULL, buf1, 127);
+	}
+	char buf2[128];
+	hold = term_read(NULL, buf2, 7);
+	if(hold == -1) {
+		printf("Error -1");
+	} else {
+		printf("User buf: ");
+		term_write(NULL, buf2, 8);
+	}
+
+ 	term_close(NULL);
 }
 
 void term_read_ben() {
@@ -377,5 +413,5 @@ void launch_tests(){
 	//term_read_test();
 	//term_write_test();
 	//term_read_ben();
-	file_test();
+	//file_test();
 }

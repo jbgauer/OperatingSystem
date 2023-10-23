@@ -62,8 +62,8 @@ term_read(int32_t fd, char* buf, int32_t nbytes) {
         buf[nbytes] = '\n';
     }
     //clear keyboard buf
-    for(j = 0; j < 128; j++) {
-        keyboard_buf[j] = 0x0; 
+    for(j = 0; j < KEYBOARD_BUF_LEN; j++) {
+        keyboard_buf[j] = 0; 
     }
     keyboard_buf_index = 0;
     /*success*/
@@ -79,7 +79,7 @@ term_read(int32_t fd, char* buf, int32_t nbytes) {
  *   INPUTS: none
  *   OUTPUTS: user buffer 
  *   RETURN VALUE: number of bytes written, -1 if failed
- *   SIDE EFFECTS: none
+ *   SIDE EFFECTS: writes to the screen
  */
 int32_t
 term_write(int32_t fd, char* buf, int32_t nbytes) {

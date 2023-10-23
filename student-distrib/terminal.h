@@ -3,7 +3,7 @@
 
 #include "lib.h"
 
-#define BUF_LENGTH 128
+#define KEYBOARD_BUF_LEN 128
 
 int32_t term_open(const uint8_t* filename);
 
