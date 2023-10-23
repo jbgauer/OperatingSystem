@@ -392,7 +392,7 @@ void file_test(){
 	//my system is wonky because no PCB
 	//fd is index in file array
 	//use fd as the way of keeping track which file to do stuff to
-	uint8_t file0[32] = "cat";
+	uint8_t file0[32] = "frame0.txt";//"verylargetextwithverylongname.tx";
 	int fd0 = 0;
 	int len0 = 6000; //number of characters to read
 	uint8_t buf0[len0];
@@ -406,8 +406,8 @@ void file_test(){
 	for(i=0; i < bread; i++){
 		putc(buf0[i]);
 	}
-	printf("\nfile done");
-	
+	printf("\nfile name: %s\n", file0);
+
 	//check byte read
 	printf("actual len: %d\n", len0);
 	printf("bytes read: %d\n", bread);
