@@ -285,7 +285,7 @@ void rtc_virt_test(int freq){
 
 void term_test() {
 	int hold = 0;
-	itn wrote = 0;
+	int wrote = 0;
 	int i;
 	char buf[128];
 	for(i = 0; i < strlen(buf); i++) {
@@ -440,7 +440,7 @@ void launch_tests(){
 	// rtc_open_test();
 	// rtc_driver_test();
 	// rtc_virt_test(10);
-	//term_test();
+	term_test();
 	//term_write_test();
 	//file_test();
 }
