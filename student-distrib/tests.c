@@ -5,6 +5,7 @@
 #include "rtc.h"
 #include "terminal.h"
 #include "keyboard.h"
+#include "filesys_driver.h"
 
 #define PASS 1
 #define FAIL 0
@@ -314,6 +315,42 @@ void term_write_test() {
 	}
 }
 
+/* file_test
+ * 
+ * Test filesystem
+ * Inputs: None
+ * Outputs: None
+ * Side Effects: None
+ * Coverage: file/dir open, close, and read
+ * Files: filesys_driver.c
+ */
+void file_test(){
+	//my system is wonky because no PCB
+	//fd is index in file array
+	//use fd as the way of keeping track which file to do stuff to
+	uint8_t file0[32] = "frame0.txt";
+	int fd0 = 0;
+	int len0 = 23;//strlen(file0);
+	uint8_t buf0[len0];
+	int result;
+	int i;
+
+	open_file(file0, fd0);
+	result = read_file(fd0, buf0, len0);
+
+	//check byte read
+	printf("actual len: %d\n", len0);
+	printf("bytes read: %d\n", result);
+
+	printf("file:\n");
+	for(i=0; i < len0; i++){
+		putc(buf0[i]);
+	}
+	printf("\nfile done");
+
+	close_file(fd0);
+}
+
 /* Checkpoint 3 tests */
 /* Checkpoint 4 tests */
 /* Checkpoint 5 tests */
@@ -340,4 +377,5 @@ void launch_tests(){
 	//term_read_test();
 	//term_write_test();
 	//term_read_ben();
+	file_test();
 }

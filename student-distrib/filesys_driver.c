@@ -101,12 +101,15 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
     int bytesread = 0;
     int bloff;          //starting block index after offset
     int dataoff;
+    int totalblocks = 1;
 
     //check inputs valid
     if(inode < 0 || inode >= bbl->inode_count || buf == NULL){
+        printf("read data fail\n");
         return -1;
     }
-    
+//SOMEWHERE HERE IS PAGE FAULT
+//GO THRU WITH GDB    
     //get inode of the file
     itnode = (inode_t*)(startinode+inode);
 
@@ -121,13 +124,27 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
     //   offset might not be perfect, may need to start middle of 1st block
     dataoff = (offset%BLOCK_SIZE);
 
+    //get total blocks to read
+    //if 0, then length less than 1 block, so only read 1 block
+    totalblocks += length/BLOCK_SIZE;
+
+    printf("len: %d ", length);
+    printf("bloff: %d dataoff: %d\n", bloff, dataoff);
+
     //get each block to read
-    for(i=0; i < (length/BLOCK_SIZE); i++){
+    // length is in CHARS
+    // each index in data is 1 (ONE) CHAR
+    for(i=0; i < totalblocks; i++){
         //get the data block
         curblock = (data_block_t*)(startblock + (itnode->data_block_num[i+bloff]));
-
+        printf("got block\n");
         //put each char of curblock into the buf
         for(j=0; j < BLOCK_SIZE; j++){
+            printf("j %d", j);
+            //get page fault because file may be smaller than 1 block
+            if(j+dataoff >= length){
+                break;
+            }
             //if at the starting block, need to account for offset
             if((i == 0) && ((j+dataoff) < BLOCK_SIZE)){
                 buf[j] = curblock->actualdata[j+dataoff];
@@ -179,6 +196,7 @@ int32_t read_file(int32_t fd, void* buf, int32_t nbytes){
 
     //check invalid
     if(buf == NULL){
+        printf("read file fail");
         return -1;
     }
 
