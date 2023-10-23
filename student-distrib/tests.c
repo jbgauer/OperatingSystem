@@ -392,25 +392,25 @@ void file_test(){
 	//my system is wonky because no PCB
 	//fd is index in file array
 	//use fd as the way of keeping track which file to do stuff to
-	uint8_t file0[32] = "frame0.txt";
+	uint8_t file0[32] = "cat";
 	int fd0 = 0;
-	int len0 = 23;//strlen(file0);
+	int len0 = 6000; //number of characters to read
 	uint8_t buf0[len0];
-	int result;
+	int bread;
 	int i;
 
 	open_file(file0, fd0);
-	result = read_file(fd0, buf0, len0);
-
-	//check byte read
-	printf("actual len: %d\n", len0);
-	printf("bytes read: %d\n", result);
+	bread = read_file(fd0, buf0, len0);
 
 	printf("file:\n");
-	for(i=0; i < len0; i++){
+	for(i=0; i < bread; i++){
 		putc(buf0[i]);
 	}
 	printf("\nfile done");
+	
+	//check byte read
+	printf("actual len: %d\n", len0);
+	printf("bytes read: %d\n", bread);
 
 	close_file(fd0);
 }
@@ -440,5 +440,5 @@ void launch_tests(){
 	// rtc_virt_test(10);
 	//term_test();
 	//term_write_test();
-	//file_test();
+	file_test();
 }

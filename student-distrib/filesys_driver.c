@@ -99,11 +99,12 @@ int32_t read_dentry_by_index(uint32_t index, dentry_t* dentry){
 int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length){
     inode_t* itnode;    //actual inode of the file
     data_block_t* curblock;  //current data block being read
-    int i, j;           //i is index for blocks, j is index for chars of block
+    int i, j, x;           //i is index for blocks, j is index for chars of block
     int bytesread = 0;
     int bloff;          //starting block index after offset
     int dataoff;
     int totalblocks = 1;
+    int b = 0;
 
     //check inputs valid
     if(inode < 0 || inode >= bbl->inode_count || buf == NULL){
@@ -129,8 +130,8 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
     //if 0, then length less than 1 block, so only read 1 block
     totalblocks += length/BLOCK_SIZE;
 
-    printf("len: %d ", length);
-    printf("bloff: %d dataoff: %d\n", bloff, dataoff);
+    printf("input len: %d ", length);
+    printf("file len: %d\n", itnode->length);
 
     //get each block to read
     // length is in CHARS
@@ -145,16 +146,29 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
             if(j+dataoff >= length){
                 break;
             }
+            //in case if length > file size, exit when file done
+            if(bytesread >= itnode->length){
+                break;
+            }
+            if((i == 0) && ((j+dataoff) >= BLOCK_SIZE)){
+                break;
+            }
+            if(bytesread >= 5000){
+                x = 1;
+            }
             //if at the starting block, need to account for offset
             if((i == 0) && ((j+dataoff) < BLOCK_SIZE)){
-                buf[j] = curblock->actualdata[j+dataoff];
+                buf[b] = curblock->actualdata[j+dataoff];
+                //buf[j] = curblock->actualdata[j+dataoff];
             }
             //otherwise get data as normal
             else{
-                buf[(i*j) + j] = curblock->actualdata[j];
+                buf[b] = curblock->actualdata[j];
+                //buf[(i*BLOCK_SIZE) + j] = curblock->actualdata[j];
             }
             //keep track how many bytes read
             bytesread++;
+            b++;
         }
     }
 
@@ -195,7 +209,7 @@ int32_t read_file(int32_t fd, void* buf, int32_t nbytes){
     int32_t actualbytes;
 
     //check invalid
-    if(buf == NULL){
+    if(fentry == NULL || buf == NULL){
         printf("read file fail");
         return -1;
     }
