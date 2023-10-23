@@ -8,24 +8,7 @@ X description of bug (X means resolved, > means in progress, - means recorded)
   ~ type of bug and how it was fixed
     (who fixed the bug)
 --------------------
-EXAMPLES: (we can delete this later)
-- bits aren't shifting correctly (bug that was recorded)
-    (Alexandra)
-  * colors are messed up
-  * I think the bug is in level 2 of the octree
 
-> LEDs only display the 1st digit (bug currently being worked on)
-    (Ben)
-  * not reading the packet correctly
-  * I am changing the bitmask (Kevin)
-
-X time not showing correctly (bug that was resolved)
-    (Jack)
-  * time counting down in reverse
-  * I think something is wrong when converting the hex number
-  ~ 30 mins, 1 line change
-  ~ algorithmic, was inputting the time wrong, display function was fine
-    (Jack)
 --------------------
 DEBUG LOG 3.1:
 
@@ -74,6 +57,10 @@ X boot looping
     have to load directory first, then enable paging,
     also had to change the assembly functions
   (Ben)
+--------------------
+
+--------------------
+DEBUG LOG 3.2:
 
 X frequency of RTC off 
   (Kevin)
