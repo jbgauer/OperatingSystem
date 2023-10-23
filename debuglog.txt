@@ -119,3 +119,19 @@ X read_data is not reading anything, returns 0 bytes
   * maybe issue with the \n?
   * cannot use null dentry when opening file
   * read dentry can't assign using null pointer
+
+X Backspace possible even before start of user entered space
+  (Ben)
+  * It was possible to delete previous information displayed to the screen even
+    before the user was supposed to be able to type into the terminal
+  ~ 5 minutes, 1 line change
+  ~ Algorithmic, fixed by checking against first location of keyboard buffer so that it 
+    couldn't go before the zero index of keyboard buffer
+
+X Enter possible even before terminal read previous keyboard buffer
+  * It was possible for the user to print the new line character by clicking enter even 
+    before the terminal read the previous keyboard buffer
+  ~ 5 minutes, 2 line change
+  ~ Algorithmic, fixed by checking if enter flag was already 1 before new line character 
+    would be generated
+
