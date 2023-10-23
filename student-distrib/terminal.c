@@ -40,6 +40,7 @@ term_close(int32_t fd) {
 int32_t 
 term_read(int32_t fd, char* buf, int32_t nbytes) {
     int32_t i, j;    
+    uint8_t en_flag = 0;
     /*check if buf is valid*/
     if(buf == NULL || (nbytes < 1)) {
         /*failed*/
@@ -54,11 +55,12 @@ term_read(int32_t fd, char* buf, int32_t nbytes) {
     for(i = 0; i < nbytes; i++) {
         buf[i] = keyboard_buf[i];
         if(keyboard_buf[i] == '\n') {
+            en_flag = 1;
             break;
         }
     }
     //check if last char is \n if not, set it.
-    if(buf[nbytes-1] != '\n') {
+    if(en_flag == 0) {
         buf[nbytes] = '\n';
     }
     //clear keyboard buf

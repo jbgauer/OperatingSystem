@@ -298,23 +298,32 @@ void term_test() {
 		printf("User buf: ");
 		term_write(NULL, buf, 0);
 	}
-	char buf1[128];
+	char buf1[129];
+	for(i = 0; i < strlen(buf1); i++) {
+		buf1[i] = 0;
+	}
 	hold = term_read(NULL, NULL, 127);
 	if(hold == -1) {
 		printf("Error NULL buf\n");
 	} else {
 		printf("User buf: ");
-		term_write(NULL, buf1, 127);
+		term_write(NULL, buf1, 129);
 	}
 	char buf3[128];
+	for(i = 0; i < strlen(buf3); i++) {
+		buf3[i] = 0;
+	}
 	hold = term_read(NULL, buf3, 127);
 	if(hold == -1) {
 		printf("Error -1");
 	} else {
 		printf("User buf: ");
-		term_write(NULL, buf3, 127);
+		term_write(NULL, buf3, 128);
 	}
 	char buf2[128];
+	for(i = 0; i < strlen(buf2); i++) {
+		buf2[i] = 0;
+	}
 	hold = term_read(NULL, buf2, 7);
 	if(hold == -1) {
 		printf("Error -1");
@@ -323,12 +332,15 @@ void term_test() {
 		term_write(NULL, buf2, 8);
 	}
 	char buf4[500];
+	for(i = 0; i < strlen(buf4); i++) {
+		buf4[i] = 0;
+	}
 	hold = term_read(NULL, buf4, 435);
 	if(hold == -1) {
 		printf("Error -1");
 	} else {
 		printf("User buf: ");
-		term_write(NULL, buf4, 8);
+		term_write(NULL, buf4, 129);
 	}
 
  	term_close(NULL);
@@ -412,7 +424,7 @@ void launch_tests(){
 	// rtc_open_test();
 	// rtc_driver_test();
 	// rtc_virt_test(10);
-	//term_test();
+	term_test();
 	//term_write_test();
 	//file_test();
 }
