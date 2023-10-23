@@ -44,8 +44,8 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
 
     //check inputs are valid
     int flen = strlen((char*)fname);
-    if(flen < 0 || flen > MAX_FILENAME_LEN || fname == NULL){
-        printf("read by name fail");
+    if(flen < 0 || flen > MAX_FILENAME_LEN || fname == NULL || dentry == NULL){
+        printf("read dentry by name fail");
         return -1;
     }
 
@@ -76,13 +76,12 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
  */
 int32_t read_dentry_by_index(uint32_t index, dentry_t* dentry){
     //check inputs valid
-    if(index < 0 || index >= bbl->dentry_count){
-        printf("read by index fail");
+    if(index < 0 || index >= bbl->dentry_count || dentry == NULL){
+        printf("read dentry by index fail");
         return -1;
     }
     
     //set input dentry
-//PAGE FAULT HERE CANNOT USE NULL DENTRY
     *dentry = bbl->entries[index];
     return 0;
 }
@@ -111,8 +110,7 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
         printf("read data fail\n");
         return -1;
     }
-//SOMEWHERE HERE IS PAGE FAULT
-//GO THRU WITH GDB    
+  
     //get inode of the file
     itnode = (inode_t*)(startinode+inode);
 
@@ -143,7 +141,6 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
         printf("got block\n");
         //put each char of curblock into the buf
         for(j=0; j < BLOCK_SIZE; j++){
-            printf("j %d", j);
             //get page fault because file may be smaller than 1 block
             if(j+dataoff >= length){
                 break;
@@ -175,10 +172,9 @@ int32_t open_file(const uint8_t* filename, int fd){
     //open just sets up the file
     
     //get file dentry and put into array
-    dentry_t* fentry;
+    dentry_t* fentry = &(bbl->entries[0]);
     read_dentry_by_name(filename, fentry);
-// ^ PAGE FAULT HERE CANNOT USE NULL DENTRY
-// initialize fentry, and put null checkers in read by if statements
+
     filearray[fd] = fentry;
     bytecount[fd] = 0;
 

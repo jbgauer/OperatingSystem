@@ -108,17 +108,20 @@ X read_data is not reading anything, returns 0 bytes
   (Alexandra)
   * first fixed for loop so that will read 1st block
   * still issues with j and length
-    - length is CHAR length
-    - every index in block is 1 char (4096 chars total)
+    * length is CHAR length
+    * every index in block is 1 char (4096 chars total)
+  ~ 15 mins, 10 line change
+  ~ algorithmic, have to account for block offset in 1st block
   (Alexandra)
 
-> sometimes get page_fault even before actual reading
+X sometimes get page_fault even before actual reading
   (Alexandra)
-  * issue with the strlen in test
-    - happens when len = 24
-  * maybe issue with the \n?
+  * issue with the strlen in test (happens when len = 24)
   * cannot use null dentry when opening file
   * read dentry can't assign using null pointer
+  ~ 20 mins, 1 line change
+  ~ need to initialize dentry pointer before passing it
+  (Alexandra)
 
 X Backspace possible even before start of user entered space
   (Ben)
