@@ -7,7 +7,7 @@
 #define MAX_FILENAME_LEN    32
 
 #define MAX_FILE_SIZE   4190208 //4 MB
-#define MAX_BLOCK_SIZE  4096
+#define BLOCK_SIZE  4096
 
 //file supports
 //~~ INODE
@@ -37,14 +37,29 @@ typedef struct {
     dentry_t entries[MAX_ENTRIES];   //array of all file entries
 } boot_block_t;
 
+//~~ DATA BLOCK because the slides said so (use for pointer)
+// data blocks hold 4096 chars
+typedef struct {
+    uint8_t actualdata[BLOCK_SIZE];
+} data_block_t;
+
 //^ initialize all this stuff for the file system driver
 void filesys_init(uint32_t memstart);
 
-//utility fuctions for kernel
+//utility fuctions for file reading
 int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry);
 
 int32_t read_dentry_by_index(uint32_t index, dentry_t* dentry);
 
 int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length);
 
-//fuctions for user?
+//fuctions for system calls (comes from appendix A)
+int32_t open_file(const uint8_t* filename, int fd);
+int32_t close_file(int32_t fd);
+int32_t read_file(int32_t fd, void* buf, int32_t nbytes);
+int32_t write_file(int32_t fd, const void* buf, int32_t nbytes);
+
+int32_t open_dir(const uint8_t* filename);
+int32_t close_dir(int32_t fd);
+int32_t read_dir(int32_t fd, void* buf, int32_t nbytes);
+int32_t write_dir(int32_t fd, const void* buf, int32_t nbytes);

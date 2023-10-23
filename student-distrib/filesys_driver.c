@@ -3,8 +3,13 @@
 
 //global boot block to use for finding files
 boot_block_t* bbl; //points to the boot block address
+//global pointers to start of inode and data block sections
+inode_t* startinode;
+data_block_t* startblock;
 
-//dentry = directory entry
+//fd array just for now because PCB not set up yet
+dentry_t* filearray[6];
+int bytecount[6];
 
 /*
  * filesys_init
@@ -18,6 +23,11 @@ void filesys_init(uint32_t memstart){
     //set the bbl address
     bbl = (boot_block_t*)memstart;
     //everything else done automatically from the memstart
+
+    //pointers to start of inode and data block sections
+    // (just for making thing easier)
+    startinode = (inode_t*)(bbl+1);
+    startblock = (data_block_t*)(startinode + (bbl->inode_count));
 }
 
 /*
@@ -29,7 +39,7 @@ void filesys_init(uint32_t memstart){
  *   SIDE EFFECTS: dentry is filled in with the file data
  */
 int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
-    uint8_t curname;
+    uint8_t* curname;
     int i;
 
     //check inputs are valid
@@ -78,12 +88,158 @@ int32_t read_dentry_by_index(uint32_t index, dentry_t* dentry){
  * read_data
  *   DESCRIPTION: gets the data at a certain location and puts it into buf
  *   INPUTS: inode to get data from, offset from inode, buf to put data into,
-        length of data to read (from offset to offset+length)
+        length of data to read
+        AND length of buf!
  *   OUTPUTS: 0 if success, -1 if fail
- *   RETURN VALUE:
+ *   RETURN VALUE: number of bytes read
  *   SIDE EFFECTS: data is put into buf
  */
 int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length){
-    //fail if inode number is invalid
+    inode_t* itnode;    //actual inode of the file
+    data_block_t* curblock;  //current data block being read
+    int i, j;           //i is index for blocks, j is index for chars of block
+    int bytesread = 0;
+    int bloff;          //starting block index after offset
+    int dataoff;
+
+    //check inputs valid
+    if(inode < 0 || inode >= bbl->inode_count || buf == NULL){
+        return -1;
+    }
+    
+    //get inode of the file
+    itnode = (inode_t*)(startinode+inode);
+
+    //put into buf from 0 to length
+    // ^ this is CHAR length
+    //num of blocks to read would be length/4096
+    // ^ use this for getting each block from inode
+
+    //offset is in bytes (int8), need to figure out how many blocks that is
+    // ^ start at different block depending on offset
+    bloff = (offset/BLOCK_SIZE);
+    //   offset might not be perfect, may need to start middle of 1st block
+    dataoff = (offset%BLOCK_SIZE);
+
+    //get each block to read
+    for(i=0; i < (length/BLOCK_SIZE); i++){
+        //get the data block
+        curblock = (data_block_t*)(startblock + (itnode->data_block_num[i+bloff]));
+
+        //put each char of curblock into the buf
+        for(j=0; j < BLOCK_SIZE; j++){
+            //if at the starting block, need to account for offset
+            if((i == 0) && ((j+dataoff) < BLOCK_SIZE)){
+                buf[j] = curblock->actualdata[j+dataoff];
+            }
+            //otherwise get data as normal
+            else{
+                buf[(i*j) + j] = curblock->actualdata[j];
+            }
+            //keep track how many bytes read
+            bytesread++;
+        }
+    }
+
+    return bytesread;
+}
+
+// ~~~~~ FILE FUNCTIONS ~~~~~
+//open always successful
+int32_t open_file(const uint8_t* filename, int fd){
+    //must have a counter for each file
+    //count how many bytes have been read
+    //when read again, start where left off, not at beginning
+    // counter is in fdarray, fd itself is the index
+
+    //open just sets up the file
+    
+    //get file dentry and put into array
+    dentry_t* fentry;
+    read_dentry_by_name(filename, fentry);
+
+    filearray[fd] = fentry;
+    bytecount[fd] = 0;
+
+    return 0;
+}
+
+//close always successful
+int32_t close_file(int32_t fd){
+    //undo what open did
+    filearray[fd] = NULL;
+    bytecount[fd] = -1;
+
+    return 0;
+}
+
+int32_t read_file(int32_t fd, void* buf, int32_t nbytes){
+    dentry_t* fentry = filearray[fd];
+    int32_t actualbytes;
+
+    //check invalid
+    if(buf == NULL){
+        return -1;
+    }
+
+    //get the inode (using fd)
+    actualbytes = read_data(fentry->inode_num, bytecount[fd], buf, nbytes);
+
+    bytecount[fd] += nbytes;
+
+    return actualbytes;
+}
+
+int32_t write_file(int32_t fd, const void* buf, int32_t nbytes){
+    //writes will always fail because read-only system
+    return -1;
+}
+
+
+// ~~~~~ DIRECTORY FUNCTIONS ~~~~~
+//there is only 1 directory so don't really care about open and close
+//open always successful
+int32_t open_dir(const uint8_t* filename){
+    return 0;
+}
+
+//close always successful
+int32_t close_dir(int32_t fd){
+    return 0;
+}
+
+//put all the names of files inside the directory into the buffer
+int32_t read_dir(int32_t fd, void* buf, int32_t nbytes){
+    int i;
+    dentry_t curentry;
+    inode_t* curnode;
+    uint32_t lencounter = 0; //keep track of length of all the files
+    //will use this to put file names into the buffer at offsets
+    // (so that file names won't overwrite each other)
+
+    for(i=0; i < bbl->dentry_count; i++){
+        //get the inode of cur entry
+        curentry = bbl->entries[i];
+        curnode = (inode_t*)(startinode + curentry.inode_num);
+        //write to the buf
+        read_data(curentry.inode_num, lencounter, buf, curnode->length);
+
+        //get total length bytes used so far, so know what offset for buf
+        lencounter += curnode->length;
+
+        //add a newline after each file
+        //buf[lencounter] = '\n';
+
+        //lencounter += 1;
+    }
+    
+    //remove extra new lines
+    lencounter = lencounter - bbl->dentry_count;
+
+    return lencounter;
+}
+
+int32_t write_dir(int32_t fd, const void* buf, int32_t nbytes){
+    //writes will always fail because read-only system
     return -1;
 }
