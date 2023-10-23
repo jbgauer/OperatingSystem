@@ -323,7 +323,7 @@ void term_test() {
 		term_write(NULL, buf2, 8);
 	}
 	char buf4[500];
-	hold = term_read(NULL, buf4, 435);J
+	hold = term_read(NULL, buf4, 435);
 	if(hold == -1) {
 		printf("Error -1");
 	} else {
@@ -412,7 +412,7 @@ void launch_tests(){
 	// rtc_open_test();
 	// rtc_driver_test();
 	// rtc_virt_test(10);
-	term_test();
+	//term_test();
 	//term_write_test();
 	//file_test();
 }
