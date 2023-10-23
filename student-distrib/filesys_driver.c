@@ -44,7 +44,8 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
 
     //check inputs are valid
     int flen = strlen((char*)fname);
-    if(flen < 0 || flen > MAX_FILENAME_LEN || fname == NULL || dentry == NULL){
+    if(flen < 0 || flen > MAX_FILENAME_LEN || fname == NULL){
+        printf("read by name fail");
         return -1;
     }
 
@@ -75,11 +76,13 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
  */
 int32_t read_dentry_by_index(uint32_t index, dentry_t* dentry){
     //check inputs valid
-    if(index < 0 || index >= bbl->dentry_count || dentry == NULL){
+    if(index < 0 || index >= bbl->dentry_count){
+        printf("read by index fail");
         return -1;
     }
     
     //set input dentry
+//PAGE FAULT HERE CANNOT USE NULL DENTRY
     *dentry = bbl->entries[index];
     return 0;
 }
@@ -174,7 +177,8 @@ int32_t open_file(const uint8_t* filename, int fd){
     //get file dentry and put into array
     dentry_t* fentry;
     read_dentry_by_name(filename, fentry);
-
+// ^ PAGE FAULT HERE CANNOT USE NULL DENTRY
+// initialize fentry, and put null checkers in read by if statements
     filearray[fd] = fentry;
     bytecount[fd] = 0;
 
@@ -199,7 +203,7 @@ int32_t read_file(int32_t fd, void* buf, int32_t nbytes){
         printf("read file fail");
         return -1;
     }
-
+//if statement triggered but still got to here?
     //get the inode (using fd)
     actualbytes = read_data(fentry->inode_num, bytecount[fd], buf, nbytes);
 

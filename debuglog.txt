@@ -103,3 +103,19 @@ X Enter button didn't work
   ~ 20 minutes, 1 line change
   ~ Algorithmic, didn't check for enter flag before enter character sequence
   (Ben)
+
+X read_data is not reading anything, returns 0 bytes
+  (Alexandra)
+  * first fixed for loop so that will read 1st block
+  * still issues with j and length
+    - length is CHAR length
+    - every index in block is 1 char (4096 chars total)
+  (Alexandra)
+
+> sometimes get page_fault even before actual reading
+  (Alexandra)
+  * issue with the strlen in test
+    - happens when len = 24
+  * maybe issue with the \n?
+  * cannot use null dentry when opening file
+  * read dentry can't assign using null pointer
