@@ -392,7 +392,7 @@ void file_test(){
 	//my system is wonky because no PCB
 	//fd is index in file array
 	//use fd as the way of keeping track which file to do stuff to
-	uint8_t file0[32] = "frame0.txt";//"verylargetextwithverylongname.tx";
+	uint8_t file0[32] = "verylargetextwithverylongname.tx";
 	int fd0 = 0;
 	int len0 = 6000; //number of characters to read
 	uint8_t buf0[len0];
@@ -413,6 +413,19 @@ void file_test(){
 	printf("bytes read: %d\n", bread);
 
 	close_file(fd0);
+}
+
+void dir_test(){
+	int bread, i;
+	int len = 10000;
+	uint8_t buf[len];
+	bread = read_dir(0, buf, len);
+
+	printf("dir:\n");
+	for(i=0; i < bread; i++){
+		putc(buf[i]);
+	}
+	printf("\ndir done");
 }
 
 /* Checkpoint 3 tests */
@@ -441,4 +454,5 @@ void launch_tests(){
 	//term_test();
 	//term_write_test();
 	file_test();
+	//dir_test();
 }

@@ -45,7 +45,8 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     //check inputs are valid
     int flen = strlen((char*)fname);
     //when at 32, it thinks length is actually 35
-    if(flen < 0 || flen > MAX_FILENAME_LEN || fname == NULL || dentry == NULL){
+    //so use 35 instead of MAX_FILENAME_LEN
+    if(flen < 0 || flen > 35 || fname == NULL || dentry == NULL){
         printf("read dentry by name fail");
         return -1;
     }
