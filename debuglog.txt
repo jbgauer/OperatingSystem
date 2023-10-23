@@ -125,3 +125,10 @@ X Enter possible even before terminal read previous keyboard buffer
   ~ Algorithmic, fixed by checking if enter flag was already 1 before new line character 
     would be generated
 
+X read goes beyond end of file and sometimes page fault
+   (Alexandra)
+  * indexing for buffer was wrong
+  ~ 30 mins, 10 line change
+  ~ algorithmic, was skipping parts of the buffer because of block offset
+   (Alexandra)
+
