@@ -4,7 +4,7 @@
 #include "i8259.h"
 #include "lib.h"
 
-#define TAB_SPACE   5
+#define TAB_SPACE   4
 #define NUM_COLS    80
 #define NUM_ROWS    25
 
@@ -95,13 +95,12 @@ void keyboard_handler(){
             break;
         case 0x0F:
             // Tab pressed
-            if(keyboard_buf_index < (keyboard_buf_size-TAB_SPACE-2)) {
-                for(i = 0; i < TAB_SPACE; i++) {
-                    keyboard_buf[keyboard_buf_index] = ' ';
-                    keyboard_buf_index++;
-                    putc(' ');
-                }   
-            }
+            for(i = 0; i < TAB_SPACE; i++) {
+                if(keyboard_buf_index == 127) break;
+                keyboard_buf[keyboard_buf_index] = ' ';
+                keyboard_buf_index++;
+                putc(' ');
+            }   
             break;
         case 0x1C: 
             // Enter Pressed
