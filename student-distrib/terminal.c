@@ -25,7 +25,7 @@ term_open(const uint8_t* filename) {
 int32_t
 term_close(int32_t fd) {
     /*success*/
-    return 0;
+    return -1;
 }
 
 /*
