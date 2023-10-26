@@ -393,9 +393,9 @@ void file_test(){
 	//fd is index in file array
 	//use fd as the way of keeping track which file to do stuff to
 	//uint8_t file0[35] = "verylargetextwithverylongname.txt";
-	uint8_t file0[32] = "frame0.txt";
-	int fd0 = 0;
-	int len0 = 6000; //number of characters to read
+	uint8_t file0[32] = "sigtest";
+	int fd0 = 0; //file num
+	int len0 = 37000; //number of characters to read
 	uint8_t buf0[len0];
 	int bread;
 	int i;

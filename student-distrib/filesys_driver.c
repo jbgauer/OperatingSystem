@@ -141,19 +141,23 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
     for(i=0; i < totalblocks; i++){
         //get the data block
         curblock = (data_block_t*)(startblock + (itnode->data_block_num[i+bloff]));
-        //printf("got block\n");
+        //printf("got block %d\n", i);
         //put each char of curblock into the buf
         for(j=0; j < BLOCK_SIZE; j++){
             //get page fault because file may be smaller than 1 block
             if(j+dataoff >= length){
-                break;
+                return bytesread;
+            }
+            //stop reading when reached length (may be shorter than a block)
+            if(bytesread >= length){
+                return bytesread;
             }
             //in case if length > file size, exit when file done
             if(bytesread >= itnode->length){
-                break;
+                return bytesread;
             }
             if((i == 0) && ((j+dataoff) >= BLOCK_SIZE)){
-                break;
+                return bytesread;
             }
             if(bytesread >= 5000){
                 x = 1;
