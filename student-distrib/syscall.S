@@ -1,3 +1,2 @@
 
-
-#define ASM 1
+#assembly for syscall here
