@@ -1,6 +1,6 @@
 // #include "syscall.h"
-
-
+// #include "syscall.S"
+// #include "filesys_driver.h"
 
 // /*
 //  * halt
@@ -30,6 +30,13 @@
 //     uint8_t *cmdArgs;
 //     uint8_t *file;
 //     uint32_t i;
+//     uint8_t *buf;
+//     dentry_t *dentry;
+    
+//     //uint32_t basePointer;
+
+// //parent base pointer
+//     //basePointer = retrieveBasePointer();
 
 //     if(command == NULL) {
 //         return -1;
@@ -45,25 +52,35 @@
 //         }
 //     } 
 //     file = cmdHold;
-//     //check for args
-//     for(int j = 0; j = COMMAND_MAX-i; j++) {
-//         if(cmdHold == ' ' || cmdHold == '\n' || cmdHold == '\0') {
-//             cmdHold++;
-//             break;
-//         }
+//     //go to end of filename
+//     while(cmdHold != ' ' || cmdHold != '\n' || cmdHold != '\0') {
 //         cmdHold++;
 //     }
+//     //set end of filename
+//     *cmdHold = '\0';
+//     cmdHold++;
 //     cmdArgs = cmdHold;
-    
-//     /*Executable Check*/
-//     //file open check if return -1
-//     //read data check if return -1
-//     //file type
-//     //if 0x464C457F
+//     //go to end of args
+//     while(cmdHold != ' ' || cmdHold != '\n' || cmdHold != '\0') {
+//         cmdHold++;
+//     }
+//     //set end
+//     cmdHold = '\0';
 
+//     /*Executable Check*/
+//     //set dentry
+//     read_dentry_by_name(file, dentry);
+//     if(read_data(dentry->inode_num,0,buf,4) == -1) 
+//         return -1;
+//     if(buf != EXEC_VAL) 
+//         return -1;
+//     if(dentry->filetype != 2)
+//         return -1;
 
 //     /*set up program paging*/
-
+//     //always at 32
+//     //user page (4mb)
+//     //once have the page read_data
 
 
 //     /*user-level program loader*/

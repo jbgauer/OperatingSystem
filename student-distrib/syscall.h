@@ -5,6 +5,10 @@
 // #include "lib.h"
 
 // #define COMMAND_MAX 128
+// #define EXEC_VAL 0x464C457F
+
+
+// extern retrieveBasePointer();
 
 // int32_t halt (uint8_t status);
 
