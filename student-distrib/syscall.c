@@ -1,6 +1,7 @@
 #include "syscall.h"
-//#include "syscall.S"
+#include "sc.S"
 #include "filesys_driver.h"
+#include "paging.c"
 
 /*
  * halt
@@ -29,10 +30,10 @@ execute(const uint8_t *command) {
 //     uint8_t *cmdHold;
 //     uint8_t *cmdArgs;
 //     uint8_t *file;
-//     uint32_t i;
+//     uint32_t i, currPCB, newEntry;
 //     uint8_t *buf;
 //     dentry_t *dentry;
-    
+//     pdir_entry_t kerntry;
 //     //uint32_t basePointer;
 
 // //parent base pointer
@@ -58,18 +59,26 @@ execute(const uint8_t *command) {
 //     }
 //     //set end of filename
 //     *cmdHold = '\0';
-//     cmdHold++;
+//     //skip spaces
+//     for(int i = 0; i < COMMAND_MAX; i++) {
+//         if(cmdHold == ' ') {
+//             cmdHold++;
+//         } else { 
+//             break;
+//         }
+//     } 
 //     cmdArgs = cmdHold;
 //     //go to end of args
 //     while(cmdHold != ' ' || cmdHold != '\n' || cmdHold != '\0') {
 //         cmdHold++;
 //     }
-//     //set end
+//     //set end of args
 //     cmdHold = '\0';
 
 //     /*Executable Check*/
 //     //set dentry
-//     read_dentry_by_name(file, dentry);
+//     if(read_dentry_by_name(file, dentry) == -1)
+//         return -1;
 //     if(read_data(dentry->inode_num,0,buf,4) == -1) 
 //         return -1;
 //     if(buf != EXEC_VAL) 
@@ -78,15 +87,46 @@ execute(const uint8_t *command) {
 //         return -1;
 
 //     /*set up program paging*/
-//     //always at 32
-//     //user page (4mb)
+    
+//     //Find first open process (0-5)
+//     for(i = 0; i < PROG_MAX; i++) {
+//         if(PCB[i].used == 0) {
+//             currPCB = i;
+//             break;
+//         }
+//     }
+//     //FAILED TO RUN
+//     if(i == PROG_MAX)
+//         return -1;
+
+//     //pages in use
+//     currPCB += PAGES_DEFAULT_USE;
+//     //Set new page (first addr at 0x400)
+//     kerntry.p_addr = currPCB << KENTRY_SHIFT;
+//     kerntry.ps = 1;
+//     kerntry.a = 0;
+//     kerntry.pcd = 0;
+//     kerntry.pwt = 0;
+//     kerntry.us = 1;
+//     kerntry.rw = 1;
+//     kerntry.p = 1;
+//     newEntry = combine_kir_entry(kerntry);
+//     pagedir[32] = newEntry;
+
+//     /*load into memory*/
 //     //once have the page read_data
-
-
-//     /*user-level program loader*/
-//     //sys all in eax, first arg in EBX, ECX, EDX
+    
 
 //     /*create pcb*/
+
+
+//     /*fda*/
+
+//     /*tss*/
+//     //change esp0
+//     //tss.esp0
+//     //change ss0
+//     //tss.ss0
 
 //     /*context switch (IN x86)*/
 //         //create its own context switch stack
