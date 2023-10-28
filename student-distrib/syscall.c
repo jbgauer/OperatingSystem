@@ -1,30 +1,30 @@
-// #include "syscall.h"
-// #include "syscall.S"
-// #include "filesys_driver.h"
+#include "syscall.h"
+//#include "syscall.S"
+#include "filesys_driver.h"
 
-// /*
-//  * halt
-//  *   DESCRIPTION: 
-//  *   INPUTS:
-//  *   OUTPUTS: none
-//  *   RETURN VALUE: 
-//  *   SIDE EFFECTS: none
-//  */
-// int32_t halt (uint8_t status) {
+/*
+ * halt
+ *   DESCRIPTION: 
+ *   INPUTS:
+ *   OUTPUTS: none
+ *   RETURN VALUE: 
+ *   SIDE EFFECTS: none
+ */
+int32_t halt (uint8_t status) {
+    return -1;
+}
 
-// }
 
-
-// /*
-//  * system_execute
-//  *   DESCRIPTION: 
-//  *   INPUTS:
-//  *   OUTPUTS: none
-//  *   RETURN VALUE: 
-//  *   SIDE EFFECTS: none
-//  */
-// int32_t
-// execute(const uint8_t *command) {
+/*
+ * system_execute
+ *   DESCRIPTION: 
+ *   INPUTS:
+ *   OUTPUTS: none
+ *   RETURN VALUE: 
+ *   SIDE EFFECTS: none
+ */
+int32_t
+execute(const uint8_t *command) {
         
 //     uint8_t *cmdHold;
 //     uint8_t *cmdArgs;
@@ -92,105 +92,106 @@
 //         //create its own context switch stack
 //         //IRET
 
-// }
+    return -1;
+}
 
 
 
-// /*
-//  * read
-//  *   DESCRIPTION: 
-//  *   INPUTS:
-//  *   OUTPUTS: none
-//  *   RETURN VALUE: 
-//  *   SIDE EFFECTS: none
-//  */
-// int32_t read (int32_t fd, void* buf, int32_t nbytes); {
+/*
+ * read
+ *   DESCRIPTION: 
+ *   INPUTS:
+ *   OUTPUTS: none
+ *   RETURN VALUE: 
+ *   SIDE EFFECTS: none
+ */
+int32_t read (int32_t fd, void* buf, int32_t nbytes) {
+    return -1;
+}
 
-// }
+/*
+ * write
+ *   DESCRIPTION: 
+ *   INPUTS:
+ *   OUTPUTS: none
+ *   RETURN VALUE: 
+ *   SIDE EFFECTS: none
+ */
+int32_t write (int32_t fd, const void* buf, int32_t nbytes) {
+    return -1;
+}
 
-// /*
-//  * write
-//  *   DESCRIPTION: 
-//  *   INPUTS:
-//  *   OUTPUTS: none
-//  *   RETURN VALUE: 
-//  *   SIDE EFFECTS: none
-//  */
-// int32_t write (int32_t fd, const void* buf, int32_t nbytes) {
+/*
+ * open
+ *   DESCRIPTION: 
+ *   INPUTS:
+ *   OUTPUTS: none
+ *   RETURN VALUE: 
+ *   SIDE EFFECTS: none
+ */
+int32_t open (const uint8_t* filename) {
+    return -1;
+}
 
-// }
+/*
+ * close
+ *   DESCRIPTION: 
+ *   INPUTS:
+ *   OUTPUTS: none
+ *   RETURN VALUE: 
+ *   SIDE EFFECTS: none
+ */
+int32_t close (int32_t fd) {
+    return -1;
+}
 
-// /*
-//  * open
-//  *   DESCRIPTION: 
-//  *   INPUTS:
-//  *   OUTPUTS: none
-//  *   RETURN VALUE: 
-//  *   SIDE EFFECTS: none
-//  */
-// int32_t open (const uint8_t* filename) {
+/*
+ * getargs
+ *   DESCRIPTION: 
+ *   INPUTS:
+ *   OUTPUTS: none
+ *   RETURN VALUE: 
+ *   SIDE EFFECTS: none
+ */
+int32_t getargs (uint8_t* buf, int32_t nbytes) {
+    return -1;
+}
 
-// }
+/*
+ * vidmap
+ *   DESCRIPTION: 
+ *   INPUTS:
+ *   OUTPUTS: none
+ *   RETURN VALUE: 
+ *   SIDE EFFECTS: none
+ */
+int32_t vidmap (uint8_t** screen_start) {
+    return -1;
+}
 
-// /*
-//  * close
-//  *   DESCRIPTION: 
-//  *   INPUTS:
-//  *   OUTPUTS: none
-//  *   RETURN VALUE: 
-//  *   SIDE EFFECTS: none
-//  */
-// int32_t close (int32_t fd) {
+/*
+ * set_handler
+ *   DESCRIPTION: 
+ *   INPUTS:
+ *   OUTPUTS: none
+ *   RETURN VALUE: 
+ *   SIDE EFFECTS: none
+ */
+int32_t set_handler(int32_t signum, void* handler_address) {
+    return -1;
+}
 
-// }
-
-// /*
-//  * getargs
-//  *   DESCRIPTION: 
-//  *   INPUTS:
-//  *   OUTPUTS: none
-//  *   RETURN VALUE: 
-//  *   SIDE EFFECTS: none
-//  */
-// int32_t getargs (uint8_t* buf, int32_t nbytes) {
-
-// }
-
-// /*
-//  * vidmap
-//  *   DESCRIPTION: 
-//  *   INPUTS:
-//  *   OUTPUTS: none
-//  *   RETURN VALUE: 
-//  *   SIDE EFFECTS: none
-//  */
-// int32_t vidmap (uint8_t** screen_start) {
-
-// }
-
-// /*
-//  * set_handler
-//  *   DESCRIPTION: 
-//  *   INPUTS:
-//  *   OUTPUTS: none
-//  *   RETURN VALUE: 
-//  *   SIDE EFFECTS: none
-//  */
-// int32_t set_handler(int32_t signum, void* handler_address) {
-
-// }
-
-// /*
-//  * sigreturn
-//  *   DESCRIPTION: 
-//  *   INPUTS:
-//  *   OUTPUTS: none
-//  *   RETURN VALUE: 
-//  *   SIDE EFFECTS: none
-//  */
-// int32_t sigreturn (void) {
-
-// }
+/*
+ * sigreturn
+ *   DESCRIPTION: 
+ *   INPUTS:
+ *   OUTPUTS: none
+ *   RETURN VALUE: 
+ *   SIDE EFFECTS: none
+ */
+int32_t sigreturn (void) {
+    return -1;
+}
 
 
 
