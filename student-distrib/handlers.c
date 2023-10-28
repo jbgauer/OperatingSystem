@@ -1,5 +1,8 @@
+
 #include "handlers.h"
 
+
+/* keyboard and rtc handlers in devices.c */
 
 char* exceptions[20] = {"Division by Zero", "debug", "non_maskable_interrupt", "breakpoint", "overflow", 
 "bound_range_exceeded", "invalid_opcode", "device_not_available", "double_fault", "coprocessor_segment_overrun", 
@@ -26,10 +29,6 @@ void exception_handler(uint32_t vectorNo){
 }
 
 
-// keyboard and rtc handlers in devices .c
-
-
-
 /*
  * syscall_handler
  *   DESCRIPTION: handler for system calls
@@ -38,17 +37,19 @@ void exception_handler(uint32_t vectorNo){
  *   RETURN VALUE: none
  *   SIDE EFFECTS: prints the system call and freezes
  */
-void syscall_handler(){
-    cli();
+// void syscall_handler(){
+//     cli();
 
-    volatile int dontmodify = 0;
-    printf("System Call was Called");
+//     volatile int dontmodify = 0;
+//     printf("System Call was Called");
+
+//     // call asm code
     
-    while(1){   //freeze
-        if(dontmodify) break;
-    }
+//     while(1){   //freeze
+//         if(dontmodify) break;
+//     }
 
-}
+// }
 
 
 

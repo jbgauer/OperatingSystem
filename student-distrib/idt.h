@@ -8,6 +8,8 @@
 #include "keyboard.h"
 #include "rtc.h"
 
+#include "syscall_link.h"
+
 void init_idt();
 
 
