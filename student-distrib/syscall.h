@@ -3,6 +3,8 @@
 #define _SYSCALL_H
 
 #include "lib.h"
+#include "filesys_driver.h"
+#include "paging.h"
 
 #define COMMAND_MAX 128
 #define EXEC_VAL 0x464C457F
