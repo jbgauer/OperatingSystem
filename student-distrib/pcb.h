@@ -7,6 +7,7 @@
 
 // #include "lib.h"
 // #include "filesys_driver.h"
+// #define MAX_FILENAME_LEN 32
 
 // typedef struct {
 //     uint32_t* stack_ptr;            // Holds current stack position of process
@@ -20,6 +21,15 @@
 //     uint32_t p_esi; 
 //     dentry_t file_array[8];         // Array that holds dentrys of every file used by this program
 // } pcb_t;
+
+// typedef struct {
+//     uint32_t* file_op_ptr;  
+//     uint32_t inode;         //files inode
+//     uint32_t file_position; //current position in file
+//     uint32_t flags;         //current flags
+//     uint8_t filename[MAX_FILENAME_LEN];     //filename
+//     uint32_t file_type;                     //type of file
+// } fda_t;
 
 
 // /*
