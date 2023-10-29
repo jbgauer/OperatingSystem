@@ -1,7 +1,7 @@
 
 .globl retrieveBasePointer 
 .globl syscall_handler
-
+.globl flush_tlb
 #define ASM 1
 
 /* retrieveBasePointer
@@ -80,3 +80,7 @@ sys_call_table:
     .long set_handler
     .long sigreturn 
 
+flush_tlb: 
+    movl %cr3, %eax
+    movl %eax, %cr3
+    ret
