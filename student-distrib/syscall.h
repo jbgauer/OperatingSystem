@@ -19,6 +19,8 @@ extern uint32_t retrieveBasePointer();
 
 extern void syscall_handler();
 
+extern void flush_tlb();
+
 int32_t halt (uint8_t status);
 
 int32_t execute(const uint8_t *command);
