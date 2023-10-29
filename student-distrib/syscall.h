@@ -13,7 +13,9 @@
 #define PAGES_DEFAULT_USE 2
 #define FILE_SIZE (4096*1023)
 
-extern void retrieveBasePointer();
+#define PHYS_MEM_128MB 0x08048000
+
+extern uint32_t retrieveBasePointer();
 
 extern void syscall_handler();
 

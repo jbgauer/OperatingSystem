@@ -31,7 +31,7 @@ execute(const uint8_t *command) {
     // uint8_t *buf;
     // dentry_t *dentry;
     // pdir_entry_t kerntry;
-    // //uint32_t basePointer;
+    // uint32_t basePointer;
 
     // //parent base pointer
     // basePointer = retrieveBasePointer();
@@ -70,7 +70,9 @@ execute(const uint8_t *command) {
     //     cmdHold++;
     // }
     // //set end of args
-    // cmdHold = '\0';
+    // *cmdHold = '\0';
+
+    // // args will be passed into get args to the program
 
     // /*Executable Check*/
     // //set dentry
@@ -109,8 +111,13 @@ execute(const uint8_t *command) {
     // newEntry = combine_kir_entry(kerntry);
     // pagedir[32] = newEntry;
 
-    // /*load into memory*/
+    // //flush tlb
+
+    // /*load file into memory*/ /*aka User-level program loader*/
     // //once have the page read_data
+
+    // // load from FS to program page (how to get process number)
+
     
 
     // /*create pcb*/
