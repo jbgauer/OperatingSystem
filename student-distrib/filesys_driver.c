@@ -40,14 +40,14 @@ void filesys_init(uint32_t memstart){
  */
 int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     uint8_t* curname;
-    int i;
+    int i, curlen;
 
     //check inputs are valid
     int flen = strlen((char*)fname);
     //when at 32, it thinks length is actually 35
     //so use 35 instead of MAX_FILENAME_LEN
     if(flen < 0 || flen > 35 || fname == NULL || dentry == NULL){
-        printf("read dentry by name fail");
+        printf("read dentry by name fail, invalid inputs");
         return -1;
     }
 
@@ -55,16 +55,25 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     for(i = 0; i < bbl->dentry_count; i++){
         //get cur name
         curname = (bbl->entries[i]).filename;
+        //get cur length, files might have parts match
+        // (frame == frame0.txt)
+        curlen = strlen((char*)curname);
+        if(curlen > MAX_FILENAME_LEN){
+            curlen = MAX_FILENAME_LEN;
+        }
 
         //if fname = curname
         if(strncmp((int8_t*)fname, (int8_t*)curname, MAX_FILENAME_LEN) == 0){
-            //use the read by index function once found file
-            read_dentry_by_index(i, dentry);
-            return 0;
+            if(flen == curlen){
+                //use the read by index function once found file
+                read_dentry_by_index(i, dentry);
+                return 0;
+            }
         }
     }
 
     //fail if file doesnt exist
+    printf("read dentry by name fail, file not found");
     return -1;
 }
 
@@ -101,7 +110,7 @@ int32_t read_dentry_by_index(uint32_t index, dentry_t* dentry){
 int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length){
     inode_t* itnode;    //actual inode of the file
     data_block_t* curblock;  //current data block being read
-    int i, j, x;           //i is index for blocks, j is index for chars of block
+    int i, j;           //i is index for blocks, j is index for chars of block
     int bytesread = 0;
     int bloff;          //starting block index after offset
     int dataoff;
@@ -159,9 +168,7 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
             if((i == 0) && ((j+dataoff) >= BLOCK_SIZE)){
                 return bytesread;
             }
-            if(bytesread >= 5000){
-                x = 1;
-            }
+
             //if at the starting block, need to account for offset
             if((i == 0) && ((j+dataoff) < BLOCK_SIZE)){
                 buf[b] = curblock->actualdata[j+dataoff];
@@ -193,6 +200,13 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
  */
 //open always successful
 int32_t open_file(const uint8_t* filename, int fd){
+    //first need to get pcb (process that called me)
+    //create and initialize a fda_t 'file' based on the filename
+    //but this fda_t 'file' into the pcb's filearray
+
+    //pcb->filearray[fd] = file;
+
+
     //must have a counter for each file
     //count how many bytes have been read
     //when read again, start where left off, not at beginning
