@@ -3,6 +3,8 @@
 */
 
 #include "types.h"
+#include "enable_paging.h"
+#include "lib.h"
 
 //these structs for dir and table entries are just to help organize
 //the actual tables are just 32-bit numbers (uint32_t)
@@ -37,3 +39,9 @@ typedef struct {
 
 
 void page_init();
+
+//these functions take all the separate variables of the struct
+// and combine them into one 32 bit (4 byte) value
+uint32_t combine_dir_entry(pdir_entry_t pde);
+uint32_t combine_table_entry(ptable_entry_t pte);
+

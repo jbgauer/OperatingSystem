@@ -3,8 +3,7 @@
 */
 
 #include "paging.h"
-#include "enable_paging.h"
-#include "lib.h"
+
 
 // [PD index, PT index, pageoffset]
 // ^ this is what the virtual address will look like
@@ -16,11 +15,6 @@
 //offset is into the page itself (NOT the page table)
 uint32_t pagedir[1024] __attribute__((aligned(4096)));
 uint32_t first_pagetable[1024] __attribute__((aligned(4096)));
-
-//these functions take all the separate variables of the struct
-// and combine them into one 32 bit (4 byte) value
-uint32_t combine_dir_entry(pdir_entry_t pde);
-uint32_t combine_table_entry(ptable_entry_t pte);
 
 //take a combo_entry and return a struct that has all the separate variables
 // pdir_entry_t uncombine_dir_entry(uint32_t);
