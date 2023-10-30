@@ -43,6 +43,17 @@ typedef struct {
     uint8_t actualdata[BLOCK_SIZE];
 } data_block_t;
 
+
+//global boot block to use for finding files
+boot_block_t* bbl; //points to the boot block address
+//global pointers to start of inode and data block sections
+inode_t* startinode;
+data_block_t* startblock;
+
+//fd array just for now because PCB not set up yet
+dentry_t* filearray[6];
+int bytecount[6];
+
 //^ initialize all this stuff for the file system driver
 void filesys_init(uint32_t memstart);
 

@@ -1,16 +1,6 @@
 #include "filesys_driver.h"
 #include "lib.h"
 
-//global boot block to use for finding files
-boot_block_t* bbl; //points to the boot block address
-//global pointers to start of inode and data block sections
-inode_t* startinode;
-data_block_t* startblock;
-
-//fd array just for now because PCB not set up yet
-dentry_t* filearray[6];
-int bytecount[6];
-
 /*
  * filesys_init
  *   DESCRIPTION: initialize all the structs for the file system
