@@ -19,7 +19,7 @@
 //     uint32_t p_edx;
 //     uint32_t p_edi; 
 //     uint32_t p_esi; 
-//     dentry_t file_array[8];         // Array that holds dentrys of every file used by this program
+//     fda_t file_array[8];         // Array that holds dentrys of every file used by this program
 // } pcb_t;
 
 // typedef struct {

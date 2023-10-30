@@ -5,6 +5,7 @@
 #include "lib.h"
 #include "filesys_driver.h"
 #include "paging.h"
+#include "x86_desc.h"
 
 #define COMMAND_MAX 128
 #define EXEC_VAL 0x464C457F
@@ -12,9 +13,10 @@
 #define KENTRY_SHIFT 10
 #define PAGES_DEFAULT_USE 2
 #define FILE_SIZE (4096*1023)
-
+#define KERNEL_DS 0x0018
 #define PHYS_MEM_128MB 0x08048000
-
+#define FILE_MAX 8
+#define USER_SPACE 32
 extern uint32_t retrieveBasePointer();
 
 extern void syscall_handler();
