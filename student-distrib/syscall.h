@@ -14,7 +14,7 @@
 #define PAGES_DEFAULT_USE 2
 #define FILE_SIZE (4096*1023)
 #define KERNEL_DS 0x0018
-#define PHYS_MEM_128MB 0x08048000
+#define PRGRM_IMG_START 0x08048000
 #define FILE_MAX 8
 #define USER_SPACE 32
 extern uint32_t retrieveBasePointer();
