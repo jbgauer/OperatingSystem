@@ -202,7 +202,7 @@ int32_t open_file(const uint8_t* filename){
     // pcb_t* curpcb = pcb_array[curpid]; //get curpid from syscall file
 
     // //get the first available index
-    // for(j=2; j < 6; j++){
+    // for(j=2; j < 8; j++){
     //     if(curpcb->fda[j].flags == 0){
     //         break;
     //     }
