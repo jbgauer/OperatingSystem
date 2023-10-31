@@ -6,6 +6,7 @@
 #include "filesys_driver.h"
 #include "paging.h"
 #include "x86_desc.h"
+#include "pcb.h"
 
 #define COMMAND_MAX 128
 #define EXEC_VAL 0x464C457F
@@ -17,6 +18,10 @@
 #define PRGRM_IMG_START 0x08048000
 #define FILE_MAX 8
 #define USER_SPACE 32
+
+// current process id
+uint32_t curr_pid;
+
 extern uint32_t retrieveBasePointer();
 
 extern void syscall_handler();

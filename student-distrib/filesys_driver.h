@@ -69,7 +69,7 @@ int32_t read_dentry_by_index(uint32_t index, dentry_t* dentry);
 int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length);
 
 //fuctions for system calls (comes from appendix A)
-int32_t open_file(const uint8_t* filename, int fd);
+int32_t open_file(const uint8_t* filename);
 int32_t close_file(int32_t fd);
 int32_t read_file(int32_t fd, void* buf, int32_t nbytes);
 int32_t write_file(int32_t fd, const void* buf, int32_t nbytes);
