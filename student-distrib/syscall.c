@@ -9,7 +9,40 @@
  *   SIDE EFFECTS: none
  */
 int32_t halt (uint8_t status) {
-    return -1;
+    // uint32_t parent_id;
+
+    // /*restore parent data*/
+    // parent_id = pcb_array[curr_pid].par_id;
+    // curr_pid = parent_id;
+
+    
+
+    // /*base pointer?*/
+    // /*restore parent paging*/
+    // //Set new page (first addr at 0x400)
+    // kerntry.p_addr = pageHold << KENTRY_SHIFT;
+    // kerntry.ps = 1;
+    // kerntry.a = 0;
+    // kerntry.pcd = 0;
+    // kerntry.pwt = 0;
+    // kerntry.us = 1;
+    // kerntry.rw = 1;
+    // kerntry.p = 1;
+    // newEntry = combine_kir_entry(kerntry);
+    // pagedir[USER_SPACE] = newEntry;
+    // //flush tlb ???
+    // flush_tlb();
+
+
+
+    // /*close any relevant FDs*/
+    // pcb_array[curr_pid].
+
+
+
+    // /*Jump to execute return*/
+
+    // return -1;
 }
 
 
@@ -27,11 +60,10 @@ execute(const uint8_t *command) {
     // uint8_t *cmdHold;
     // uint8_t *cmdArgs;
     // uint8_t *file;
-    // uint32_t i, j, currPCB, newEntry;
+    // uint32_t i, j, newEntry, pageHold, basePointer;
     // uint8_t *buf;
     // dentry_t *dentry;
     // pdir_entry_t kerntry;
-    // uint32_t basePointer;
 
     // //parent base pointer
     // basePointer = retrieveBasePointer();
@@ -89,8 +121,8 @@ execute(const uint8_t *command) {
     // /*set up program paging*/
     // //Find first open process (0-5)
     // for(i = 0; i < PROG_MAX; i++) {
-    //     if(PCB[i].used == 0) {
-    //         currPCB = i;
+    //     if(pcb_array[i].used == 0) {
+    //         curr_pid = i;
     //         break;
     //     }
     // }
@@ -99,9 +131,10 @@ execute(const uint8_t *command) {
     //     return -1;
 
     // //pages in use
-    // currPCB += PAGES_DEFAULT_USE;
+    // pageHold = curr_pid;
+    // pageHold += PAGES_DEFAULT_USE;
     // //Set new page (first addr at 0x400)
-    // kerntry.p_addr = currPCB << KENTRY_SHIFT;
+    // kerntry.p_addr = pageHold << KENTRY_SHIFT;
     // kerntry.ps = 1;
     // kerntry.a = 0;
     // kerntry.pcd = 0;
@@ -123,40 +156,11 @@ execute(const uint8_t *command) {
 
     // read_data(dentry->inode_num, 0, (uint8_t*)PRGRM_IMG_START, file_inode->length);
 
-    // /*create pcb*/
+    // /*Create PCB*/
 
-
-    // /*fda*/
-
-    // //stdin + stdout vals STILL NEED TO BE CHANGED!
-    // //set filearray[0] == stdin
-    // PCB[i]->filearray[0].file_op_ptr = NULL;
-    // PCB[i]->filearray[0].inode = 0;
-    // PCB[i]->filearray[0].file_position = 0;
-    // PCB[i]->filearray[0].flags = 0;
-    // PCB[i]->filearray[j].filename = "";     //not sure if we want this
-    // PCB[i]->filearray[j].file_type = 0;     //not sure if we want this
-    // //set filearray[1] == stdout 
-    // PCB[i]->filearray[1].file_op_ptr = NULL;
-    // PCB[i]->filearray[1].inode = 0;
-    // PCB[i]->filearray[1].file_position = 0;
-    // PCB[i]->filearray[1].flags = 0;
-    // PCB[i]->filearray[j].filename = "";     //not sure if we want this
-    // PCB[i]->filearray[j].file_type = 0;     //not sure if we want this
-
-    // //set rest of array to 0
-    // for(j = 2; j < FILE_MAX; j++) {
-    //     PCB[i]->filearray[j].file_op_ptr = NULL;
-    //     PCB[i]->filearray[j].inode = 0;
-    //     PCB[i]->filearray[j].file_position = 0;
-    //     PCB[i]->filearray[j].flags = 0;
-    //     PCB[i]->filearray[j].filename = "";     //not sure if we want this
-    //     PCB[i]->filearray[j].file_type = 0;     //not sure if we want this
-    // }
-    
     // /*tss*/
     // //change esp0 to the value the stack pointer 
-    // tss.esp0 = PCB[i].stack_ptr;
+    // tss.esp0 = pcb_array[curr_pid].stack_ptr;
     // //change ss0
     // tss.ss0 = KERNEL_DS; 
 
@@ -169,7 +173,7 @@ execute(const uint8_t *command) {
 
     // // IRET 
 
-    return -1;
+    // return -1;
 }
 
 
