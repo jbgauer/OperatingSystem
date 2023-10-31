@@ -11,7 +11,7 @@
 // #define NUM_PCB 6
 // #define FILE_MAX 8
 
-// pcb_t* PCB[NUM_PCB];
+// pcb_t PCB[NUM_PCB];
 
 // typedef struct {
 //     uint32_t in_use;                // 1 if in use, 0 if not in use
@@ -29,9 +29,9 @@
 
 // typedef struct {
 //     uint32_t* file_op_ptr;  
-//     uint32_t inode;         //files inode
-//     uint32_t file_position; //current position in file
-//     uint32_t flags;         //current flags
+//     uint32_t inode;                         //files inode
+//     uint32_t file_position;                 //current position in file
+//     uint32_t flags;                         //current flags
 //     uint8_t filename[MAX_FILENAME_LEN];     //filename
 //     uint32_t file_type;                     //type of file
 // } fd_t;

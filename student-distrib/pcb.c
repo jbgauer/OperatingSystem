@@ -14,7 +14,7 @@
 //  *   SIDE EFFECTS: loads pcb into kernel memory
 //  */
 // pcb_t* pcb_init(uint32_t process_num) {
-//     pcb_t* new_pcb = ;
+//     pcb_t* new_pcb = PCB[process_num];
 //     int j;
 //     new_pcb->in_use = 1;
 //     new_pcb->p_id = process_num;
