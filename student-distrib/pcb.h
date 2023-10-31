@@ -11,12 +11,12 @@
 // #define NUM_PCB 6
 // #define FILE_MAX 8
 
-// pcb_t PCB[NUM_PCB];
+// pcb_t pcb_array[NUM_PCB];
 
 // typedef struct {
 //     uint32_t in_use;                // 1 if in use, 0 if not in use
 //     uint32_t* stack_ptr;            // Holds current stack position of process
-//     uint32_t p_id;                  // Number of process
+//     uint32_t par_id;                // parent process number
 //     uint32_t* inst_ptr;             // Holds next instruction to be executed for process
 //     uint32_t p_eax;                 // Holds current registers of process
 //     uint32_t p_ebx;
@@ -28,23 +28,30 @@
 // } pcb_t;
 
 // typedef struct {
-//     uint32_t* file_op_ptr;  
+//     file_opt_t* file_op_ptr;  
 //     uint32_t inode;                         //files inode
 //     uint32_t file_position;                 //current position in file
-//     uint32_t flags;                         //current flags
+//     uint32_t flags;                         //current flags - 1 if in use, 0 if open
 //     uint8_t filename[MAX_FILENAME_LEN];     //filename
 //     uint32_t file_type;                     //type of file
 // } fd_t;
+
+// typedef struct {
+//     void (*open)(const uint8_t* filename);
+//     void (*read)(int32_t fd, char* buf, int32_t nbytes);
+//     void (*write)(int32_t fd, char* buf, int32_t nbytes);
+//     void (*close)(int32_t fd);
+// } file_op_t;
 
 
 // /*
 //  * pcb_init
 //  *   DESCRIPTION: initializes a new process control block
-//  *   INPUTS: uint32_t - Number of process to create new pcb at 
-//  *   OUTPUTS: new pcb struct in correct process control block
-//  *   RETURN VALUE: pointer to pcb struct created
-//  *   SIDE EFFECTS: initializes pcb in kernel memory
+//  *   INPUTS: uint32_t - process number of parent
+//  *   OUTPUTS: changed entry in pcb array
+//  *   RETURN VALUE: none
+//  *   SIDE EFFECTS: loads pcb into array
 //  */
-// pcb_t* pcb_init(uint32_t process_num);
+// void pcb_init(uint32_t par_process_num);
 
 // #endif

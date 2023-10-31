@@ -5,17 +5,6 @@
 #include "paging.h"
 
 
-// [PD index, PT index, pageoffset]
-// ^ this is what the virtual address will look like
-// pageddir[PDindex] = pagetable
-// pagetable[PTindex] = pageoffset
-
-//directory is array of pointers to page tables
-//table is array of pointers to pages
-//offset is into the page itself (NOT the page table)
-uint32_t pagedir[1024] __attribute__((aligned(4096)));
-uint32_t first_pagetable[1024] __attribute__((aligned(4096)));
-
 //take a combo_entry and return a struct that has all the separate variables
 // pdir_entry_t uncombine_dir_entry(uint32_t);
 // ptable_entry_t uncombine_table_entry(uint32_t);

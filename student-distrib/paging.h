@@ -9,6 +9,17 @@
 #include "enable_paging.h"
 #include "lib.h"
 
+// [PD index, PT index, pageoffset]
+// ^ this is what the virtual address will look like
+// pageddir[PDindex] = pagetable
+// pagetable[PTindex] = pageoffset
+
+//directory is array of pointers to page tables
+//table is array of pointers to pages
+//offset is into the page itself (NOT the page table)
+uint32_t pagedir[1024] __attribute__((aligned(4096)));
+uint32_t first_pagetable[1024] __attribute__((aligned(4096)));
+
 //these structs for dir and table entries are just to help organize
 //the actual tables are just 32-bit numbers (uint32_t)
 typedef struct {

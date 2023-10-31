@@ -4,31 +4,46 @@
 
 // #include "pcb.h"
 // #include "paging.h"
+// #include "terminal.h"
 
 // /*
 //  * pcb_init
 //  *   DESCRIPTION: initializes a new process control block
-//  *   INPUTS: none
-//  *   OUTPUTS: new pcb struct with correct id based on which process
-//  *   RETURN VALUE: pointer to pcb struct created
-//  *   SIDE EFFECTS: loads pcb into kernel memory
+//  *   INPUTS: uint32_t - process number of parent
+//  *   OUTPUTS: changed entry in pcb array
+//  *   RETURN VALUE: none
+//  *   SIDE EFFECTS: loads pcb into array
 //  */
-// pcb_t* pcb_init(uint32_t process_num) {
-//     pcb_t* new_pcb = PCB[process_num];
+// void pcb_init(uint32_t par_process_num) {
+//     file_op_t std_file_op;
+//     pcb_t* new_pcb = pcb_array[curr_pid];
+//     new_pcb->stack_ptr = (uint32_t*)(0x800000-(0x2000*process_num)-4);
 //     int j;
 //     new_pcb->in_use = 1;
-//     new_pcb->p_id = process_num;
+//     new_pcb->par_id = par_process_num;
+
+//     new_pcb->inst_ptr = 0;
+//     new_pcb->p_eax = 0;
+//     new_pcb->p_ebx = 0;
+//     new_pcb->p_ecx = 0;
+//     new_pcb->p_edx = 0;
+//     new_pcb->p_edi = 0;
+//     new_pcb->p_esi = 0;
 
 //     //stdin + stdout vals STILL NEED TO BE CHANGED!
 //     //set fda[0] == stdin
-//     new_pcb->fda[0].file_op_ptr = NULL;
+//     std_file_op.open = &term_open;
+//     std_file_op.read = &term_read;
+//     std_file_op.write = &term_write;
+//     std_file_op.close = &term_close;
+//     new_pcb->fda[0].file_op_ptr = &std_file_op;
 //     new_pcb->fda[0].inode = 0;
 //     new_pcb->fda[0].file_position = 0;
 //     new_pcb->fda[0].flags = 0;
 //     new_pcb->fda[0].filename = "";     //not sure if we want this
 //     new_pcb->fda[0].file_type = 0;     //not sure if we want this
 //     //set fda[1] == stdout 
-//     new_pcb->fda[1].file_op_ptr = NULL;
+//     new_pcb->fda[1].file_op_ptr = &std_file_op;
 //     new_pcb->fda[1].inode = 0;
 //     new_pcb->fda[1].file_position = 0;
 //     new_pcb->fda[1].flags = 0;
