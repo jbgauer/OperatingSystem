@@ -393,25 +393,25 @@ void file_test(){
 	//fd is index in file array
 	//use fd as the way of keeping track which file to do stuff to
 	//uint8_t file0[35] = "verylargetextwithverylongname.txt";
-	uint8_t file0[] = "cat";
-	int fd0 = 0; //file num
-	int len0 = 1000; //number of characters to read
-	uint8_t buf0[len0];
-	int bread;
-	int i;
+	// uint8_t file0[] = "cat";
+	// int fd0 = 0; //file num
+	// int len0 = 1000; //number of characters to read
+	// uint8_t buf0[len0];
+	// int bread;
+	// int i;
 
-	//printf("name len: %d", strlen((char*)file0));
+	// //printf("name len: %d", strlen((char*)file0));
 
-	open_file(file0, fd0);
-	bread = read_file(fd0, buf0, len0);
+	// open_file(file0, fd0);
+	// bread = read_file(fd0, buf0, len0);
 
-	printf("file:\n");
-	for(i=0; i < bread; i++){
-		if(buf0[i] != 0)
-			putc(buf0[i]);
-	}
-	printf("\nfile name: %s\n", file0);
-	printf("bytes read: %d\n", bread);
+	// printf("file:\n");
+	// for(i=0; i < bread; i++){
+	// 	if(buf0[i] != 0)
+	// 		putc(buf0[i]);
+	// }
+	// printf("\nfile name: %s\n", file0);
+	// printf("bytes read: %d\n", bread);
 
 	//check byte read
 	//printf("actual len: %d\n", len0);
@@ -426,9 +426,9 @@ void file_test(){
 	// printf("bytes read: %d\n", bread);
 	// printf("\nfile name: %s\n", file0);
 
-	//printf("name len: %d", strlen((char*)file0));
+	// printf("name len: %d", strlen((char*)file0));
 
-	close_file(fd0);
+	// close_file(fd0);
 }
 
 void dir_test(){

@@ -1,5 +1,7 @@
 #include "filesys_driver.h"
 #include "lib.h"
+#include "syscall.h"
+#include "pcb.h"
 
 /*
  * filesys_init
@@ -189,27 +191,28 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
  *   SIDE EFFECTS: puts file into file array
  */
 //open always successful
-int32_t open_file(const uint8_t* filename, int fd){
-    //first need to get pcb (process that called me)
-    //create and initialize a fda_t 'file' based on the filename
-    //but this fda_t 'file' into the pcb's filearray
+//open just sets up the file
+int32_t open_file(const uint8_t* filename){
+    // int j;
+    // //get file dentry
+    // dentry_t* fentry = &(bbl->entries[0]);
+    // read_dentry_by_name(filename, fentry);
 
-    //pcb->filearray[fd] = file;
+    // //first need to get pcb (process that called me)
+    // pcb_t* curpcb = pcb_array[curpid]; //get curpid from syscall file
 
-
-    //must have a counter for each file
-    //count how many bytes have been read
-    //when read again, start where left off, not at beginning
-    // counter is in fdarray, fd itself is the index
-
-    //open just sets up the file
-    
-    //get file dentry and put into array
-    dentry_t* fentry = &(bbl->entries[0]);
-    read_dentry_by_name(filename, fentry);
-
-    filearray[fd] = fentry;
-    bytecount[fd] = 0;
+    // //get the first available index
+    // for(j=2; j < 6; j++){
+    //     if(curpcb->fda[j].flags == 0){
+    //         break;
+    //     }
+    // }
+    // //put the file into the file array at this index
+    // curpcb->fda[j].inode = fentry->inode_num;
+    // curpcb->fda[j].file_position = 0;
+    // curpcb->fda[j].flags = 1;   //flags = 0 when open, flags = 1 when file here
+    // curpcb->fda[j].filename = fentry->filename;
+    // curpcb->fda[j].file_type = fentry->file_type;
 
     return 0;
 }
@@ -224,9 +227,16 @@ int32_t open_file(const uint8_t* filename, int fd){
  */
 //close always successful
 int32_t close_file(int32_t fd){
-    //undo what open did
-    filearray[fd] = NULL;
-    bytecount[fd] = -1;
+    // //undo what open did
+    // //get current pcb
+    // pcb_t* curpcb = pcb_array[curpid];
+
+    // //remove the file from curpcb's array
+    // curpcb->fda[fd].inode = 0;
+    // curpcb->fda[fd].file_position = 0;
+    // curpcb->fda[fd].flags = 0;
+    // curpcb->fda[fd].filename = "";
+    // curpcb->fda[fd].file_type = 0;
 
     return 0;
 }
@@ -236,25 +246,34 @@ int32_t close_file(int32_t fd){
  *   DESCRIPTION: read data in a given file
  *   INPUTS: fd, buf, nbytes
  *   OUTPUTS: int
- *   RETURN VALUE: 0 if success, -1 if fail
+ *   RETURN VALUE: num bytes read, -1 if fail
  *   SIDE EFFECTS: puts data into buf
  */
 int32_t read_file(int32_t fd, void* buf, int32_t nbytes){
-    dentry_t* fentry = filearray[fd];
-    int32_t actualbytes;
+    // //keep track of bytes read
+    // int32_t actualbytes;
 
-    //check invalid
-    if(fentry == NULL || buf == NULL){
-        printf("read file fail");
-        return -1;
-    }
-//if statement triggered but still got to here?
-    //get the inode (using fd)
-    actualbytes = read_data(fentry->inode_num, bytecount[fd], buf, nbytes);
+    // //get the current pcb
+    // pcb_t* curpcb = pcb_array[curpid];
 
-    bytecount[fd] += nbytes;
+    // //get the dentry of the pcb's file
+    // dentry_t* fentry = &(bbl->entries[0]); //initialize fentry to bbl, cause otherwise page fault
+    // read_dentry_by_name(curpcb->fda[fd].inode, fentry);
 
-    return actualbytes;
+    // //check invalid
+    // if(fentry == NULL || buf == NULL){
+    //     printf("read file fail");
+    //     return -1;
+    // }
+
+    // //read the data
+    // //account for offset (file_position)
+    // actualbytes = read_data(fentry->inode_num, curpcb->fda[fd].file_position, buf, nbytes);
+
+    // //add the bytes read to the file position
+    // curpcb->fda[fd].file_position += actualbytes;
+
+    // return actualbytes;
 }
 
 /*
