@@ -2,6 +2,9 @@
  * paging.h - Definitions for paging
 */
 
+#ifndef _PAGING_H
+#define _PAGING_H
+
 #include "types.h"
 #include "enable_paging.h"
 #include "lib.h"
@@ -45,3 +48,4 @@ void page_init();
 uint32_t combine_dir_entry(pdir_entry_t pde);
 uint32_t combine_table_entry(ptable_entry_t pte);
 
+#endif
