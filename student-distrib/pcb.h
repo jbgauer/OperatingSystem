@@ -14,10 +14,10 @@
 #define EIGHT_KB 0x2000
 
 typedef struct {
-    void (*open)(const uint8_t* filename);
-    void (*read)(int32_t fd, char* buf, int32_t nbytes);
-    void (*write)(int32_t fd, char* buf, int32_t nbytes);
-    void (*close)(int32_t fd);
+    void (*open)(const uint8_t*);
+    void (*read)(int32_t, void*, int32_t);
+    void (*write)(int32_t, const void*, int32_t);
+    void (*close)(int32_t);
 } file_op_t;
 
 typedef struct {

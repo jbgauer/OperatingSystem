@@ -38,11 +38,12 @@ term_close(int32_t fd) {
  *   SIDE EFFECTS: copies keyboard buff into user buffer and sends it to user space
  */
 int32_t 
-term_read(int32_t fd, char* buf, int32_t nbytes) {
+term_read(int32_t fd, void* buf, int32_t nbytes) {
     int32_t i, j;    
     uint8_t en_flag = 0;
+    char* buf1 = (char*)buf;
     /*check if buf is valid*/
-    if(buf == NULL || (nbytes < 1)) {
+    if(buf1 == NULL || (nbytes < 1)) {
         /*failed*/
         return -1;
     }
@@ -53,7 +54,7 @@ term_read(int32_t fd, char* buf, int32_t nbytes) {
     //user has hit enter
     /*Copy keyboard buff to user buff*/
     for(i = 0; i < nbytes; i++) {
-        buf[i] = keyboard_buf[i];
+        buf1[i] = keyboard_buf[i];
         if(keyboard_buf[i] == '\n') {
             en_flag = 1;
             break;
@@ -61,7 +62,7 @@ term_read(int32_t fd, char* buf, int32_t nbytes) {
     }
     //check if last char is \n if not, set it.
     if(en_flag == 0) {
-        buf[nbytes] = '\n';
+        buf1[nbytes] = '\n';
     }
     //clear keyboard buf
     for(j = 0; j < KEYBOARD_BUF_LEN; j++) {
@@ -74,7 +75,7 @@ term_read(int32_t fd, char* buf, int32_t nbytes) {
     return i;
 }
 
-    
+
 /*
  * term_write
  *   DESCRIPTION: copy the user buffer to the screen
@@ -84,19 +85,20 @@ term_read(int32_t fd, char* buf, int32_t nbytes) {
  *   SIDE EFFECTS: writes to the screen
  */
 int32_t
-term_write(int32_t fd, char* buf, int32_t nbytes) {
+term_write(int32_t fd, const void* buf, int32_t nbytes) {
     /*initialize variables*/
+    char* buf1 = (char*)buf;
     int32_t byteCount = 0;
     int32_t i = 0;
     /*check if buf is valid*/
-    if(buf == NULL || (nbytes < 1)) {
+    if(buf1 == NULL || (nbytes < 1)) {
         /*failed*/
         return -1;
     }
     /*Print to screen if not NULL*/
     for(i = 0; i < nbytes; i++) {
-        if(buf[i] != '\0') {
-          putc(buf[i]);
+        if(buf1[i] != '\0') {
+          putc(buf1[i]);
           byteCount++;
         }
     }
