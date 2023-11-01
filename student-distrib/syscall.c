@@ -204,13 +204,41 @@ int32_t write (int32_t fd, const void* buf, int32_t nbytes) {
 
 /*
  * open
- *   DESCRIPTION: 
- *   INPUTS:
- *   OUTPUTS: none
- *   RETURN VALUE: 
- *   SIDE EFFECTS: none
+ *   DESCRIPTION: puts the file into the pcb's file array
+ *   INPUTS: filename
+ *   OUTPUTS: index in the file array, or -1 if fail
+ *   RETURN VALUE: int
+ *   SIDE EFFECTS: changes the fda of curpcb
  */
 int32_t open (const uint8_t* filename) {
+    // uint32_t type;
+    // file_op_t fops;
+    // //open_file will do most of the work because need dentry info
+    // int fdindex = open_file(filename);
+
+    // if(fdindex == -1){
+    //     return -1;
+    // }
+
+    // //need to set the file operations depending on file type
+    // pcb_t* curpcb = pcb_array[curr_pid];
+
+    // type = curpcb->fda[fdindex].file_type;
+    // switch(type){
+    //     case 0: //if type 0, then rtc
+    //         //fops = ??
+    //     case 1: //if type 1, then boot block (dir)
+    //         //fops
+    //     case 2: //type 2 is normal files
+    //         //fops
+    //     default:
+    //         printf("open fail, invalid file type");
+    //         return -1;
+    // }
+
+    // //curpcb->fda[fdindex].file_op_ptr = fops;
+
+    // return fdindex;
     return -1;
 }
 
@@ -223,6 +251,14 @@ int32_t open (const uint8_t* filename) {
  *   SIDE EFFECTS: none
  */
 int32_t close (int32_t fd) {
+    // //check input valid
+    // if(fd > 7 || fd < 2){
+    //     printf("close fail, invalid fd");
+    //     return -1;
+    // }
+
+    // //use the close operation from the file ops
+
     return -1;
 }
 
