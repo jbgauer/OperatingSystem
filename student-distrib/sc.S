@@ -2,7 +2,10 @@
 .globl retrieveBasePointer 
 .globl syscall_handler
 .globl flush_tlb
+.globl iret_context
 #define ASM 1
+
+#include "x86_desc.h"
 
 /* retrieveBasePointer
    DESC- grabs the base pointer and returns.
@@ -84,3 +87,31 @@ flush_tlb:
     movl %cr3, %eax
     movl %eax, %cr3
     ret
+
+iret_context:
+
+/* IRET needs 5 elements on stack: User DS, ESP, EFLAG,CS,EIP */
+
+    /* store EIP */
+    movl 4(%esp), %eax
+
+    pushl $USER_DS
+
+    /* ESP to User Stack */
+    movl $0x08400000, %ebx
+    pushl %ebx
+
+    /* set IF flag to 1 */
+    pushfl
+    popl %ebx
+    orl $0x0200, %ebx
+    pushl %ebx
+
+    pushl $USER_CS
+
+    /* push eip */
+    pushl %eax
+
+    iret
+
+
