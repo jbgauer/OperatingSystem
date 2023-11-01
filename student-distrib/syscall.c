@@ -42,7 +42,7 @@ int32_t halt (uint8_t status) {
 
     // /*Jump to execute return*/
 
-    // return -1;
+    return -1;
 }
 
 
@@ -57,123 +57,127 @@ int32_t halt (uint8_t status) {
 int32_t
 execute(const uint8_t *command) {
         
-    // uint8_t *cmdHold;
-    // uint8_t *cmdArgs;
-    // uint8_t *file;
-    // uint32_t i, j, newEntry, pageHold, basePointer;
-    // uint8_t *buf;
-    // dentry_t *dentry;
-    // pdir_entry_t kerntry;
+    uint8_t *cmdHold;
+    uint8_t *cmdArgs;
+    uint8_t *file;
+    uint32_t i, j, newEntry, pageHold, basePointer;
+    uint8_t *buf;
+    dentry_t *dentry;
+    pdir_entry_t kerntry;
 
-    // //parent base pointer
-    // basePointer = retrieveBasePointer();
 
-    // if(command == NULL) {
-    //     return -1;
-    // }
-    // /*Parse Args*/
-    // cmdHold = command;
-    // //skip spaces
-    // for(int i = 0; i < COMMAND_MAX; i++) {
-    //     if(cmdHold == ' ') {
-    //         cmdHold++;
-    //     } else { 
-    //         break;
-    //     }
-    // } 
-    // file = cmdHold;
-    // //go to end of filename
-    // while(*cmdHold != ' ' || *cmdHold != '\n' || *cmdHold != '\0') {
-    //     cmdHold++;
-    // }
-    // //set end of filename
-    // *cmdHold = '\0';
-    // //skip spaces (NOTE: maybe this goes to far? Maybe it will have infinite spaces? [when there are no args])
-    // for(int i = 0; i < COMMAND_MAX; i++) {
-    //     if(cmdHold == ' ') {
-    //         cmdHold++;
-    //     } else { 
-    //         break;
-    //     }
-    // } 
+    //parent base pointer
+    basePointer = retrieveBasePointer();
 
-    // cmdArgs = cmdHold;
-    // //go to end of args
-    // while(*cmdHold != ' ' || *cmdHold != '\n' || *cmdHold != '\0') {
-    //     cmdHold++;
-    // }
-    // //set end of args
-    // *cmdHold = '\0';
+    if(command == NULL) {
+        return -1;
+    }
+    /*Parse Args*/
+    cmdHold = command;
+    //skip spaces
+    for(i = 0; i < COMMAND_MAX; i++) {
+        if(cmdHold == ' ') {
+            cmdHold++;
+        } else { 
+            break;
+        }
+    } 
+    file = cmdHold;
+    //go to end of filename
+    while(*cmdHold != ' ' || *cmdHold != '\n' || *cmdHold != '\0') {
+        cmdHold++;
+    }
+    //set end of filename
+    *cmdHold = '\0';
+    //skip spaces (NOTE: maybe this goes to far? Maybe it will have infinite spaces? [when there are no args])
+    for(i = 0; i < COMMAND_MAX; i++) {
+        if(cmdHold == ' ') {
+            cmdHold++;
+        } else { 
+            break;
+        }
+    } 
 
-    // // args will be passed into get args to the program
+    cmdArgs = cmdHold;
+    //go to end of args
+    while(*cmdHold != ' ' || *cmdHold != '\n' || *cmdHold != '\0') {
+        cmdHold++;
+    }
+    //set end of args
+    *cmdHold = '\0';
 
-    // /*Executable Check*/
-    // //set dentry
-    // if(read_dentry_by_name(file, dentry) == -1)
-    //     return -1;
-    // if(read_data(dentry->inode_num,0,buf,4) == -1) 
-    //     return -1;
-    // if(buf != EXEC_VAL) 
-    //     return -1;
-    // if(dentry->filetype != 2)
-    //     return -1;
+    // args will be passed into get args to the program
 
-    // /*set up program paging*/
-    // //Find first open process (0-5)
-    // for(i = 0; i < PROG_MAX; i++) {
-    //     if(pcb_array[i].used == 0) {
-    //         curr_pid = i;
-    //         break;
-    //     }
-    // }
-    // //FAILED TO RUN (could be another error return (-2))
-    // if(i == PROG_MAX)
-    //     return -1;
+    /*Executable Check*/
+    //set dentry
+    if(read_dentry_by_name(file, dentry) == -1)
+        return -1;
+    if(read_data(dentry->inode_num,0,buf,4) == -1) 
+        return -1;
+    if(buf != EXEC_VAL) 
+        return -1;
+    if(dentry->filetype != 2)
+        return -1;
 
-    // //pages in use
-    // pageHold = curr_pid;
-    // pageHold += PAGES_DEFAULT_USE;
-    // //Set new page (first addr at 0x400)
-    // kerntry.p_addr = pageHold << KENTRY_SHIFT;
-    // kerntry.ps = 1;
-    // kerntry.a = 0;
-    // kerntry.pcd = 0;
-    // kerntry.pwt = 0;
-    // kerntry.us = 1;
-    // kerntry.rw = 1;
-    // kerntry.p = 1;
-    // newEntry = combine_kir_entry(kerntry);
-    // pagedir[USER_SPACE] = newEntry;
-    // //flush tlb
-    // flush_tlb();
+    /*set up program paging*/
+    //Find first open process (0-5)
+    for(i = 0; i < PROG_MAX; i++) {
+        if(pcb_array[i].in_use == 0) {
+            curr_pid = i;
+            break;
+        }
+    }
+    //FAILED TO RUN (could be another error return (-2))
+    if(i == PROG_MAX)
+        return -1;
 
-    // /*load file into memory*/ /*aka User-level program loader*/
-    // //once have the page read_data
+    //pages in use
+    pageHold = curr_pid;
+    pageHold += PAGES_DEFAULT_USE;
+    //Set new page (first addr at 0x400)
+    kerntry.p_addr = pageHold << KENTRY_SHIFT;
+    kerntry.ps = 1;
+    kerntry.a = 0;
+    kerntry.pcd = 0;
+    kerntry.pwt = 0;
+    kerntry.us = 1;
+    kerntry.rw = 1;
+    kerntry.p = 1;
+    newEntry = combine_dir_entry(kerntry);
+    pagedir[USER_SPACE] = newEntry;
+    //flush tlb
+    flush_tlb();
+
+    /*load file into memory*/ /*aka User-level program loader*/
+    //once have the page read_data
     
-    // // load from FS to program page (how to get process number)
+    // load from FS to program page (how to get process number)
 
-    // inode_t* file_inode = (inode_t*)(startinode + dentry->inode_num);
+    inode_t* file_inode = (inode_t*)(startinode + dentry->inode_num);
 
-    // read_data(dentry->inode_num, 0, (uint8_t*)PRGRM_IMG_START, file_inode->length);
+    read_data(dentry->inode_num, 0, (uint8_t*)PRGRM_IMG_START, file_inode->length);
 
-    // /*Create PCB*/
+    /*Create PCB*/
 
-    // /*tss*/
-    // //change esp0 to the value the stack pointer 
-    // tss.esp0 = pcb_array[curr_pid].stack_ptr;
-    // //change ss0
-    // tss.ss0 = KERNEL_DS; 
+    /*tss*/
+    //change esp0 to the value the stack pointer 
+    tss.esp0 = pcb_array[curr_pid].stack_ptr;
+    //change ss0
+    tss.ss0 = KERNEL_DS; 
 
     
-    // /*context switch (IN x86)*/
-    // // create its own context switch stack 
+    /*context switch (IN x86)*/
+    // create its own context switch stack 
     
-    // read_data(dentry->inode_num, 24, buf, 4); // buf holds entry point in program
+    read_data(dentry->inode_num, 24, buf, 4); // buf holds entry point in program
+
+    pcb_array[curr_pid].inst_ptr = *((uint32_t*)buf);
 
 
-    // // IRET 
+    // IRET 
+    iret_context(*((uint32_t*)buf));
 
-    // return -1;
+    return -1;
 }
 
 
