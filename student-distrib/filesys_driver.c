@@ -193,13 +193,18 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
 //open always successful
 //open just sets up the file
 int32_t open_file(const uint8_t* filename){
-    // int j;
+    // int j, rd;
     // //get file dentry
     // dentry_t* fentry = &(bbl->entries[0]);
-    // read_dentry_by_name(filename, fentry);
+    // rd = read_dentry_by_name(filename, fentry);
 
     // //first need to get pcb (process that called me)
     // pcb_t* curpcb = pcb_array[curpid]; //get curpid from syscall file
+
+    // //check values
+    // if(rd == -1 || curpcb == NULL){
+    //     return -1;
+    // }
 
     // //get the first available index
     // for(j=2; j < 8; j++){
@@ -214,6 +219,7 @@ int32_t open_file(const uint8_t* filename){
     // curpcb->fda[j].filename = fentry->filename;
     // curpcb->fda[j].file_type = fentry->file_type;
 
+    //return j;
     return 0;
 }
 
