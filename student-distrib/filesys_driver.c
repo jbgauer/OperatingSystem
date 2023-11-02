@@ -193,34 +193,34 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
 //open always successful
 //open just sets up the file
 int32_t open_file(const uint8_t* filename){
-    // int j, rd;
-    // //get file dentry
-    // dentry_t* fentry = &(bbl->entries[0]);
-    // rd = read_dentry_by_name(filename, fentry);
+    int j, rd;
+    //get file dentry
+    dentry_t* fentry = &(bbl->entries[0]);
+    rd = read_dentry_by_name(filename, fentry);
 
-    // //first need to get pcb (process that called me)
-    // pcb_t* curpcb = pcb_array[curpid]; //get curpid from syscall file
+    //first need to get pcb (process that called me)
+    pcb_t* curpcb = &pcb_array[curr_pid]; //get curpid from syscall file
 
-    // //check values
-    // if(rd == -1 || curpcb == NULL){
-    //     return -1;
-    // }
+    //check values
+    if(rd == -1 || curpcb == NULL){
+        return -1;
+    }
 
-    // //get the first available index
-    // for(j=2; j < 8; j++){
-    //     if(curpcb->fda[j].flags == 0){
-    //         break;
-    //     }
-    // }
-    // //put the file into the file array at this index
-    // curpcb->fda[j].inode = fentry->inode_num;
-    // curpcb->fda[j].file_position = 0;
-    // curpcb->fda[j].flags = 1;   //flags = 0 when open, flags = 1 when file here
-    // curpcb->fda[j].filename = fentry->filename;
-    // curpcb->fda[j].file_type = fentry->file_type;
+    //get the first available index
+    for(j=2; j < 8; j++){
+        if(curpcb->fda[j].flags == 0){
+            break;
+        }
+    }
+    
+    //put the file into the file array at this index
+    curpcb->fda[j].inode = fentry->inode_num;
+    curpcb->fda[j].file_position = 0;
+    curpcb->fda[j].flags = 1;   //flags = 0 when open, flags = 1 when file here
+    curpcb->fda[j].file_type = fentry->filetype;
 
-    //return j;
-    return 0;
+    return j;
+    //return 0;
 }
 
 /*
@@ -233,16 +233,16 @@ int32_t open_file(const uint8_t* filename){
  */
 //close always successful
 int32_t close_file(int32_t fd){
-    // //undo what open did
-    // //get current pcb
-    // pcb_t* curpcb = pcb_array[curpid];
+    //undo what open did
+    //get current pcb
+    pcb_t* curpcb = &pcb_array[curr_pid];
 
-    // //remove the file from curpcb's array
-    // curpcb->fda[fd].inode = 0;
-    // curpcb->fda[fd].file_position = 0;
-    // curpcb->fda[fd].flags = 0;
-    // curpcb->fda[fd].filename = "";
-    // curpcb->fda[fd].file_type = 0;
+    //remove the file from curpcb's array
+    curpcb->fda[fd].file_op_ptr = NULL;
+    curpcb->fda[fd].inode = 0;
+    curpcb->fda[fd].file_position = 0;
+    curpcb->fda[fd].flags = 0;
+    curpcb->fda[fd].file_type = 0;
 
     return 0;
 }
@@ -256,30 +256,27 @@ int32_t close_file(int32_t fd){
  *   SIDE EFFECTS: puts data into buf
  */
 int32_t read_file(int32_t fd, void* buf, int32_t nbytes){
-    // //keep track of bytes read
-    // int32_t actualbytes;
+    //keep track of bytes read
+    int32_t actualbytes;
 
-    // //get the current pcb
-    // pcb_t* curpcb = pcb_array[curpid];
+    //get the current pcb
+    pcb_t* curpcb = &pcb_array[curr_pid];
 
-    // //get the dentry of the pcb's file
-    // dentry_t* fentry = &(bbl->entries[0]); //initialize fentry to bbl, cause otherwise page fault
-    // read_dentry_by_name(curpcb->fda[fd].inode, fentry);
+    //check invalid
+    if(buf == NULL){
+        printf("read file fail");
+        return -1;
+    }
 
-    // //check invalid
-    // if(fentry == NULL || buf == NULL){
-    //     printf("read file fail");
-    //     return -1;
-    // }
+    //read the data
+    //account for offset (file_position)
+    actualbytes = read_data(curpcb->fda[fd].inode, curpcb->fda[fd].file_position, buf, nbytes);
 
-    // //read the data
-    // //account for offset (file_position)
-    // actualbytes = read_data(fentry->inode_num, curpcb->fda[fd].file_position, buf, nbytes);
+    //add the bytes read to the file position
+    curpcb->fda[fd].file_position += actualbytes;
 
-    // //add the bytes read to the file position
-    // curpcb->fda[fd].file_position += actualbytes;
-
-    // return actualbytes;
+    return actualbytes;
+    //return 0;
 }
 
 /*
@@ -333,45 +330,49 @@ int32_t close_dir(int32_t fd){
  *   SIDE EFFECTS: puts file names into buffer
  */
 //put all the names of files inside the directory into the buffer
-int32_t read_dir(int32_t fd, uint8_t* buf, int32_t nbytes){
-    int i, j;
-    //dentry_t curentry;
-    //inode_t* curnode;
-    uint32_t lencounter = 0; //keep track of length of all the file names
-    //will use this to put file names into the buffer at offsets
-    // (so that file names won't overwrite each other)
-    uint8_t* curname;
-    //int8_t* filename = "file_name:"; //10 long
+int32_t read_dir(int32_t fd, void* buf, int32_t nbytes){
+    int actualbytes = read_file(fd, buf, nbytes);
+    
+    return actualbytes;
+    // //uint8_t* buf
+    // int i, j;
+    // //dentry_t curentry;
+    // //inode_t* curnode;
+    // uint32_t lencounter = 0; //keep track of length of all the file names
+    // //will use this to put file names into the buffer at offsets
+    // // (so that file names won't overwrite each other)
+    // uint8_t* curname;
+    // //int8_t* filename = "file_name:"; //10 long
 
-    for(i=0; i < bbl->dentry_count; i++){
-        //get the name of current dentry
-        curname = bbl->entries[i].filename;
+    // for(i=0; i < bbl->dentry_count; i++){
+    //     //get the name of current dentry
+    //     curname = bbl->entries[i].filename;
 
-        //put file_name:
-        //strcpy(buf[lencounter], filename);
-        //lencounter += 10;
+    //     //put file_name:
+    //     //strcpy(buf[lencounter], filename);
+    //     //lencounter += 10;
 
-        //33-strlen
-        for(j=0; j < strlen((char*)curname); j++){
-            //dont go over 32 char limit
-            if(j >= 32){
-                break;
-            }
-            buf[lencounter] = curname[j];
-            lencounter++;
-        }
+    //     //33-strlen
+    //     for(j=0; j < strlen((char*)curname); j++){
+    //         //dont go over 32 char limit
+    //         if(j >= 32){
+    //             break;
+    //         }
+    //         buf[lencounter] = curname[j];
+    //         lencounter++;
+    //     }
 
-        // buf[lencounter] = ',';
-        // lencounter++;
-        // buf[lencounter] = ' ';
-        // lencounter++;
-        // buf[lencounter] = (char*)(bbl->entries[i].filetype);
-        // lencounter++;
-        buf[lencounter] = '\n';
-        lencounter++;
-    }
+    //     // buf[lencounter] = ',';
+    //     // lencounter++;
+    //     // buf[lencounter] = ' ';
+    //     // lencounter++;
+    //     // buf[lencounter] = (char*)(bbl->entries[i].filetype);
+    //     // lencounter++;
+    //     buf[lencounter] = '\n';
+    //     lencounter++;
+    // }
 
-    return lencounter;
+    // return lencounter;
 }
 
 /*

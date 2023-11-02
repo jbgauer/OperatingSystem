@@ -190,7 +190,7 @@ execute(const uint8_t *command) {
     read_data(dentry->inode_num, 0, (uint8_t*)PRGRM_IMG_START, file_inode->length);
 
     /*Create PCB*/
-    pcb_init(curr_pid-1);
+    pcb_init(curr_pid);
     programs_running += 1;
 
     /*tss*/
@@ -220,22 +220,32 @@ execute(const uint8_t *command) {
 
 /*
  * read
- *   DESCRIPTION: 
- *   INPUTS:
- *   OUTPUTS: none
- *   RETURN VALUE: 
- *   SIDE EFFECTS: none
+ *   DESCRIPTION: reads nbytes of the file and puts into buf
+ *   INPUTS: index in fda, buf, nbytes
+ *   OUTPUTS: bytes read, or -1 if fail
+ *   RETURN VALUE: int
+ *   SIDE EFFECTS: fills in buf 
  */
 int32_t read (int32_t fd, void* buf, int32_t nbytes) {
-    return -1;
+    pcb_t* curpcb;
+    file_op_t fops;
+    int32_t bread;  //bytes read from read function
+
+    curpcb = &pcb_array[curr_pid];
+
+    fops = *(curpcb->fda[fd].file_op_ptr);
+    
+    bread = (*(fops.read))(fd, buf, nbytes);
+    
+    return bread;
 }
 
 /*
  * write
- *   DESCRIPTION: 
- *   INPUTS:
+ *   DESCRIPTION: does nothing, this is read-only file system
+ *   INPUTS: fd, buf, nbytes
  *   OUTPUTS: none
- *   RETURN VALUE: 
+ *   RETURN VALUE: none
  *   SIDE EFFECTS: none
  */
 int32_t write (int32_t fd, const void* buf, int32_t nbytes) {
@@ -251,55 +261,82 @@ int32_t write (int32_t fd, const void* buf, int32_t nbytes) {
  *   SIDE EFFECTS: changes the fda of curpcb
  */
 int32_t open (const uint8_t* filename) {
-    // uint32_t type;
-    // file_op_t fops;
-    // //open_file will do most of the work because need dentry info
-    // int fdindex = open_file(filename);
+    uint32_t type;
+    file_op_t fops;
+    pcb_t* curpcb;
 
-    // if(fdindex == -1){
-    //     return -1;
-    // }
+    //open_file will do most of the work because need dentry info
+    int fdindex = open_file(filename);
 
-    // //need to set the file operations depending on file type
-    // pcb_t* curpcb = pcb_array[curr_pid];
+    if(fdindex == -1){
+        return -1;
+    }
 
-    // type = curpcb->fda[fdindex].file_type;
-    // switch(type){
-    //     case 0: //if type 0, then rtc
-    //         //fops = ??
-    //     case 1: //if type 1, then boot block (dir)
-    //         //fops
-    //     case 2: //type 2 is normal files
-    //         //fops
-    //     default:
-    //         printf("open fail, invalid file type");
-    //         return -1;
-    // }
+    //need to set the file operations depending on file type
+    curpcb = &pcb_array[curr_pid];
+    type = curpcb->fda[fdindex].file_type;
 
-    // //curpcb->fda[fdindex].file_op_ptr = fops;
+    switch(type){
+        case 0: //if type 0, then rtc
+            fops.open = &rtc_open;
+            fops.close = &rtc_close;
+            fops.read = &rtc_read;
+            fops.write = &rtc_write;
 
-    // return fdindex;
-    return -1;
+            //also need to do the rtc open
+            rtc_open(filename);
+
+        case 1: //if type 1, then boot block (dir)
+            fops.open = &open_dir;
+            fops.close = &close_dir;
+            fops.read = &read_dir;
+            fops.write = &write_dir;
+
+            //need to do the directory open (does nothing)
+            open_dir(filename);
+
+        case 2: //type 2 is normal files
+            fops.open = &open_file;
+            fops.close = &close_file;
+            fops.read = &read_file;
+            fops.write = &write_file;
+
+        default:
+            printf("open fail, invalid file type");
+            return -1;
+    }
+
+    curpcb->fda[fdindex].file_op_ptr = &fops;
+
+    return fdindex;
 }
 
 /*
  * close
- *   DESCRIPTION: 
- *   INPUTS:
- *   OUTPUTS: none
- *   RETURN VALUE: 
- *   SIDE EFFECTS: none
+ *   DESCRIPTION: removes the file from the pcb's file array
+ *   INPUTS: fd index of file
+ *   OUTPUTS: 0 if success, -1 if fail
+ *   RETURN VALUE: int
+ *   SIDE EFFECTS: changes an entry in the file array
  */
 int32_t close (int32_t fd) {
-    // //check input valid
-    // if(fd > 7 || fd < 2){
-    //     printf("close fail, invalid fd");
-    //     return -1;
-    // }
+    pcb_t* curpcb;
+    file_op_t fops;
+    
+    //check input valid
+    if(fd > 7 || fd < 2){
+        printf("close fail, invalid fd");
+        return -1;
+    }
 
-    // //use the close operation from the file ops
+    //use the close operation from the file ops
+    curpcb = &pcb_array[curr_pid];
 
-    return -1;
+    fops = *(curpcb->fda[fd].file_op_ptr);
+
+    (*(fops.close))(fd);
+
+    return 0;
 }
 
 /*
