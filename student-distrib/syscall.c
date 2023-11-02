@@ -87,7 +87,7 @@ int32_t halt (uint8_t status) {
  */
 int32_t
 execute(const uint8_t *command) {
-    printf("entering execute");
+    printf("entering execute\n");
     uint8_t *cmdHold;
     uint8_t *cmdArgs;
     uint8_t *file;
@@ -115,9 +115,12 @@ execute(const uint8_t *command) {
     } 
     file = cmdHold;
     //go to end of filename
-    while(*cmdHold != ' ' || *cmdHold != '\n' || *cmdHold != '\0') {
+    while(*cmdHold != ' ' || *cmdHold != '\n' || *cmdHold != '\0' || *cmdHold != "") {
+        printf("%c", *cmdHold);
         cmdHold++;
     }
+    printf("got to end of file\n");
+
     //set end of filename
     *cmdHold = '\0';
     
