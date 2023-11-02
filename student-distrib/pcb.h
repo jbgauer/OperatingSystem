@@ -14,18 +14,18 @@
 #define EIGHT_KB 0x2000
 
 typedef struct {
-    void (*open)(const uint8_t*);
-    void (*read)(int32_t, void*, int32_t);
-    void (*write)(int32_t, const void*, int32_t);
-    void (*close)(int32_t);
+    int32_t (*open)(const uint8_t*);
+    int32_t (*read)(int32_t, void*, int32_t);
+    int32_t (*write)(int32_t, const void*, int32_t);
+    int32_t (*close)(int32_t);
 } file_op_t;
 
 typedef struct {
     file_op_t* file_op_ptr;  
     uint32_t inode;                         //files inode
     uint32_t file_position;                 //current position in file
-    uint32_t flags;                         //current flags - 1 if in use, 0 if open
-    char filename[MAX_FILENAME_LEN];        //filename
+    uint32_t flags;                         //current flags: 1 if in use, 0 if open
+    //uint8_t filename[MAX_FILENAME_LEN];     //filename
     uint32_t file_type;                     //type of file
 } fd_t;
 
