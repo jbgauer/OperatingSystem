@@ -1,5 +1,8 @@
 #include "syscall.h"
 
+
+uint32_t programs_running = 0;
+
 /*
  * halt
  *   DESCRIPTION: 
@@ -9,40 +12,68 @@
  *   SIDE EFFECTS: none
  */
 int32_t halt (uint8_t status) {
-    // uint32_t parent_id;
+    uint32_t parent_id;
 
-    // /*restore parent data*/
-    // parent_id = pcb_array[curr_pid].par_id;
-    // curr_pid = parent_id;
+    uint32_t newEntry, pageHold; //basePointer;
+    // uint8_t *buf;
+    // dentry_t *dentry;
+    pdir_entry_t kerntry;
 
+    uint8_t shellcmd[5] = "shell";
+    
+    if(programs_running > 0){
+        pcb_array[curr_pid].in_use = 0;
+        programs_running -= 1;
+    }
+
+    if(programs_running == 0){
+        execute(shellcmd);
+    }
+
+
+    /*restore parent data*/
+    parent_id = pcb_array[curr_pid].par_id;
+    curr_pid = parent_id;
+
+    /*base pointer?*/
+    /*restore parent paging*/
+    //Set new page (first addr at 0x400)
+    kerntry.p_addr = pageHold << KENTRY_SHIFT;
+    kerntry.ps = 1;
+    kerntry.a = 0;
+    kerntry.pcd = 0;
+    kerntry.pwt = 0;
+    kerntry.us = 1;
+    kerntry.rw = 1;
+    kerntry.p = 1;
+    newEntry = combine_dir_entry(kerntry);
+    pagedir[USER_SPACE] = newEntry;
+    
+    flush_tlb();
+
+    tss.esp0 = *(pcb_array[curr_pid].stack_ptr);
+    tss.ss0  = KERNEL_DS;
     
 
-    // /*base pointer?*/
-    // /*restore parent paging*/
-    // //Set new page (first addr at 0x400)
-    // kerntry.p_addr = pageHold << KENTRY_SHIFT;
-    // kerntry.ps = 1;
-    // kerntry.a = 0;
-    // kerntry.pcd = 0;
-    // kerntry.pwt = 0;
-    // kerntry.us = 1;
-    // kerntry.rw = 1;
-    // kerntry.p = 1;
-    // newEntry = combine_kir_entry(kerntry);
-    // pagedir[USER_SPACE] = newEntry;
-    // //flush tlb ???
-    // flush_tlb();
 
-
-
-    // /*close any relevant FDs*/
+    /*close any relevant FDs*/
     // pcb_array[curr_pid].
 
 
+    /*Jump to execute return*/ 
+    //also restores parent esp and ebp
 
-    // /*Jump to execute return*/
+    asm volatile(
+                 "movl %0, %%esp;" 
+                 "movl %1, %%ebp;" 
+                 "movl %2, %%eax;"
+                 "jmp  execute_return"
+                 :
+                 :"r"(pcb_array[curr_pid].stack_ptr), "r"(pcb_array[curr_pid].base_ptr), "r"((uint32_t)status)
+                 :"eax"
+                 );
 
-    return -1;
+    return 0;
 }
 
 
@@ -56,7 +87,7 @@ int32_t halt (uint8_t status) {
  */
 int32_t
 execute(const uint8_t *command) {
-        
+    printf("entering execute");
     uint8_t *cmdHold;
     uint8_t *cmdArgs;
     uint8_t *file;
@@ -76,7 +107,7 @@ execute(const uint8_t *command) {
     cmdHold = command;
     //skip spaces
     for(i = 0; i < COMMAND_MAX; i++) {
-        if(cmdHold == ' ') {
+        if(*cmdHold == ' ') {
             cmdHold++;
         } else { 
             break;
@@ -89,9 +120,10 @@ execute(const uint8_t *command) {
     }
     //set end of filename
     *cmdHold = '\0';
+    
     //skip spaces (NOTE: maybe this goes to far? Maybe it will have infinite spaces? [when there are no args])
     for(i = 0; i < COMMAND_MAX; i++) {
-        if(cmdHold == ' ') {
+        if(*cmdHold == ' ') {
             cmdHold++;
         } else { 
             break;
@@ -107,14 +139,14 @@ execute(const uint8_t *command) {
     *cmdHold = '\0';
 
     // args will be passed into get args to the program
-
+    printf("ln141");
     /*Executable Check*/
     //set dentry
     if(read_dentry_by_name(file, dentry) == -1)
         return -1;
     if(read_data(dentry->inode_num,0,buf,4) == -1) 
         return -1;
-    if(buf != EXEC_VAL) 
+    if(buf[0] != 0x7f || buf[1] != 0x45 || buf[2] != 0x4C || buf[3] != 0x46)
         return -1;
     if(dentry->filetype != 2)
         return -1;
@@ -158,10 +190,12 @@ execute(const uint8_t *command) {
     read_data(dentry->inode_num, 0, (uint8_t*)PRGRM_IMG_START, file_inode->length);
 
     /*Create PCB*/
+    pcb_init(curr_pid-1);
+    programs_running += 1;
 
     /*tss*/
     //change esp0 to the value the stack pointer 
-    tss.esp0 = pcb_array[curr_pid].stack_ptr;
+    tss.esp0 = *(pcb_array[curr_pid].stack_ptr);
     //change ss0
     tss.ss0 = KERNEL_DS; 
 
@@ -171,13 +205,15 @@ execute(const uint8_t *command) {
     
     read_data(dentry->inode_num, 24, buf, 4); // buf holds entry point in program
 
-    pcb_array[curr_pid].inst_ptr = *((uint32_t*)buf);
+    // pcb_array[curr_pid].inst_ptr = *((uint32_t*)buf);
 
 
     // IRET 
     iret_context(*((uint32_t*)buf));
 
-    return -1;
+    asm volatile("execute_return:");
+
+    return 0;
 }
 
 
