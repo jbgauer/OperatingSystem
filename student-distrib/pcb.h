@@ -34,7 +34,8 @@ typedef struct {
     uint32_t* stack_ptr;            // Holds current stack position of process
     uint32_t* base_ptr;             // Holds current base position of process
     uint32_t par_id;                // parent process number
-    uint32_t* inst_ptr;             // Holds next instruction to be executed for process
+
+    // uint32_t* inst_ptr;             // Holds next instruction to be executed for process
     fd_t fda[FILE_MAX];             // Array that holds file descriptors of every file used by this program
 } pcb_t;
 
