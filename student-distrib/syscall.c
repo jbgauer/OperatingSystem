@@ -97,7 +97,7 @@ execute(const uint8_t *command) {
     uint32_t i, j, newEntry, pageHold, basePointer;
     uint8_t buf[4];
     //buf is an array, must initalize with a size
-    dentry_t* dentry; //= &(bbl->entries[0]);
+    dentry_t dentry; //= &(bbl->entries[0]);
     //dentry will cause page fault if null, always initialize it to something
     pdir_entry_t kerntry;
 
@@ -153,13 +153,13 @@ execute(const uint8_t *command) {
     printf("\n");
     /*Executable Check*/
     //set dentry
-    if(read_dentry_by_name(file, dentry) == -1)
+    if(read_dentry_by_name(file, &dentry) == -1)
         return -1;
-    if(read_data(dentry->inode_num,0,buf,4) == -1) 
+    if(read_data(dentry.inode_num,0,buf,4) == -1) 
         return -1;
     if(buf[0] != 0x7f || buf[1] != 0x45 || buf[2] != 0x4C || buf[3] != 0x46)
         return -1;
-    if(dentry->filetype != 2)
+    if(dentry.filetype != 2)
         return -1;
 
     /*set up program paging*/
@@ -196,13 +196,22 @@ execute(const uint8_t *command) {
     
     // load from FS to program page (how to get process number)
 
-    inode_t* file_inode = (inode_t*)(startinode + dentry->inode_num);
+    inode_t* file_inode = (inode_t*)(startinode + dentry.inode_num);
 
-    read_data(dentry->inode_num, 0, (uint8_t*)PRGRM_IMG_START, file_inode->length);
+    read_data(dentry.inode_num, 0, (uint8_t*)PRGRM_IMG_START, file_inode->length);
 
     /*Create PCB*/
     pcb_init(curr_pid);
     programs_running += 1;
+
+    
+    
+    /*context switch (IN x86)*/
+    // create its own context switch stack 
+    // read_data(dentry->inode_num, 24, buf, 4); // buf holds entry point in program
+
+    uint8_t new_buf[4];
+    read_data(dentry.inode_num, 24, new_buf, 4);   // only reads one byte for some reason
 
     /*tss*/
     //change esp0 to the value the stack pointer 
@@ -210,13 +219,7 @@ execute(const uint8_t *command) {
     //change ss0
     tss.ss0 = KERNEL_DS; 
 
-    
-    /*context switch (IN x86)*/
-    // create its own context switch stack 
-    // read_data(dentry->inode_num, 24, buf, 4); // buf holds entry point in program
 
-    uint8_t new_buf[4];
-    read_data(dentry->inode_num, 24, new_buf, 4);   // only reads one byte for some reason
 
     // this read data cannot go to the offset of 24, read data only works for first 4 bytes 
 
