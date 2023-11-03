@@ -82,10 +82,10 @@ int32_t halt (uint8_t status) {
 
 /*
  * system_execute
- *   DESCRIPTION: 
- *   INPUTS:
+ *   DESCRIPTION: Executes process, creates pcb and sets up paging for user space
+ *   INPUTS: uint8_t - command 
  *   OUTPUTS: none
- *   RETURN VALUE: 
+ *   RETURN VALUE: int32_t
  *   SIDE EFFECTS: none
  */
 int32_t
