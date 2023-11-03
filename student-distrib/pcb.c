@@ -5,6 +5,7 @@
 #include "pcb.h"
 #include "paging.h"
 #include "terminal.h"
+#include "syscall.h"
 
 
 /*
