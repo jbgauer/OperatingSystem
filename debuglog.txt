@@ -135,10 +135,14 @@ X read goes beyond end of file and sometimes page fault
 
 --------------------
 DEBUG LOG 3.3:
-- execute going past the end of the filename
+X execute going past the end of the filename
   (Alexandra)
   * syscall.c line 120
   * causes read dentry fail because filename is wrong
+  ~ 10 min, 2 lines change
+  ~ Execute was being fed wrong input 
+  (Jack)
+
 
 > read data fail
   (Alexandra)
@@ -151,3 +155,4 @@ DEBUG LOG 3.3:
   (Alexandra)
   * syscall.c line 219
   * after the function is done, the program gets lost and can't return to execute
+
