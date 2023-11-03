@@ -146,7 +146,7 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
         //put each char of curblock into the buf
         for(j=0; j < BLOCK_SIZE; j++){
             //get page fault because file may be smaller than 1 block
-            if(j+dataoff >= length){
+            if(j+dataoff >= itnode->length){
                 return bytesread;
             }
             //stop reading when reached length (may be shorter than a block)

@@ -198,7 +198,10 @@ execute(const uint8_t *command) {
     read_data(dentry.inode_num, 0, (uint8_t*)PRGRM_IMG_START, file_inode->length);
 
     /*Create PCB*/
-    pcb_init(curr_pid);
+    if(curr_pid == 0) {
+        par_pid = 0;
+    }
+    pcb_init(par_pid);
     programs_running += 1;
 
     
