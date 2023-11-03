@@ -126,7 +126,7 @@ execute(const uint8_t *command) {
         cmdHold++;
     }
     printf("\ngot to end of file\n");
-
+ 
     //set end of filename
     *cmdHold = '\0';
     
