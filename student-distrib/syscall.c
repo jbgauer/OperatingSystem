@@ -13,7 +13,7 @@ uint32_t programs_running = 0;
  */
 int32_t halt (uint8_t status) {
     uint32_t parent_id;
-
+    int i;
     uint32_t newEntry, pageHold; //basePointer;
     // uint8_t *buf;
     // dentry_t *dentry;
@@ -51,13 +51,15 @@ int32_t halt (uint8_t status) {
     
     flush_tlb();
 
-    tss.esp0 = *(pcb_array[curr_pid].stack_ptr);
+    tss.esp0 = pcb_array[curr_pid].stack_ptr;
     tss.ss0  = KERNEL_DS;
     
 
 
     /*close any relevant FDs*/
-    // pcb_array[curr_pid].
+    for(i = 0; i < FILE_MAX; i++) {
+        close_file(i);
+    }
 
 
     /*Jump to execute return*/ 
@@ -204,7 +206,7 @@ execute(const uint8_t *command) {
 
     /*tss*/
     //change esp0 to the value the stack pointer 
-    tss.esp0 = *(pcb_array[curr_pid].stack_ptr);
+    tss.esp0 = pcb_array[curr_pid].stack_ptr;
     //change ss0
     tss.ss0 = KERNEL_DS; 
 
