@@ -207,6 +207,7 @@ execute(const uint8_t *command) {
     asm volatile("movl %%esp, %0;":"=r"(pcb_array[curr_pid].stack_ptr));
     asm volatile("movl %%ebp, %0;":"=r"(pcb_array[curr_pid].base_ptr));
     
+    
     /*context switch (IN x86)*/
     // create its own context switch stack 
     // read_data(dentry->inode_num, 24, buf, 4); // buf holds entry point in program
