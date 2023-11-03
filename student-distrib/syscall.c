@@ -250,8 +250,9 @@ execute(const uint8_t *command) {
  */
 int32_t read (int32_t fd, void* buf, int32_t nbytes) {
     pcb_t* curpcb;
-    file_op_t fops;
+    //file_op_t fops;
     int32_t bread;  //bytes read from read function
+    curpcb = &pcb_array[curr_pid];
 
     //check input valid
     if(fd < 0 || fd > 7 || buf == NULL){
@@ -264,11 +265,10 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes) {
         return -1;
     }
 
-    curpcb = &pcb_array[curr_pid];
 
-    fops = *(curpcb->fda[fd].file_op_ptr);
-    
-    bread = (*(fops.read))(fd, buf, nbytes);
+    //fops = *(curpcb->fda[fd].file_op_ptr); //fops doesnt work, op ptrs wrong
+    bread = curpcb->fda[fd].file_op_ptr->read(fd, buf, nbytes);
+    //bread = (*(fops.read))(fd, buf, nbytes);
     
     return bread;
 }
@@ -309,6 +309,7 @@ int32_t open (const uint8_t* filename) {
     curpcb = &pcb_array[curr_pid];
     type = curpcb->fda[fdindex].file_type;
 
+
     switch(type){
         case 0: //if type 0, then rtc
             fops.open = &rtc_open;
@@ -318,6 +319,7 @@ int32_t open (const uint8_t* filename) {
 
             //also need to do the rtc open
             rtc_open(filename);
+            break;
 
         case 1: //if type 1, then boot block (dir)
             fops.open = &open_dir;
@@ -327,12 +329,14 @@ int32_t open (const uint8_t* filename) {
 
             //need to do the directory open (does nothing)
             open_dir(filename);
+            break;
 
         case 2: //type 2 is normal files
             fops.open = &open_file;
             fops.close = &close_file;
             fops.read = &read_file;
             fops.write = &write_file;
+            break;
 
         default:
             printf("open fail, invalid file type");
@@ -354,7 +358,7 @@ int32_t open (const uint8_t* filename) {
  */
 int32_t close (int32_t fd) {
     pcb_t* curpcb;
-    file_op_t fops;
+    //file_op_t fops;
     
     //check input valid
     if(fd < 0 || fd > 7){
@@ -363,11 +367,13 @@ int32_t close (int32_t fd) {
     }
 
     //use the close operation from the file ops
-    curpcb = &pcb_array[curr_pid];
+    curpcb = &pcb_array[curr_pid]; //gets an unitialized pcb
 
-    fops = *(curpcb->fda[fd].file_op_ptr);
-
-    (*(fops.close))(fd);
+    //fops does NOT work
+    //fops = *(curpcb->fda[fd].file_op_ptr);
+    //(*(fops.close))(fd);
+//curpcb uninitialized here
+    curpcb->fda[fd].file_op_ptr->close(fd);
 
     return 0;
 }
