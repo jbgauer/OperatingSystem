@@ -331,48 +331,7 @@ int32_t close_dir(int32_t fd){
  */
 //put all the names of files inside the directory into the buffer
 int32_t read_dir(int32_t fd, void* buf, int32_t nbytes){
-    int actualbytes = read_file(fd, buf, nbytes);
-    
-    return actualbytes;
-    // //uint8_t* buf
-    // int i, j;
-    // //dentry_t curentry;
-    // //inode_t* curnode;
-    // uint32_t lencounter = 0; //keep track of length of all the file names
-    // //will use this to put file names into the buffer at offsets
-    // // (so that file names won't overwrite each other)
-    // uint8_t* curname;
-    // //int8_t* filename = "file_name:"; //10 long
-
-    // for(i=0; i < bbl->dentry_count; i++){
-    //     //get the name of current dentry
-    //     curname = bbl->entries[i].filename;
-
-    //     //put file_name:
-    //     //strcpy(buf[lencounter], filename);
-    //     //lencounter += 10;
-
-    //     //33-strlen
-    //     for(j=0; j < strlen((char*)curname); j++){
-    //         //dont go over 32 char limit
-    //         if(j >= 32){
-    //             break;
-    //         }
-    //         buf[lencounter] = curname[j];
-    //         lencounter++;
-    //     }
-
-    //     // buf[lencounter] = ',';
-    //     // lencounter++;
-    //     // buf[lencounter] = ' ';
-    //     // lencounter++;
-    //     // buf[lencounter] = (char*)(bbl->entries[i].filetype);
-    //     // lencounter++;
-    //     buf[lencounter] = '\n';
-    //     lencounter++;
-    // }
-
-    // return lencounter;
+    return read_dir_helper(fd, buf, nbytes);
 }
 
 /*
@@ -386,4 +345,38 @@ int32_t read_dir(int32_t fd, void* buf, int32_t nbytes){
 int32_t write_dir(int32_t fd, const void* buf, int32_t nbytes){
     //writes will always fail because read-only system
     return -1;
+}
+
+/*
+ * read_dir_helper
+ *   DESCRIPTION: reads a single filename from the dentries array
+ *   INPUTS: fd, buf, nbytes
+ *   OUTPUTS: num of bytes read, or -1 if fail
+ *   RETURN VALUE: int
+ *   SIDE EFFECTS: fills in the buffer
+ */
+int32_t read_dir_helper(int32_t fd, uint8_t* buf, int32_t nbytes){
+    //dentry that is read depends on pcb file position
+    //file position will be set to the index of the next dentry to read
+    int i, dindex, len;
+    uint8_t* name;
+    pcb_t* curpcb = &pcb_array[curr_pid];
+
+    dindex = curpcb->fda[fd].file_position;
+    name = bbl->entries[dindex].filename;
+
+    len = strlen((char*)name);
+    
+    for(i = 0; i < len; i++){
+        if(i >= 32){
+            len = 32;
+            break;
+        }
+
+        buf[i] = name[i];
+    }
+    //move to index of next dentry
+    curpcb->fda[fd].file_position += 1;
+    //return number of bytes read
+    return len;
 }

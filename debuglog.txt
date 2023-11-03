@@ -151,7 +151,7 @@ X execute going past the end of the filename
   * (the PRGRM_IMG_START buffer works, could also change to be like this?)
   ~ 5 minutes, 1 line change
 
-- boot looping
+- was boot looping, now page fault
   (Alexandra)
   * syscall.c line 219
   * after the function is done, the program gets lost and can't return to execute

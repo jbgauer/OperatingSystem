@@ -153,9 +153,7 @@ execute(const uint8_t *command) {
     printf("\n");
     /*Executable Check*/
     //set dentry
-// I MANUALLY SET TO shell TO CHECK FOR OTHER ERRORS !!!!!!
-// still need to fix the actual filename
-    if(read_dentry_by_name("shell", dentry) == -1)
+    if(read_dentry_by_name(file, dentry) == -1)
         return -1;
     if(read_data(dentry->inode_num,0,buf,4) == -1) 
         return -1;
@@ -215,7 +213,6 @@ execute(const uint8_t *command) {
     
     /*context switch (IN x86)*/
     // create its own context switch stack 
-    
     read_data(dentry->inode_num, 24, buf, 4); // buf holds entry point in program
 
     // pcb_array[curr_pid].inst_ptr = *((uint32_t*)buf);
@@ -227,6 +224,7 @@ execute(const uint8_t *command) {
     //after iret, program can't return to here
     //"cannot access memory at address 0x8400000"
 //BOOT LOOPING BUG ^
+//page fault now ??
 
     asm volatile("execute_return:");
 
@@ -247,6 +245,17 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes) {
     pcb_t* curpcb;
     file_op_t fops;
     int32_t bread;  //bytes read from read function
+
+    //check input valid
+    if(fd > 7 || fd < 2 || buf == NULL){
+        printf("read fail, invalid inputs");
+        return -1;
+    }
+
+    if(curpcb->fda[fd].flags == 0){
+        printf("read fail, file not open");
+        return;
+    }
 
     curpcb = &pcb_array[curr_pid];
 
