@@ -1,32 +1,10 @@
 
-.globl retrieveBasePointer 
 .globl syscall_handler
 .globl flush_tlb
 .globl iret_context
 #define ASM 1
 
 #include "x86_desc.h"
-
-/* retrieveBasePointer
-   DESC- grabs the base pointer and returns.
-*/
-retrieveBasePointer:
-    pushl %ebx
-    pushl %ecx 
-    pushl %edx 
-    pushl %esi 
-    pushl %edi
-
-    movl %ebp, %eax
-
-    popl %edi 
-    popl %esi
-    popl %edx 
-    popl %ecx
-    popl %ebx
-    
-    ret
-
 
 /*
  * syscall_handler

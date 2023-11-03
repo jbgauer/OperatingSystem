@@ -23,8 +23,6 @@
 // current process id
 uint32_t curr_pid;
 
-extern uint32_t retrieveBasePointer();
-
 extern void syscall_handler();
 
 extern void flush_tlb();

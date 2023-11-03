@@ -14,6 +14,7 @@ uint32_t programs_running = 0;
 int32_t halt (uint8_t status) {
     uint32_t parent_id;
     int i;
+    uint8_t shellcmd[6] = "shell\0";
     uint32_t newEntry, pageHold; //basePointer;
     // uint8_t *buf;
     // dentry_t *dentry;
@@ -25,9 +26,13 @@ int32_t halt (uint8_t status) {
         pcb_array[curr_pid].in_use = 0;
         programs_running -= 1;
     }
+    /*close any relevant FDs*/
+    for(i = 0; i < FILE_MAX; i++) {
+        close_file(i);
+    }
 
     if(programs_running == 0){
-        execute("shell");
+        execute(shellcmd);
     }
 
 
@@ -38,6 +43,8 @@ int32_t halt (uint8_t status) {
     /*base pointer?*/
     /*restore parent paging*/
     //Set new page (first addr at 0x400)
+    pageHold = curr_pid;
+    pageHold += PAGES_DEFAULT_USE;
     kerntry.p_addr = pageHold << KENTRY_SHIFT;
     kerntry.ps = 1;
     kerntry.a = 0;
@@ -50,18 +57,10 @@ int32_t halt (uint8_t status) {
     pagedir[USER_SPACE] = newEntry;
     
     flush_tlb();
-
-    tss.esp0 = pcb_array[curr_pid].stack_ptr;
+    
+    tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
     tss.ss0  = KERNEL_DS;
     
-
-
-    /*close any relevant FDs*/
-    for(i = 0; i < FILE_MAX; i++) {
-        close_file(i);
-    }
-
-
     /*Jump to execute return*/ 
     //also restores parent esp and ebp
 
@@ -75,7 +74,7 @@ int32_t halt (uint8_t status) {
                  :"eax"
                  );
 
-    return 0;
+    return -1;
 }
 
 
@@ -94,16 +93,13 @@ execute(const uint8_t *command) {
     uint8_t *cmdHold;
     uint8_t *cmdArgs;
     uint8_t *file;
-    uint32_t i, j, newEntry, pageHold, basePointer;
+    uint32_t par_pid; 
+    uint32_t i, newEntry, pageHold;
     uint8_t buf[4];
     //buf is an array, must initalize with a size
     dentry_t dentry; //= &(bbl->entries[0]);
     //dentry will cause page fault if null, always initialize it to something
     pdir_entry_t kerntry;
-
-
-    //parent base pointer
-    basePointer = retrieveBasePointer();
 
     if(command == NULL) {
         return -1;
@@ -163,6 +159,7 @@ execute(const uint8_t *command) {
         return -1;
 
     /*set up program paging*/
+    par_pid = curr_pid;
     //Find first open process (0-5)
     for(i = 0; i < PROG_MAX; i++) {
         if(pcb_array[i].in_use == 0) {
@@ -215,7 +212,7 @@ execute(const uint8_t *command) {
 
     /*tss*/
     //change esp0 to the value the stack pointer 
-    tss.esp0 = pcb_array[curr_pid].stack_ptr;
+    tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
     //change ss0
     tss.ss0 = KERNEL_DS; 
 
@@ -259,7 +256,7 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes) {
 
     if(curpcb->fda[fd].flags == 0){
         printf("read fail, file not open");
-        return;
+        return -1;
     }
 
     curpcb = &pcb_array[curr_pid];
