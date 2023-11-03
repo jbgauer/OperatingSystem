@@ -204,7 +204,7 @@ execute(const uint8_t *command) {
     pcb_init(par_pid);
     programs_running += 1;
 
-    asm volatile("movl %%esp, %0;":"=r"(pcb_array[curr_pid].stack_ptr));
+    //asm volatile("movl %%esp, %0;":"=r"(pcb_array[curr_pid].stack_ptr));
     asm volatile("movl %%ebp, %0;":"=r"(pcb_array[curr_pid].base_ptr));
     
     

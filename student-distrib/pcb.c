@@ -23,6 +23,7 @@ void pcb_init(uint32_t par_process_num) {
     pcb_t* new_pcb = &pcb_array[curr_proc];
     new_pcb->in_use = 1;
     new_pcb->par_id = par_process_num;
+    new_pcb->stack_ptr = EIGHT_MB - (EIGHT_KB*curr_proc) - 4;
     // new_pcb->inst_ptr = 0;
 
     //set fda[0] == stdin
