@@ -79,7 +79,7 @@ iret_context:
     pushl %ebx
 
     /* ESP to User Stack */
-    movl $0x08400000, %ebx   
+    movl $0x83FFFFC, %ebx   
     pushl %ebx
 
     /* set IF flag to 1 */
