@@ -131,4 +131,23 @@ X read goes beyond end of file and sometimes page fault
   ~ 30 mins, 10 line change
   ~ algorithmic, was skipping parts of the buffer because of block offset
    (Alexandra)
+--------------------
 
+--------------------
+DEBUG LOG 3.3:
+- execute going past the end of the filename
+  (Alexandra)
+  * syscall.c line 120
+  * causes read dentry fail because filename is wrong
+
+> read data fail
+  (Alexandra)
+  * you must initialize buffer for read_data
+  * right now I just did buf[4], we can change this later
+  * (the PRGRM_IMG_START buffer works, could also change to be like this?)
+  ~ 5 minutes, 1 line change
+
+- boot looping
+  (Alexandra)
+  * syscall.c line 219
+  * after the function is done, the program gets lost and can't return to execute

@@ -92,8 +92,10 @@ execute(const uint8_t *command) {
     uint8_t *cmdArgs;
     uint8_t *file;
     uint32_t i, j, newEntry, pageHold, basePointer;
-    uint8_t *buf;
-    dentry_t *dentry;
+    uint8_t buf[4];
+    //buf is an array, must initalize with a size
+    dentry_t* dentry; //= &(bbl->entries[0]);
+    //dentry will cause page fault if null, always initialize it to something
     pdir_entry_t kerntry;
 
 
@@ -115,11 +117,11 @@ execute(const uint8_t *command) {
     } 
     file = cmdHold;
     //go to end of filename
-    while(*cmdHold != ' ' || *cmdHold != '\n' || *cmdHold != '\0' || *cmdHold != "") {
+    while(*cmdHold != ' ' && *cmdHold != '\n' && *cmdHold != '\0' && *cmdHold != "" && cmdHold != NULL) {
         printf("%c", *cmdHold);
         cmdHold++;
     }
-    printf("got to end of file\n");
+    printf("\ngot to end of file\n");
 
     //set end of filename
     *cmdHold = '\0';
@@ -135,17 +137,21 @@ execute(const uint8_t *command) {
 
     cmdArgs = cmdHold;
     //go to end of args
-    while(*cmdHold != ' ' || *cmdHold != '\n' || *cmdHold != '\0') {
+    while(*cmdHold != ' ' && *cmdHold != '\n' && *cmdHold != '\0' && *cmdHold != "") {
         cmdHold++;
     }
     //set end of args
     *cmdHold = '\0';
 
     // args will be passed into get args to the program
-    printf("ln141");
+    printf("file: ");
+    puts(file);
+    printf("\n");
     /*Executable Check*/
     //set dentry
-    if(read_dentry_by_name(file, dentry) == -1)
+// I MANUALLY SET TO shell TO CHECK FOR OTHER ERRORS !!!!!!
+// still need to fix the actual filename
+    if(read_dentry_by_name("shell", dentry) == -1)
         return -1;
     if(read_data(dentry->inode_num,0,buf,4) == -1) 
         return -1;
@@ -213,6 +219,10 @@ execute(const uint8_t *command) {
 
     // IRET 
     iret_context(*((uint32_t*)buf));
+    // ^ gets lost in this function
+    //after iret, program can't return to here
+    //"cannot access memory at address 0x8400000"
+//BOOT LOOPING BUG ^
 
     asm volatile("execute_return:");
 
