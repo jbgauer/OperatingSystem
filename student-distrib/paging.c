@@ -24,7 +24,7 @@ void page_init(){
     //video memory ptable entry
     ptable_entry_t vidmem;
     //kernel pdir entry
-    pdir_entry_t kerntry;
+    pdir_entry_MB_t kerntry;
 
     vidmem.m_addr = 0xB8;
     vidmem.g = 0;
@@ -38,7 +38,10 @@ void page_init(){
     vidmem.p = 1;
 
     kerntry.p_addr = 0x400;
+    kerntry.pat = 0;
+    kerntry.g = 0;
     kerntry.ps = 1;
+    kerntry.d = 0;
     kerntry.a = 0;
     kerntry.pcd = 0;
     kerntry.pwt = 0;
@@ -47,7 +50,7 @@ void page_init(){
     kerntry.p = 1;
 
     vidf = combine_table_entry(vidmem);
-    kernf = combine_dir_entry(kerntry);
+    kernf = combine_dir_entry_MB(kerntry);
     
     //initialize the page directory
     for(i=0; i < 1024; i++){
@@ -77,7 +80,7 @@ void page_init(){
 
     load_page_directory(&pagedir[0]);
     enable_paging();
- }
+}
 
 /*
  * combine_dir_entry
@@ -93,6 +96,32 @@ uint32_t combine_dir_entry(pdir_entry_t pde){
     combo = pde.p_addr << 12;
 
     combo += pde.ps << 7;
+    combo += pde.a << 5;
+    combo += pde.pcd << 4;
+    combo += pde.pwt << 3;
+    combo += pde.us << 2;
+    combo += pde.rw << 1;
+    combo += pde.p;
+
+    return combo;
+}
+
+/*
+ * combine_dir_entry_MB
+ *   DESCRIPTION: gets the combined 32-bit entry of a 4MB pdir entry struct
+ *   INPUTS: a 4MB pdir entry struct
+ *   OUTPUTS: combined entry
+ *   RETURN VALUE: 32-bit int (unsigned)
+ *   SIDE EFFECTS: none
+ */
+uint32_t combine_dir_entry_MB(pdir_entry_MB_t pde){
+    uint32_t combo;
+
+    combo = pde.p_addr << 12;
+    combo += pde.pat << 12;
+    combo += pde.g << 8;
+    combo += pde.ps << 7;
+    combo += pde.d << 6;
     combo += pde.a << 5;
     combo += pde.pcd << 4;
     combo += pde.pwt << 3;
