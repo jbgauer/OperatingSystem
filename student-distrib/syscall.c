@@ -252,7 +252,7 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes) {
     int32_t bread;  //bytes read from read function
 
     //check input valid
-    if(fd > 7 || fd < 2 || buf == NULL){
+    if(fd < 0 || fd > 7 || buf == NULL){
         printf("read fail, invalid inputs");
         return -1;
     }
@@ -355,7 +355,7 @@ int32_t close (int32_t fd) {
     file_op_t fops;
     
     //check input valid
-    if(fd > 7 || fd < 2){
+    if(fd < 0 || fd > 7){
         printf("close fail, invalid fd");
         return -1;
     }
