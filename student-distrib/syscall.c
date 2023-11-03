@@ -213,13 +213,15 @@ execute(const uint8_t *command) {
     
     /*context switch (IN x86)*/
     // create its own context switch stack 
-    read_data(dentry->inode_num, 24, buf, 4); // buf holds entry point in program
+    // read_data(dentry->inode_num, 24, buf, 4); // buf holds entry point in program
 
-    // pcb_array[curr_pid].inst_ptr = *((uint32_t*)buf);
+    uint8_t new_buf[4];
+    read_data(dentry->inode_num, 24, new_buf, 4);   // only reads one byte for some reason
 
+    // this read data cannot go to the offset of 24, read data only works for first 4 bytes 
 
     // IRET 
-    iret_context(*((uint32_t*)buf));
+    iret_context(*((uint32_t*)new_buf));
     // ^ gets lost in this function
     //after iret, program can't return to here
     //"cannot access memory at address 0x8400000"
@@ -412,6 +414,3 @@ int32_t set_handler(int32_t signum, void* handler_address) {
 int32_t sigreturn (void) {
     return -1;
 }
-
-
-
