@@ -163,6 +163,8 @@ void entry(unsigned long magic, unsigned long addr) {
     /* Initialize Paging Structure */
     page_init();
 
+    initial_pcb_array();
+
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your
      * IDT correctly otherwise QEMU will triple fault and simple close

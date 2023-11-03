@@ -50,6 +50,16 @@ typedef struct {
  */
 void pcb_init(uint32_t par_process_num);
 
+/*
+ * initial_pcb_array
+ *   DESCRIPTION: initializes pcb array to not in use
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: sets entire pcb array to not in use
+ */
+void initial_pcb_array();
+
 pcb_t pcb_array[NUM_PCB];
 
 #endif
