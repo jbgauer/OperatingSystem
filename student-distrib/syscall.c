@@ -5,7 +5,9 @@ uint32_t programs_running = 0;
 
 /*
  * halt
- *   DESCRIPTION: 
+ *   DESCRIPTION: Ends a process by clearing the fda, 
+ *   checking if there is a parent process, if so 
+ *   switch the pages and set the tss. Then return to execute.
  *   INPUTS:
  *   OUTPUTS: none
  *   RETURN VALUE: 
@@ -145,7 +147,7 @@ execute(const uint8_t *command) {
 
     // args will be passed into get args to the program
     printf("file: ");
-    puts(file);
+    //puts(file);
     printf("\n");
     /*Executable Check*/
     //set dentry

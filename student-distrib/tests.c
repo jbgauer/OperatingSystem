@@ -460,20 +460,20 @@ void read_data_test(){
 }
 
 void read_test() {
-	int fd;
-	int bytes_read;
-	uint8_t buf[50];
-	int i;
-	curr_pid = 0;
-	pcb_init(0);
+	// int fd;
+	// int bytes_read;
+	// uint8_t buf[50];
+	// int i;
+	// curr_pid = 0;
+	// pcb_init(0);
 
-	fd = open("frame0.txt"); //pcb at 0x407000
-	bytes_read = read(fd, buf, 50); //pcb at 0x407000
+	// fd = open("frame0.txt"); //pcb at 0x407000
+	// bytes_read = read(fd, buf, 50); //pcb at 0x407000
 
-	printf("bytes read: %x\n", bytes_read);
-	for(i = 0; i < bytes_read; i++) {
-		putc(buf[i]);
-	}
+	// printf("bytes read: %x\n", bytes_read);
+	// for(i = 0; i < bytes_read; i++) {
+	// 	putc(buf[i]);
+	// }
 //somewhere after read, and before close, pcb gets clobbered
 	//close(fd); //pcb at 0x10, pcb at 0x404020, pcb unitialized!
 	//printf("\nafter close");
