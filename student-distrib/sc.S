@@ -69,14 +69,16 @@ flush_tlb:
 iret_context:
 
 /* IRET needs 5 elements on stack: User DS, ESP, EFLAG,CS,EIP */
-/*
+
     /* store EIP */
     movl 4(%esp), %eax
 
-    xorl %ebx, %ebx
+    /*xorl %ebx, %ebx
     movw $USER_DS, %bx
     movw %bx, %ds
-    pushl %ebx
+    pushl %ebx */
+
+    pushl $USER_DS
 
     /* ESP to User Stack */
     movl $0x83FFFFC, %ebx   
@@ -84,9 +86,9 @@ iret_context:
 
     /* set IF flag to 1 */
     pushfl
-    popl %ebx
+    /*popl %ebx
     orl $0x0200, %ebx
-    pushl %ebx
+    pushl %ebx */
 
     pushl $USER_CS
 
