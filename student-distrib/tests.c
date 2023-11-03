@@ -6,6 +6,7 @@
 #include "terminal.h"
 #include "keyboard.h"
 #include "filesys_driver.h"
+#include "syscall.h"
 
 #define PASS 1
 #define FAIL 0
@@ -458,6 +459,23 @@ void read_data_test(){
 	// }
 }
 
+void read_test() {
+	int fd;
+	int bytes_read;
+	uint8_t buf[50];
+	int i;
+	curr_pid = 0;
+	pcb_init(0);
+	fd = open("frame0.txt");
+	bytes_read = read(fd, buf, 50);
+	printf("%x", bytes_read);
+	for(i = 0; i < bytes_read; i++) {
+		putc(buf[i]);
+	}
+	close(fd);
+	bytes_read = read(fd, buf, 50);
+	printf("%x", bytes_read);
+}
 /* Checkpoint 4 tests */
 /* Checkpoint 5 tests */
 
@@ -487,4 +505,5 @@ void launch_tests(){
 
 	// CHECKPOINT 3:
 	//read_data_test();
+	read_test();
 }
