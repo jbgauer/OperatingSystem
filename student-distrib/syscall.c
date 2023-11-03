@@ -19,7 +19,7 @@ int32_t halt (uint8_t status) {
     // dentry_t *dentry;
     pdir_entry_t kerntry;
 
-    uint8_t shellcmd[5] = "shell";
+   //uint8_t shellcmd[5] = "shell";
     
     if(programs_running > 0){
         pcb_array[curr_pid].in_use = 0;
@@ -27,7 +27,7 @@ int32_t halt (uint8_t status) {
     }
 
     if(programs_running == 0){
-        execute(shellcmd);
+        execute("shell");
     }
 
 
@@ -90,6 +90,7 @@ int32_t halt (uint8_t status) {
 int32_t
 execute(const uint8_t *command) {
     printf("entering execute\n");
+    uint8_t hold1[COMMAND_MAX];
     uint8_t *cmdHold;
     uint8_t *cmdArgs;
     uint8_t *file;
@@ -107,8 +108,9 @@ execute(const uint8_t *command) {
     if(command == NULL) {
         return -1;
     }
+    cmdHold = hold1;
     /*Parse Args*/
-    cmdHold = command;
+    strncpy((char*)cmdHold, (char*)command, COMMAND_MAX);
     //skip spaces
     for(i = 0; i < COMMAND_MAX; i++) {
         if(*cmdHold == ' ') {
@@ -119,7 +121,7 @@ execute(const uint8_t *command) {
     } 
     file = cmdHold;
     //go to end of filename
-    while(*cmdHold != ' ' && *cmdHold != '\n' && *cmdHold != '\0' && *cmdHold != "" && cmdHold != NULL) {
+    while(*cmdHold != ' ' && *cmdHold != '\n' && *cmdHold != '\0') {
         printf("%c", *cmdHold);
         cmdHold++;
     }
@@ -139,7 +141,7 @@ execute(const uint8_t *command) {
 
     cmdArgs = cmdHold;
     //go to end of args
-    while(*cmdHold != ' ' && *cmdHold != '\n' && *cmdHold != '\0' && *cmdHold != "") {
+    while(*cmdHold != ' ' && *cmdHold != '\n' && *cmdHold != '\0') {
         cmdHold++;
     }
     //set end of args
