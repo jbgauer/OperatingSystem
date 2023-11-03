@@ -445,6 +445,19 @@ void dir_test(){
 }
 
 /* Checkpoint 3 tests */
+void read_data_test(){
+	// dentry_t fentry;
+	// uint8_t new_buf[10];
+	// int bread, i;
+
+	// read_dentry_by_name("frame0.txt", &fentry);
+	// bread = read_data(fentry.inode_num, 15, new_buf, 25);
+
+	// for(i=0; i < bread; i++){
+	// 	putc(new_buf[i]);
+	// }
+}
+
 /* Checkpoint 4 tests */
 /* Checkpoint 5 tests */
 
@@ -471,4 +484,7 @@ void launch_tests(){
 	//term_write_test();
 	//file_test();
 	//dir_test();
+
+	// CHECKPOINT 3:
+	//read_data_test();
 }
