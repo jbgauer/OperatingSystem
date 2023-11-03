@@ -17,11 +17,11 @@
  */
 void pcb_init(uint32_t par_process_num) {
     file_op_t std_file_op;
-    int curr_proc = 0;
+    int curr_proc = curr_pid;
     int j;
     pcb_t* new_pcb = &pcb_array[curr_proc];
-    new_pcb->stack_ptr = (uint32_t*)(EIGHT_MB-(EIGHT_KB*curr_proc)-4);
-    new_pcb->base_ptr = (uint32_t*)(EIGHT_MB-(EIGHT_KB*curr_proc)-4);
+    new_pcb->stack_ptr = EIGHT_MB-(EIGHT_KB*curr_proc)-4;
+    new_pcb->base_ptr = EIGHT_MB-(EIGHT_KB*curr_proc)-4;
     new_pcb->in_use = 1;
     new_pcb->par_id = par_process_num;
     // new_pcb->inst_ptr = 0;
