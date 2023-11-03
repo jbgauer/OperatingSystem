@@ -146,26 +146,29 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
         //put each char of curblock into the buf
         for(j=0; j < BLOCK_SIZE; j++){
             //get page fault because file may be smaller than 1 block
-            if(j+dataoff >= itnode->length){
+            if(j+dataoff >= itnode->length || bytesread >= length
+                || bytesread >= itnode->length){
                 return bytesread;
             }
-            //stop reading when reached length (may be shorter than a block)
-            if(bytesread >= length){
-                return bytesread;
-            }
-            //in case if length > file size, exit when file done
-            if(bytesread >= itnode->length){
-                return bytesread;
-            }
-            if((i == 0) && ((j+dataoff) >= BLOCK_SIZE)){
-                return bytesread;
-            }
+            // //stop reading when reached length (may be shorter than a block)
+            // if(bytesread >= length){
+            //     return bytesread;
+            // }
+            // //in case if length > file size, exit when file done
+            // if(bytesread >= itnode->length){
+            //     return bytesread;
+            // }
+            // if((i == 0) && ((j+dataoff) >= BLOCK_SIZE)){
+            //     return bytesread;
+            // }
 
             //if at the starting block, need to account for offset
-            if((i == 0) && ((j+dataoff) < BLOCK_SIZE)){
+            else if((i == 0) && ((j+dataoff) < BLOCK_SIZE)){
                 buf[b] = curblock->actualdata[j+dataoff];
                 //putc(buf[b]);
+                //putc(curblock->actualdata[j+dataoff]);
                 //buf[j] = curblock->actualdata[j+dataoff];
+                //printf("bread: %d", bytesread);
             }
             //otherwise get data as normal
             else{
