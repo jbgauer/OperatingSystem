@@ -279,12 +279,25 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes) {
  * write
  *   DESCRIPTION: does nothing, this is read-only file system
  *   INPUTS: fd, buf, nbytes
- *   OUTPUTS: none
- *   RETURN VALUE: none
- *   SIDE EFFECTS: none
+ *   OUTPUTS: num of bytes written, -1 if fail
+ *   RETURN VALUE: int
+ *   SIDE EFFECTS: might copy the input buffer
  */
 int32_t write (int32_t fd, const void* buf, int32_t nbytes) {
-    return -1;
+    pcb_t* curpcb;
+    //file_op_t fops;
+    int32_t bitten;  //bytes written
+    curpcb = &pcb_array[curr_pid];
+
+    //check input valid
+    if(fd < 0 || fd > 7 || buf == NULL){
+        printf("read fail, invalid inputs");
+        return -1;
+    }
+
+    bitten = curpcb->fda[fd].file_op_ptr->write(fd, buf, nbytes);
+
+    return bitten;
 }
 
 /*

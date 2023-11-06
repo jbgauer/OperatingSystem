@@ -484,6 +484,15 @@ void read_test() {
 /* Checkpoint 4 tests */
 /* Checkpoint 5 tests */
 
+void write_test(){
+	int bytes_read;
+	uint8_t buf[50] = "hello pain\n";
+	curr_pid = 0;
+	pcb_init(0);
+
+	bytes_read = write(1, buf, 20);
+}
+
 
 /* Test suite entry point */
 void launch_tests(){
@@ -510,5 +519,6 @@ void launch_tests(){
 
 	// CHECKPOINT 3:
 	//read_data_test();
-	read_test();
+	//read_test();
+	write_test();
 }
