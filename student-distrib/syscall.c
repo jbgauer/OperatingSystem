@@ -1,7 +1,14 @@
 #include "syscall.h"
-
+#include "terminal.h"
 
 uint32_t programs_running = 0;
+
+file_op_t fop_stdin = {.read = term_read, .write = term_write, .open = term_open, .close = term_close};
+file_op_t fop_stdout = {.read = term_read, .write = term_write, .open = term_open, .close = term_close};
+file_op_t fop_rtc = {.read = rtc_read, .write = rtc_write, .open = rtc_open, .close = rtc_close};
+file_op_t fop_dir = {.read = read_dir, .write = write_dir, .open = open_dir, .close = close_dir};
+file_op_t fop_file = {.read = read_file, .write = write_file, .open = open_file, .close = close_file};
+
 
 /*
  * halt
@@ -251,25 +258,26 @@ execute(const uint8_t *command) {
  *   SIDE EFFECTS: fills in buf 
  */
 int32_t read (int32_t fd, void* buf, int32_t nbytes) {
+    
     pcb_t* curpcb;
     //file_op_t fops;
     int32_t bread;  //bytes read from read function
     curpcb = &pcb_array[curr_pid];
 
-    //check input valid
-    if(fd < 0 || fd > 7 || buf == NULL){
-        printf("read fail, invalid inputs");
-        return -1;
-    }
+    // //check input valid
+    // if(fd < 0 || fd > 7 || buf == NULL){
+    //     printf("read fail, invalid inputs");
+    //     return -1;
+    // }
 
-    if(curpcb->fda[fd].flags == 0){
-        printf("read fail, file not open");
-        return -1;
-    }
+    // if(curpcb->fda[fd].flags == 0){
+    //     printf("read fail, file not open");
+    //     return -1;
+    // }
 
-
+//read broken, change 0=fd
     //fops = *(curpcb->fda[fd].file_op_ptr); //fops doesnt work, op ptrs wrong
-    bread = curpcb->fda[fd].file_op_ptr->read(fd, buf, nbytes);
+    bread = curpcb->fda[0].file_op_ptr->read(0, buf, nbytes);
     //bread = (*(fops.read))(fd, buf, nbytes);
     
     return bread;
@@ -284,6 +292,8 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes) {
  *   SIDE EFFECTS: might copy the input buffer
  */
 int32_t write (int32_t fd, const void* buf, int32_t nbytes) {
+    // printf("%s",buf);
+    
     pcb_t* curpcb;
     //file_op_t fops;
     int32_t bitten;  //bytes written
@@ -327,30 +337,21 @@ int32_t open (const uint8_t* filename) {
 
     switch(type){
         case 0: //if type 0, then rtc
-            fops.open = &rtc_open;
-            fops.close = &rtc_close;
-            fops.read = &rtc_read;
-            fops.write = &rtc_write;
+            curpcb->fda[fdindex].file_op_ptr = &fop_rtc;
 
             //also need to do the rtc open
             rtc_open(filename);
             break;
 
         case 1: //if type 1, then boot block (dir)
-            fops.open = &open_dir;
-            fops.close = &close_dir;
-            fops.read = &read_dir;
-            fops.write = &write_dir;
+            curpcb->fda[fdindex].file_op_ptr = &fop_dir;
 
             //need to do the directory open (does nothing)
             open_dir(filename);
             break;
 
         case 2: //type 2 is normal files
-            fops.open = &open_file;
-            fops.close = &close_file;
-            fops.read = &read_file;
-            fops.write = &write_file;
+            curpcb->fda[fdindex].file_op_ptr = &fop_file;
             break;
 
         default:

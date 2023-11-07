@@ -83,7 +83,7 @@ iret_context:
     /* ESP to User Stack */
     movl $0x83FFFFC, %ebx   
     pushl %ebx
-
+# change this to eax ^
     /* set IF flag to 1 */
     pushfl
     /*popl %ebx
@@ -97,5 +97,11 @@ iret_context:
 
     iret
 
+
+    # 0x80481a4
+    # 0x23
+    # 0xflag
+    # 0x803fffc
+    # 0x2b
 
 

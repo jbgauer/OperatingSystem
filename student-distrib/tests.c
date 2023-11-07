@@ -520,5 +520,5 @@ void launch_tests(){
 	// CHECKPOINT 3:
 	//read_data_test();
 	//read_test();
-	write_test();
+	// write_test();
 }

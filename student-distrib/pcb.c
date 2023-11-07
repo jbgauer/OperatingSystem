@@ -16,8 +16,9 @@
  *   RETURN VALUE: none
  *   SIDE EFFECTS: loads pcb into array
  */
+file_op_t std_file_op;
 void pcb_init(uint32_t par_process_num) {
-    file_op_t std_file_op;
+    
     int curr_proc = curr_pid;
     int j;
     pcb_t* new_pcb = &pcb_array[curr_proc];
