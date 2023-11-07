@@ -6,7 +6,17 @@
 #define VIDEO       0xB8000
 #define NUM_COLS    80
 #define NUM_ROWS    25
-#define ATTRIB      0x7
+#define ATTRIB      0x09 //0x7
+//0 - black
+//1 - blue
+//2 - green
+//3 - cyan
+//4 - orange
+//5 - pink
+//6 - yellow
+//7 - white
+//8 - grey
+//9 - violet
 
 
 static char* video_mem = (char *)VIDEO;
