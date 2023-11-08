@@ -8,6 +8,7 @@
 #include "x86_desc.h"
 #include "pcb.h"
 #include "rtc.h"
+#include "terminal.h"
 
 #define COMMAND_MAX 128
 #define EXEC_VAL 0x464C457F

@@ -1,14 +1,12 @@
 #include "syscall.h"
-#include "terminal.h"
 
 uint32_t programs_running = 0;
 
-file_op_t fop_stdin = {.read = term_read, .write = term_write, .open = term_open, .close = term_close};
-file_op_t fop_stdout = {.read = term_read, .write = term_write, .open = term_open, .close = term_close};
+// file operations pointers
+
 file_op_t fop_rtc = {.read = rtc_read, .write = rtc_write, .open = rtc_open, .close = rtc_close};
 file_op_t fop_dir = {.read = read_dir, .write = write_dir, .open = open_dir, .close = close_dir};
 file_op_t fop_file = {.read = read_file, .write = write_file, .open = open_file, .close = close_file};
-
 
 /*
  * halt
@@ -23,7 +21,6 @@ file_op_t fop_file = {.read = read_file, .write = write_file, .open = open_file,
 int32_t halt (uint8_t status) {
     uint32_t parent_id;
     int i;
-    uint8_t shellcmd[6] = "shell\0";
     uint32_t newEntry, pageHold; //basePointer;
     // uint8_t *buf;
     // dentry_t *dentry;
