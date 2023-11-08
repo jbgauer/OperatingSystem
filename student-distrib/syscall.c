@@ -29,7 +29,7 @@ int32_t halt (uint8_t status) {
     // dentry_t *dentry;
     pdir_entry_t kerntry;
 
-   //uint8_t shellcmd[5] = "shell";
+    //uint8_t shellcmd[5] = "shell";
     
     if(programs_running > 0){
         pcb_array[curr_pid].in_use = 0;
@@ -41,7 +41,7 @@ int32_t halt (uint8_t status) {
     }
 
     if(programs_running == 0){
-        execute(shellcmd);
+        return -1;
     }
 
 
@@ -97,7 +97,7 @@ int32_t halt (uint8_t status) {
  */
 int32_t
 execute(const uint8_t *command) {
-    printf("entering execute\n");
+    //printf("entering execute\n");
     uint8_t hold1[COMMAND_MAX];
     uint8_t *cmdHold;
     uint8_t *cmdArgs;
@@ -127,10 +127,10 @@ execute(const uint8_t *command) {
     file = cmdHold;
     //go to end of filename
     while(*cmdHold != ' ' && *cmdHold != '\n' && *cmdHold != '\0') {
-        printf("%c", *cmdHold);
+        //printf("%c", *cmdHold);
         cmdHold++;
     }
-    printf("\ngot to end of file\n");
+    //printf("\ngot to end of file\n");
  
     //set end of filename
     *cmdHold = '\0';
@@ -153,9 +153,9 @@ execute(const uint8_t *command) {
     *cmdHold = '\0';
 
     // args will be passed into get args to the program
-    printf("file: ");
+    //printf("file: ");
     //puts(file);
-    printf("\n");
+    //printf("\n");
     /*Executable Check*/
     //set dentry
     if(read_dentry_by_name(file, &dentry) == -1)
