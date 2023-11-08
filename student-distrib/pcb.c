@@ -32,14 +32,14 @@ void pcb_init(uint32_t par_process_num) {
     new_pcb->fda[0].file_op_ptr = &fop_stdin;
     new_pcb->fda[0].inode = 0;
     new_pcb->fda[0].file_position = 0;
-    new_pcb->fda[0].flags = 0;
-    new_pcb->fda[0].file_type = 0;     
+    new_pcb->fda[0].flags = 1;
+    new_pcb->fda[0].file_type = 3;     
     //set fda[1] == stdout 
     new_pcb->fda[1].file_op_ptr = &fop_stdout;
     new_pcb->fda[1].inode = 0;
     new_pcb->fda[1].file_position = 0;
-    new_pcb->fda[1].flags = 0;
-    new_pcb->fda[1].file_type = 0;     
+    new_pcb->fda[1].flags = 1;
+    new_pcb->fda[1].file_type = 3;     
 
     //set rest of array to 0
     for(j = 2; j < FILE_MAX; j++) {

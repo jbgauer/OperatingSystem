@@ -261,22 +261,25 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes) {
     int32_t bread;  //bytes read from read function
     curpcb = &pcb_array[curr_pid];
 
-    // //check input valid
-    // if(fd < 0 || fd > 7 || buf == NULL){
-    //     printf("read fail, invalid inputs");
-    //     return -1;
-    // }
+    //check input valid
+    if(fd < 0 || fd > 7 || buf == NULL){
+        printf("read fail, invalid inputs");
+        return -1;
+    }
 
-    // if(curpcb->fda[fd].flags == 0){
-    //     printf("read fail, file not open");
-    //     return -1;
-    // }
+    if(curpcb->fda[fd].flags == 0){
+        printf("read fail, file not open");
+        return -1;
+    }
 
 //read broken, change 0=fd
     //fops = *(curpcb->fda[fd].file_op_ptr); //fops doesnt work, op ptrs wrong
-    bread = curpcb->fda[0].file_op_ptr->read(0, buf, nbytes);
+    bread = curpcb->fda[fd].file_op_ptr->read(fd, buf, nbytes);
+//when ls tries to do read dir it page faults
+// because read is empty, why is file_op_ptr empty??
+
     //bread = (*(fops.read))(fd, buf, nbytes);
-    
+//printf("bread");
     return bread;
 }
 
@@ -301,9 +304,9 @@ int32_t write (int32_t fd, const void* buf, int32_t nbytes) {
         printf("read fail, invalid inputs");
         return -1;
     }
-
+//printf("write");
     bitten = curpcb->fda[fd].file_op_ptr->write(fd, buf, nbytes);
-
+//printf("kitten");
     return bitten;
 }
 
@@ -345,6 +348,7 @@ int32_t open (const uint8_t* filename) {
 
             //need to do the directory open (does nothing)
             open_dir(filename);
+//gdb here to see why file op ptr was empty
             break;
 
         case 2: //type 2 is normal files

@@ -65,7 +65,7 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     }
 
     //fail if file doesnt exist
-    printf("read dentry by name fail, file not found");
+    //printf("read dentry by name fail, file not found");
     return -1;
 }
 
