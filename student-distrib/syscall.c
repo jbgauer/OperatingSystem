@@ -107,6 +107,8 @@ execute(const uint8_t *command) {
     //dentry will cause page fault if null, always initialize it to something
     pdir_entry_t kerntry;
 
+    asm volatile("movl %%ebp, %0;":"=r"(pcb_array[curr_pid].base_ptr));
+
     if(command == NULL) {
         return -1;
     }
@@ -210,8 +212,7 @@ execute(const uint8_t *command) {
     pcb_init(par_pid);
     programs_running += 1;
 
-    //asm volatile("movl %%esp, %0;":"=r"(pcb_array[curr_pid].stack_ptr));
-    asm volatile("movl %%ebp, %0;":"=r"(pcb_array[curr_pid].base_ptr));
+
     
     
     /*context switch (IN x86)*/
