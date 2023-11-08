@@ -163,11 +163,18 @@ X was boot looping, now page fault
   * rtc functions should default have virtualization in EFFECTS
   * might be causing issue that pingpong page faults
 
-- Page fault on exit from base shell
+X Page fault on exit from base shell
   (Ben)
   * if type exit in base shell, page faults
   * probably issue with how we are halting base shell
+  ~ 10 minutes, 2 line change
+  ~ Switched re-executing shell back to halt
+  (Ben)
 
 - Pingpong Page faulting
   (Ben)
   * Probably either issue with rtc or read
+
+- We cannot allow more than 3 shells running at same time
+  (Ben)
+  * Will need to add this constraint later
