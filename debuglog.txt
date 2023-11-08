@@ -143,7 +143,6 @@ X execute going past the end of the filename
   ~ Execute was being fed wrong input 
   (Jack)
 
-
 > read data fail
   (Alexandra)
   * you must initialize buffer for read_data
@@ -151,8 +150,24 @@ X execute going past the end of the filename
   * (the PRGRM_IMG_START buffer works, could also change to be like this?)
   ~ 5 minutes, 1 line change
 
-- was boot looping, now page fault
+X was boot looping, now page fault
   (Alexandra)
   * syscall.c line 219
   * after the function is done, the program gets lost and can't return to execute
+  ~ 3 hours, 1 line change
+  ~ EBP wasn't saved at right location in halt code
+  (Jack)
 
+- RTC virtual not main rtc functions
+  (Ben)
+  * rtc functions should default have virtualization in EFFECTS
+  * might be causing issue that pingpong page faults
+
+- Page fault on exit from base shell
+  (Ben)
+  * if type exit in base shell, page faults
+  * probably issue with how we are halting base shell
+
+- Pingpong Page faulting
+  (Ben)
+  * Probably either issue with rtc or read
