@@ -21,6 +21,7 @@ file_op_t fop_file = {.read = read_file, .write = write_file, .open = open_file,
 int32_t halt (uint8_t status) {
     uint32_t parent_id;
     int i;
+    uint8_t shellcmd[6] = "shell\0";
     uint32_t newEntry, pageHold; //basePointer;
     // uint8_t *buf;
     // dentry_t *dentry;
@@ -38,7 +39,7 @@ int32_t halt (uint8_t status) {
     }
 
     if(programs_running == 0){
-        return -1;
+        execute(shellcmd);
     }
 
 
