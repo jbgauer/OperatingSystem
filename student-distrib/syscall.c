@@ -213,6 +213,8 @@ execute(const uint8_t *command) {
     }
     pcb_init(par_pid);
     programs_running += 1;
+    strcpy((char *)pcb_array[curr_pid].arg_array, (char*)cmdArgs);
+    
     // if(file == "shell\0") {
     //     pcb_array[curr_pid].shell_flag = 1;
     // } else {
@@ -412,7 +414,18 @@ int32_t close (int32_t fd) {
  *   SIDE EFFECTS: none
  */
 int32_t getargs (uint8_t* buf, int32_t nbytes) {
-    return -1;
+    /*If invalid arguments*/
+    if(nbytes <= 0 || buf == NULL || pcb_array[curr_pid].arg_array[0] == '\0') {
+        return -1;
+    }
+    /*Array is longer than length*/
+    if(strlen((char*)pcb_array[curr_pid].arg_array) > nbytes) {
+        return -1;
+    }
+    //Copies arguments to buf
+    strcpy((char *)buf, (char*)pcb_array[curr_pid].arg_array);
+    /*Success*/
+    return 0;
 }
 
 /*
