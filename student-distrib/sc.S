@@ -6,6 +6,8 @@
 
 #include "x86_desc.h"
 
+#define STACK_PT $0x83FFFFC
+
 /*
  * syscall_handler
  *   DESCRIPTION: handler for system calls
@@ -61,34 +63,39 @@ sys_call_table:
     .long set_handler
     .long sigreturn 
 
+/*
+ * flush_tlb
+ *   DESCRIPTION: flushes tlb 
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: tlb gets reset
+ */
 flush_tlb: 
     movl %cr3, %eax
     movl %eax, %cr3
     ret
 
+/*
+ * iret_context
+ *   DESCRIPTION: Sets up stack for iret at end of execute
+ *   INPUTS: uint32_t - EIP 
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: Sets up stack
+ */
 iret_context:
-
 /* IRET needs 5 elements on stack: User DS, ESP, EFLAG,CS,EIP */
 
     /* store EIP */
     movl 4(%esp), %eax
 
-    /*xorl %ebx, %ebx
-    movw $USER_DS, %bx
-    movw %bx, %ds
-    pushl %ebx */
-
     pushl $USER_DS
 
     /* ESP to User Stack */
-    movl $0x83FFFFC, %ebx   
-    pushl %ebx
-# change this to eax ^
-    /* set IF flag to 1 */
+    pushl STACK_PT
+
     pushfl
-    /*popl %ebx
-    orl $0x0200, %ebx
-    pushl %ebx */
 
     pushl $USER_CS
 
@@ -96,12 +103,3 @@ iret_context:
     pushl %eax
 
     iret
-
-
-    # 0x80481a4
-    # 0x23
-    # 0xflag
-    # 0x803fffc
-    # 0x2b
-
-
