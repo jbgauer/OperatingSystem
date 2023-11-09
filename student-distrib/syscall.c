@@ -170,6 +170,7 @@ execute(const uint8_t *command) {
     /*set up program paging*/
     par_pid = curr_pid;
     //Find first open process (0-5)
+    //temp change to 3 prog_max
     for(i = 0; i < PROG_MAX; i++) {
         if(pcb_array[i].in_use == 0) {
             curr_pid = i;
@@ -212,6 +213,11 @@ execute(const uint8_t *command) {
     }
     pcb_init(par_pid);
     programs_running += 1;
+    // if(file == "shell\0") {
+    //     pcb_array[curr_pid].shell_flag = 1;
+    // } else {
+    //     pcb_array[curr_pid].shell_flag = 0;
+    // }
 
 
     

@@ -12,7 +12,7 @@
 
 #define COMMAND_MAX 128
 #define EXEC_VAL 0x464C457F
-#define PROG_MAX 6
+#define PROG_MAX 3
 #define KENTRY_SHIFT 10
 #define PAGES_DEFAULT_USE 2
 #define FILE_SIZE (4096*1023)
