@@ -19,7 +19,7 @@
 //offset is into the page itself (NOT the page table)
 uint32_t pagedir[1024] __attribute__((aligned(4096)));
 uint32_t first_pagetable[1024] __attribute__((aligned(4096)));
-
+uint32_t page_table_vmem[1024] __attribute__((aligned(4096)));
 //these structs for dir and table entries are just to help organize
 //the actual tables are just 32-bit numbers (uint32_t)
 typedef struct {

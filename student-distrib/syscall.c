@@ -62,6 +62,8 @@ int32_t halt (uint8_t status) {
     kerntry.p = 1;
     newEntry = combine_dir_entry(kerntry);
     pagedir[USER_SPACE] = newEntry;
+
+    page_table_vmem[0] = 0x00000006;
     
     flush_tlb();
     
@@ -393,28 +395,53 @@ int32_t getargs (uint8_t* buf, int32_t nbytes) {
 
 /*
  * vidmap
- *   DESCRIPTION: 
- *   INPUTS:
- *   OUTPUTS: none
- *   RETURN VALUE: 
- *   SIDE EFFECTS: none
+ *   DESCRIPTION: Sets user level page to video memory, gives to program
+ *   INPUTS: uint8_t** - Pointer to pointer to virtual address of user level video memory page
+ *   OUTPUTS: uint8_t** - Sets this pointer to point to the new user level page
+ *   RETURN VALUE: 0 if success, -1 if bad input
+ *   SIDE EFFECTS: Creates new user level page
  */
 int32_t vidmap (uint8_t** screen_start) {
+    uint32_t vidf;
+    uint32_t i;
+    //Checks for bad input
+    if(screen_start == NULL || screen_start < (uint8_t**)(EIGHT_MB + FOUR_MB*curr_pid) 
+       || screen_start >= (uint8_t**)(EIGHT_MB + (FOUR_MB)*(curr_pid+1))) {
+        return -1;
+    }
     
-    // The vidmap call maps the text-mode video memory into user space at a pre-set virtual address. 
-    
-    // Although the address returned is always the same (see the memory map section later in this handout), 
-    // it should be written into the memory location provided by the caller (which must be checked for validity). 
-    // If the location is invalid, the call should return -1.
+    //Creates new page for user level access to video memory
+    ptable_entry_t vidmem;
 
-    // To avoid adding kernel-side exception handling for this sort of check, you can simply check whether the address falls
-    // within the address range covered by the single user-level page. 
+    vidmem.m_addr = 0xB8;
+    vidmem.g = 0;
+    vidmem.pat = 0;
+    vidmem.d = 0;
+    vidmem.a = 0;
+    vidmem.pcd = 0;
+    vidmem.pwt = 0;
+    vidmem.us = 1;
+    vidmem.rw = 1;
+    vidmem.p = 1;
+    vidf = combine_table_entry(vidmem);
 
-    // Note that the video memory will require you to add another page mapping for the program, in this case a 4 kB page. 
-    // It is not ok to simply change the permissions of the video page located < 4MB and pass that address.
+    //initialize the page table
+    for(i=0; i < 1024; i++){
+        //set user level
+        //set r/w to 1 to allow writing
+        //set table is not present
+        page_table_vmem[i] = 0x00000006;
+    }
+    //Sets page table entry 0 to video memory
+    page_table_vmem[0] = vidf;
 
+    //Sets page directory entry with user level set to 1, present set to 1, and r/w set to 1
+    pagedir[VIRT_VID_MEM_DIR] = ((unsigned int)page_table_vmem) | 7;
 
-    return -1;
+    //Sets screen_start pointer to virtual memory of new page
+    *screen_start = (uint8_t*)VIRT_VID_MEM;
+
+    return 0;
 }
 
 /*

@@ -11,6 +11,7 @@
 #define NUM_PCB 6
 #define FILE_MAX 8
 #define EIGHT_MB 0x800000
+#define FOUR_MB 0x400000
 #define EIGHT_KB 0x2000
 
 typedef struct {
