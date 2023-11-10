@@ -243,17 +243,17 @@ void rtc_driver_test(){
  */
 void rtc_virt_test(int freq){
 	
-	rtc_virt_open(NULL);
+	rtc_open(NULL);
 
 	clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
 	
-	rtc_virt_write(NULL, (void*)&freq, 4);
+	rtc_write(NULL, (void*)&freq, 4);
 
 	while(1){
-		rtc_virt_read(NULL, NULL, NULL);
+		rtc_read(NULL, NULL, NULL);
 		putc('1');
 	}
-	rtc_virt_close(NULL);
+	rtc_close(NULL);
 }
 
 

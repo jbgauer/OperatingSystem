@@ -64,9 +64,15 @@ void rtc_handler(){
     send_eoi(8);
 }
 
+
+//////////////////////////////////////////////
+// VIRTUALIZED CODE:                        //
+//////////////////////////////////////////////
+
 /*
- * rtc_open
- *   DESCRIPTION: sets rtc to 2 Hz
+ * rtc_open (virtualized)
+ *   DESCRIPTION: sets rtc to MAX Hz, and initializes
+ *                number interrupts to trigger a read
  *   INPUTS: filename
  *   OUTPUTS: int32_t
  *   RETURN VALUE: 0
@@ -74,9 +80,49 @@ void rtc_handler(){
  */
 int32_t rtc_open (const uint8_t* filename){
 
-    rtc_change_freq(MIN); // set frequency to 2 Hz
+    rtc_change_freq(MAX); // set frequency to maximum
+    num_ticks = 1;
     return 0;
 }
+
+/*
+ * rtc_read (virtualized)
+ *   DESCRIPTION: returns 0 only after num ticks
+ *                of interrupts happened
+ *   INPUTS: int32_t fd, void* buf, int32_t nbytes
+ *   OUTPUTS: int32_t
+ *   RETURN VALUE: 0
+ *   SIDE EFFECTS: none
+ */
+int32_t rtc_read (int32_t fd, void* buf, int32_t nbytes){
+    count = 0;
+    while(count != num_ticks);
+    return 0;
+}
+
+/*
+ * rtc_write (virtualized)
+ *   DESCRIPTION: changes num ticks to signal a read operation
+ *   INPUTS: int32_t fd, void* buf, int32_t nbytes
+ *   OUTPUTS: int32_t
+ *   RETURN VALUE: 0 or -1 (if failed parameter validation)
+ *   SIDE EFFECTS: none
+ */
+int32_t rtc_write (int32_t fd, const void* buf, int32_t nbytes){
+    
+    //parameter validation
+    if(buf == 0) return -1;
+
+    int32_t frequency;
+    frequency = *((int*) buf);
+
+    if(frequency > MAX || frequency < MIN) return -1;
+
+    num_ticks = MAX/frequency/2; // max/frequency ended up being off by a factor of 2
+
+    return 0;
+}
+
 
 /*
  * rtc_close
@@ -90,46 +136,7 @@ int32_t rtc_close (int32_t fd){
     return 0;
 }
 
-/*
- * rtc_read
- *   DESCRIPTION: returns 0 only after interrupt has occurred
- *   INPUTS: int32_t fd, void* buf, int32_t nbytes
- *   OUTPUTS: int32_t
- *   RETURN VALUE: 0
- *   SIDE EFFECTS: none
- */
-int32_t rtc_read (int32_t fd, void* buf, int32_t nbytes){
-    
-    interrupt_flag = 1;    //reset flag
-    while(interrupt_flag);
-    return 0;
-}
 
-/*
- * rtc_write
- *   DESCRIPTION: changes rtc's frequency from user input
- *                checks if provided a valid frequency
- *   INPUTS: int32_t fd, void* buf, int32_t nbytes
- *   OUTPUTS: int32_t
- *   RETURN VALUE: 0 or -1 (if invalid frequency)
- *   SIDE EFFECTS: none
- */
-int32_t rtc_write (int32_t fd, const void* buf, int32_t nbytes){
-    
-    //parameter validation
-    if(buf == 0) return -1;
-    if(nbytes != 4) return -1; // 4 bytes in 32 bit integer
-
-    int32_t frequency;
-    frequency = *((int32_t*) buf);
-
-    if(frequency > MAX || frequency < MIN) return -1;
-
-    if(frequency & (frequency-1)) return -1;     //only one bit set at a time to be power of 2
-
-    rtc_change_freq(frequency);
-    return 0;
-}
 
 /*
  * rtc_change_freq
@@ -181,71 +188,60 @@ int32_t log(int32_t n){
 
 
 //////////////////////////////////////////////
-// VIRTUALIZATON CODE:                      //
+// UNVIRTUALIZED CODE:                      //
 //////////////////////////////////////////////
 
-/*
- * rtc_virt_open
- *   DESCRIPTION: sets rtc to MAX Hz, and initializes
- *                number interrupts to trigger a read
- *   INPUTS: filename
- *   OUTPUTS: int32_t
- *   RETURN VALUE: 0
- *   SIDE EFFECTS: none
- */
-int32_t rtc_virt_open (const uint8_t* filename){
+// /*
+//  * rtc_open
+//  *   DESCRIPTION: sets rtc to 2 Hz
+//  *   INPUTS: filename
+//  *   OUTPUTS: int32_t
+//  *   RETURN VALUE: 0
+//  *   SIDE EFFECTS: none
+//  */
+// int32_t rtc_open (const uint8_t* filename){
 
-    rtc_change_freq(MAX); // set frequency to maximum
-    num_ticks = 1;
-    return 0;
-}
+//     rtc_change_freq(MIN); // set frequency to 2 Hz
+//     return 0;
+// }
 
 /*
- * rtc_virt_close
- *   DESCRIPTION: returns 0
- *   INPUTS: int32_t fd (file descriptor)
- *   OUTPUTS: int32_t
- *   RETURN VALUE: 0
- *   SIDE EFFECTS: none
- */
-int32_t rtc_virt_close (int32_t fd){
-    return 0;
-}
-
-/*
- * rtc_virt_read
- *   DESCRIPTION: returns 0 only after num ticks
- *                of interrupts happened
- *   INPUTS: int32_t fd, void* buf, int32_t nbytes
- *   OUTPUTS: int32_t
- *   RETURN VALUE: 0
- *   SIDE EFFECTS: none
- */
-int32_t rtc_virt_read (int32_t fd, void* buf, int32_t nbytes){
-    count = 0;
-    while(count != num_ticks);
-    return 0;
-}
-
-/*
- * rtc_virt_write
- *   DESCRIPTION: changes num ticks to signal a read operation
- *   INPUTS: int32_t fd, void* buf, int32_t nbytes
- *   OUTPUTS: int32_t
- *   RETURN VALUE: 0 or -1 (if failed parameter validation)
- *   SIDE EFFECTS: none
- */
-int32_t rtc_virt_write (int32_t fd, const void* buf, int32_t nbytes){
+//  * rtc_read
+//  *   DESCRIPTION: returns 0 only after interrupt has occurred
+//  *   INPUTS: int32_t fd, void* buf, int32_t nbytes
+//  *   OUTPUTS: int32_t
+//  *   RETURN VALUE: 0
+//  *   SIDE EFFECTS: none
+//  */
+// int32_t rtc_read (int32_t fd, void* buf, int32_t nbytes){
     
-    //parameter validation
-    if(buf == 0) return -1;
+//     interrupt_flag = 1;    //reset flag
+//     while(interrupt_flag);
+//     return 0;
+// }
 
-    int32_t frequency;
-    frequency = *((int*) buf);
+// /*
+//  * rtc_write
+//  *   DESCRIPTION: changes rtc's frequency from user input
+//  *                checks if provided a valid frequency
+//  *   INPUTS: int32_t fd, void* buf, int32_t nbytes
+//  *   OUTPUTS: int32_t
+//  *   RETURN VALUE: 0 or -1 (if invalid frequency)
+//  *   SIDE EFFECTS: none
+//  */
+// int32_t rtc_write (int32_t fd, const void* buf, int32_t nbytes){
+    
+//     //parameter validation
+//     if(buf == 0) return -1;
+//     if(nbytes != 4) return -1; // 4 bytes in 32 bit integer
 
-    if(frequency > MAX || frequency < MIN) return -1;
+//     int32_t frequency;
+//     frequency = *((int32_t*) buf);
 
-    num_ticks = MAX/frequency/2; // max/frequency ended up being off by a factor of 2
+//     if(frequency > MAX || frequency < MIN) return -1;
 
-    return 0;
-}
+//     if(frequency & (frequency-1)) return -1;     //only one bit set at a time to be power of 2
+
+//     rtc_change_freq(frequency);
+//     return 0;
+// }

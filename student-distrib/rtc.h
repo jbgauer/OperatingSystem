@@ -28,11 +28,11 @@ int32_t rtc_close (int32_t fd);
 
 void rtc_change_freq(int frequency);
 
-int32_t rtc_virt_read (int32_t fd, void* buf, int32_t nbytes);
-int32_t rtc_virt_write (int32_t fd, const void* buf, int32_t nbytes);
+// int32_t rtc_virt_read (int32_t fd, void* buf, int32_t nbytes);
+// int32_t rtc_virt_write (int32_t fd, const void* buf, int32_t nbytes);
 
-int32_t rtc_virt_open (const uint8_t* filename);
-int32_t rtc_virt_close (int32_t fd);
+// int32_t rtc_virt_open (const uint8_t* filename);
+// int32_t rtc_virt_close (int32_t fd);
 
 
 
