@@ -265,9 +265,7 @@ execute(const uint8_t *command) {
  *   SIDE EFFECTS: fills in buf 
  */
 int32_t read (int32_t fd, void* buf, int32_t nbytes) {
-    
     pcb_t* curpcb;
-    //file_op_t fops;
     int32_t bread;  //bytes read from read function
     curpcb = &pcb_array[curr_pid];
 
@@ -282,14 +280,8 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes) {
         return -1;
     }
 
-//read broken, change 0=fd
-    //fops = *(curpcb->fda[fd].file_op_ptr); //fops doesnt work, op ptrs wrong
     bread = curpcb->fda[fd].file_op_ptr->read(fd, buf, nbytes);
-//when ls tries to do read dir it page faults
-// because read is empty, why is file_op_ptr empty??
 
-    //bread = (*(fops.read))(fd, buf, nbytes);
-//printf("bread");
     return bread;
 }
 
@@ -314,9 +306,9 @@ int32_t write (int32_t fd, const void* buf, int32_t nbytes) {
         printf("read fail, invalid inputs");
         return -1;
     }
-//printf("write");
+
     bitten = curpcb->fda[fd].file_op_ptr->write(fd, buf, nbytes);
-//printf("kitten");
+
     return bitten;
 }
 
@@ -330,7 +322,6 @@ int32_t write (int32_t fd, const void* buf, int32_t nbytes) {
  */
 int32_t open (const uint8_t* filename) {
     uint32_t type;
-    file_op_t fops;
     pcb_t* curpcb;
 
     //open_file will do most of the work because need dentry info
@@ -358,7 +349,6 @@ int32_t open (const uint8_t* filename) {
 
             //need to do the directory open (does nothing)
             open_dir(filename);
-//gdb here to see why file op ptr was empty
             break;
 
         case 2: //type 2 is normal files
@@ -369,8 +359,6 @@ int32_t open (const uint8_t* filename) {
             printf("open fail, invalid file type");
             return -1;
     }
-
-    curpcb->fda[fdindex].file_op_ptr = &fops;
 
     return fdindex;
 }
@@ -385,7 +373,6 @@ int32_t open (const uint8_t* filename) {
  */
 int32_t close (int32_t fd) {
     pcb_t* curpcb;
-    //file_op_t fops;
     
     //check input valid
     if(fd < 0 || fd > 7){
@@ -396,10 +383,6 @@ int32_t close (int32_t fd) {
     //use the close operation from the file ops
     curpcb = &pcb_array[curr_pid]; //gets an unitialized pcb
 
-    //fops does NOT work
-    //fops = *(curpcb->fda[fd].file_op_ptr);
-    //(*(fops.close))(fd);
-//curpcb uninitialized here
     curpcb->fda[fd].file_op_ptr->close(fd);
 
     return 0;
