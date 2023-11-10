@@ -401,13 +401,17 @@ int32_t getargs (uint8_t* buf, int32_t nbytes) {
  */
 int32_t vidmap (uint8_t** screen_start) {
     
-    // The vidmap call maps the text-mode video memory into user space at a pre-set virtual address. Although the address
-    // returned is always the same (see the memory map section later in this handout), it should be written into the memory
-    // location provided by the caller (which must be checked for validity). If the location is invalid, the call should return -1.
+    // The vidmap call maps the text-mode video memory into user space at a pre-set virtual address. 
+    
+    // Although the address returned is always the same (see the memory map section later in this handout), 
+    // it should be written into the memory location provided by the caller (which must be checked for validity). 
+    // If the location is invalid, the call should return -1.
+
     // To avoid adding kernel-side exception handling for this sort of check, you can simply check whether the address falls
-    // within the address range covered by the single user-level page. Note that the video memory will require you to add
-    // another page mapping for the program, in this case a 4 kB page. It is not ok to simply change the permissions of the
-    // video page located < 4MB and pass that address.
+    // within the address range covered by the single user-level page. 
+
+    // Note that the video memory will require you to add another page mapping for the program, in this case a 4 kB page. 
+    // It is not ok to simply change the permissions of the video page located < 4MB and pass that address.
 
 
     return -1;
