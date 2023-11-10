@@ -95,7 +95,6 @@ int32_t halt (uint8_t status) {
  */
 int32_t
 execute(const uint8_t *command) {
-    //printf("entering execute\n");
     uint8_t hold1[COMMAND_MAX];
     uint8_t *cmdHold;
     uint8_t *cmdArgs;
@@ -127,15 +126,11 @@ execute(const uint8_t *command) {
     file = cmdHold;
     //go to end of filename
     while(*cmdHold != ' ' && *cmdHold != '\n' && *cmdHold != '\0') {
-        //printf("%c", *cmdHold);
         cmdHold++;
     }
-    //printf("\ngot to end of file\n");
- 
     //set end of filename
     *cmdHold = '\0';
-    
-    //skip spaces (NOTE: maybe this goes to far? Maybe it will have infinite spaces? [when there are no args])
+    cmdHold++;
     for(i = 0; i < COMMAND_MAX; i++) {
         if(*cmdHold == ' ') {
             cmdHold++;
@@ -152,10 +147,6 @@ execute(const uint8_t *command) {
     //set end of args
     *cmdHold = '\0';
 
-    // args will be passed into get args to the program
-    //printf("file: ");
-    //puts(file);
-    //printf("\n");
     /*Executable Check*/
     //set dentry
     if(read_dentry_by_name(file, &dentry) == -1)
@@ -214,20 +205,9 @@ execute(const uint8_t *command) {
     pcb_init(par_pid);
     programs_running += 1;
     strcpy((char *)pcb_array[curr_pid].arg_array, (char*)cmdArgs);
-    
-    // if(file == "shell\0") {
-    //     pcb_array[curr_pid].shell_flag = 1;
-    // } else {
-    //     pcb_array[curr_pid].shell_flag = 0;
-    // }
-
-
-    
-    
+     
     /*context switch (IN x86)*/
     // create its own context switch stack 
-    // read_data(dentry->inode_num, 24, buf, 4); // buf holds entry point in program
-
     uint8_t new_buf[4];
     read_data(dentry.inode_num, 24, new_buf, 4);   // only reads one byte for some reason
 
@@ -237,17 +217,8 @@ execute(const uint8_t *command) {
     //change ss0
     tss.ss0 = KERNEL_DS; 
 
-
-
-    // this read data cannot go to the offset of 24, read data only works for first 4 bytes 
-
     // IRET 
     iret_context(*((uint32_t*)new_buf));
-    // ^ gets lost in this function
-    //after iret, program can't return to here
-    //"cannot access memory at address 0x8400000"
-//BOOT LOOPING BUG ^
-//page fault now ??
 
     asm volatile("execute_return:");
 
