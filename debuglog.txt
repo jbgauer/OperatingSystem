@@ -171,14 +171,22 @@ X Page fault on exit from base shell
   ~ Switched re-executing shell back to halt
   (Ben)
 
-- Pingpong Page faulting
+X Pingpong Page faulting
   (Ben)
   * Probably either issue with rtc or read
   * issue is with open
-  ~ 5 10 minutes, 2 line change
+  ~ 5-10 minutes, 2 line change
   ~ needed to use the new global file pointers
   (Alexandra)
 
-- We cannot allow more than 3 shells running at same time
+X We cannot allow more than 3 shells running at same time
   (Ben)
   * Will need to add this constraint later
+  ~ 10 minutes, 1 line change
+  ~ Max amount of processes is 3 
+  (Ben)
+
+--------------------
+
+--------------------
+DEBUG LOG 3.4:

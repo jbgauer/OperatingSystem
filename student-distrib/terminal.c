@@ -79,7 +79,8 @@ term_read(int32_t fd, void* buf, int32_t nbytes) {
 /*
  * term_write
  *   DESCRIPTION: copy the user buffer to the screen
- *   INPUTS: none
+ *   INPUTS:  const void* - buf    - buffer to be written to 
+ *            int32_t     - nbytes - number of bytes to write 
  *   OUTPUTS: user buffer 
  *   RETURN VALUE: number of bytes written, -1 if failed
  *   SIDE EFFECTS: writes to the screen
@@ -106,10 +107,26 @@ term_write(int32_t fd, const void* buf, int32_t nbytes) {
     return byteCount;
 }
 
+/*
+ * term_write
+ *   DESCRIPTION: returns negative one for when write is not allowed
+ *   INPUTS: none
+ *   OUTPUTS: none 
+ *   RETURN VALUE: -1
+ *   SIDE EFFECTS: Just returns -1
+ */
 int32_t bad_write (int32_t fd, const void* buf, int32_t nbytes) {
     return -1;
 }
 
+/*
+ * term_read
+ *   DESCRIPTION: returns negative one for when read is not allowed
+ *   INPUTS: none
+ *   OUTPUTS: none 
+ *   RETURN VALUE: -1
+ *   SIDE EFFECTS: Just returns -1
+ */
 int32_t bad_read (int32_t fd, void* buf, int32_t nbytes) {
     return -1;
 }
