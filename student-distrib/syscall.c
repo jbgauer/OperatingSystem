@@ -303,7 +303,11 @@ int32_t write (int32_t fd, const void* buf, int32_t nbytes) {
 
     //check input valid
     if(fd < 0 || fd > 7 || buf == NULL){
-        printf("read fail, invalid inputs");
+        printf("write fail, invalid inputs");
+        return -1;
+    }
+    if(curpcb->fda[fd].flags == 0){
+        printf("write fail, file not open");
         return -1;
     }
 
@@ -373,16 +377,21 @@ int32_t open (const uint8_t* filename) {
  */
 int32_t close (int32_t fd) {
     pcb_t* curpcb;
-    
+    curpcb = &pcb_array[curr_pid];
+
     //check input valid
-    if(fd < 0 || fd > 7){
+    //should not be able to close stdin or stdout
+    if(fd < 2 || fd > 7){
         printf("close fail, invalid fd");
+        return -1;
+    }
+    //check that a file was open before trying to close
+    if(curpcb->fda[fd].flags == 0){
+        printf("close fail, file not open");
         return -1;
     }
 
     //use the close operation from the file ops
-    curpcb = &pcb_array[curr_pid]; //gets an unitialized pcb
-
     curpcb->fda[fd].file_op_ptr->close(fd);
 
     return 0;
