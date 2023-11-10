@@ -190,3 +190,9 @@ X We cannot allow more than 3 shells running at same time
 
 --------------------
 DEBUG LOG 3.4:
+X description of bug (X means resolved, > means in progress, - means recorded)
+    (Jack)
+  * Getargs being filled with '\0'.
+  ~ 5 min, 1 line changed
+  ~ Had to increment cmdHold when changing from filename to arguments.
+    (Jack)
