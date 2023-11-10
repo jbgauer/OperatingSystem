@@ -106,3 +106,10 @@ term_write(int32_t fd, const void* buf, int32_t nbytes) {
     return byteCount;
 }
 
+int32_t bad_write (int32_t fd, const void* buf, int32_t nbytes) {
+    return -1;
+}
+
+int32_t bad_read (int32_t fd, void* buf, int32_t nbytes) {
+    return -1;
+}

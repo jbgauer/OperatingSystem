@@ -7,8 +7,8 @@
 #include "terminal.h"
 #include "syscall.h"
 
-file_op_t fop_stdin = {.read = term_read, .write = term_write, .open = term_open, .close = term_close};
-file_op_t fop_stdout = {.read = term_read, .write = term_write, .open = term_open, .close = term_close};
+file_op_t fop_stdin = {.read = term_read, .write = bad_write, .open = term_open, .close = term_close};
+file_op_t fop_stdout = {.read = bad_read, .write = term_write, .open = term_open, .close = term_close};
 
 /*
  * pcb_init

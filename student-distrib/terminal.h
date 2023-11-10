@@ -13,6 +13,8 @@ int32_t term_read(int32_t fd, void* buf, int32_t nbytes);
 
 int32_t term_write(int32_t fd, const void* buf, int32_t nbytes);
 
+int32_t bad_write (int32_t fd, const void* buf, int32_t nbytes);
 
+int32_t bad_read (int32_t fd, void* buf, int32_t nbytes);
 
 #endif
