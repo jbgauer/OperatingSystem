@@ -158,10 +158,13 @@ X was boot looping, now page fault
   ~ EBP wasn't saved at right location in halt code
   (Jack)
 
-- RTC virtual not main rtc functions
+X RTC virtual not main rtc functions
   (Ben)
   * rtc functions should default have virtualization in EFFECTS
   * might be causing issue that pingpong page faults
+  ~ 5 mins, 50 line change
+  ~ made virtualization code default for rtc
+  (Kevin)
 
 X Page fault on exit from base shell
   (Ben)
@@ -178,7 +181,10 @@ X Pingpong Page faulting
   ~ 5-10 minutes, 2 line change
   ~ needed to use the new global file pointers
   (Alexandra)
+--------------------
 
+--------------------
+DEBUG LOG 3.4:
 X We cannot allow more than 3 shells running at same time
   (Ben)
   * Will need to add this constraint later
@@ -186,13 +192,10 @@ X We cannot allow more than 3 shells running at same time
   ~ Max amount of processes is 3 
   (Ben)
 
---------------------
-
---------------------
-DEBUG LOG 3.4:
-X description of bug (X means resolved, > means in progress, - means recorded)
-    (Jack)
-  * Getargs being filled with '\0'.
+X getargs being filled with null
+  (Jack)
   ~ 5 min, 1 line changed
   ~ Had to increment cmdHold when changing from filename to arguments.
     (Jack)
+
+  
