@@ -118,6 +118,12 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
     //get inode of the file
     itnode = (inode_t*)(startinode+inode);
 
+    //if at end of file, nothing to read so return 0
+    if(offset >= itnode->length){
+        //printf("stop trying to read past end of file");
+        return 0;
+    }
+
     //put into buf from 0 to length
     // ^ this is CHAR length
     //num of blocks to read would be length/4096
@@ -147,7 +153,7 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
         for(j=0; j < BLOCK_SIZE; j++){
             //get page fault because file may be smaller than 1 block
             if(j+dataoff >= itnode->length || bytesread >= length
-                || bytesread >= itnode->length){
+                || bytesread >= itnode->length || bytesread+dataoff >= itnode->length){
                 return bytesread;
             }
             // //stop reading when reached length (may be shorter than a block)
