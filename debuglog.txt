@@ -196,6 +196,11 @@ X getargs being filled with null
   (Jack)
   ~ 5 min, 1 line changed
   ~ Had to increment cmdHold when changing from filename to arguments.
-    (Jack)
+  (Jack)
 
+> 'ls' and 'syserr 3' break after running 'cat'
+  (Alexandra)
+  * bootblock just disappears from bbl entries after 'cat'
+  * ls and syserr 3 fail because cannot find '.' (bbl) file
+  * its just gone??? also the entries order gets weird
   
