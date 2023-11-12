@@ -1,5 +1,4 @@
 
-
 #define ASM     1
 
 /* handler wrappers go into SET_IDT_ENTRY for exceptions, interrupts, and system calls
