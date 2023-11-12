@@ -1,4 +1,3 @@
-
 #include "idt.h"
 
 #include "lib.h"
@@ -98,5 +97,4 @@ void init_idt(){
 
 // /* The IDT itself (declared in x86_desc.S */
 // extern idt_desc_t idt[NUM_VEC];
-
 
