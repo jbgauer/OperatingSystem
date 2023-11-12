@@ -224,6 +224,7 @@ execute(const uint8_t *command) {
 
     asm volatile("execute_return:");
 
+    
     return 0;
 }
 
@@ -407,10 +408,9 @@ int32_t getargs (uint8_t* buf, int32_t nbytes) {
  */
 int32_t vidmap (uint8_t** screen_start) {
     uint32_t vidf;
-    uint32_t i;
+    // uint32_t i;
     //Checks for bad input
-    if(screen_start == NULL || screen_start < (uint8_t**)(EIGHT_MB + FOUR_MB*curr_pid) 
-       || screen_start >= (uint8_t**)(EIGHT_MB + (FOUR_MB)*(curr_pid+1))) {
+    if(screen_start == NULL || screen_start < (uint8_t**)(EIGHT_MB + FOUR_MB*curr_pid)) {
         return -1;
     }
     
@@ -429,19 +429,14 @@ int32_t vidmap (uint8_t** screen_start) {
     vidmem.p = 1;
     vidf = combine_table_entry(vidmem);
 
-    //initialize the page table
-    for(i=0; i < 1024; i++){
-        //set user level
-        //set r/w to 1 to allow writing
-        //set table is not present
-        page_table_vmem[i] = 0x00000006;
-    }
+    
     //Sets page table entry 0 to video memory
     page_table_vmem[0] = vidf;
 
     //Sets page directory entry with user level set to 1, present set to 1, and r/w set to 1
     pagedir[VIRT_VID_MEM_DIR] = ((unsigned int)page_table_vmem) | 7;
 
+    flush_tlb();
     //Sets screen_start pointer to virtual memory of new page
     *screen_start = (uint8_t*)VIRT_VID_MEM;
 

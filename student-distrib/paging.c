@@ -71,6 +71,15 @@ void page_init(){
     //page table entry for the video memory, 4kB, with w/r and present bits on
     first_pagetable[0xB8] = vidf; //0x000B8003;
 
+    //initialize the page table
+    for(i=0; i < 1024; i++){
+        //set user level
+        //set r/w to 1 to allow writing
+        //set table is not present
+        page_table_vmem[i] = 0x00000006;
+    }
+
+
     //put video memory table into the directory
     pagedir[0] = ((unsigned int)first_pagetable) | 3;
     //do this cast ^ to get the addr of the page table
