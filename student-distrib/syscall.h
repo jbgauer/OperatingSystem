@@ -20,7 +20,7 @@
 #define PRGRM_IMG_START 0x08048000
 #define FILE_MAX 8
 #define USER_SPACE 32
-#define VIRT_VID_MEM_DIR 255
+#define VIRT_VID_MEM_DIR 256
 #define VIRT_VID_MEM 0x40000000
 
 // current process id
