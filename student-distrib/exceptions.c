@@ -18,16 +18,18 @@ char* exceptions[20] = {"Division by Zero", "debug", "non_maskable_interrupt", "
  *   SIDE EFFECTS: prints the exception and freezes
  */
 void exception_handler(uint32_t vectorNo){
-    cli();
+    // cli();
     
     // volatile int dontmodify = 0;
-    printf("Exception: %s", exceptions[vectorNo]);
+    printf("Exception: %s \n", exceptions[vectorNo]);
     
     // while(1){   //freeze
     //     if(dontmodify) break;
     // }
 
     halt((uint8_t)256);
+
+    return;
 }
 
 
