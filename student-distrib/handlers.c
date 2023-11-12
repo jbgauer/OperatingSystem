@@ -20,12 +20,14 @@ char* exceptions[20] = {"Division by Zero", "debug", "non_maskable_interrupt", "
 void exception_handler(uint32_t vectorNo){
     cli();
     
-    volatile int dontmodify = 0;
+    // volatile int dontmodify = 0;
     printf("Exception: %s", exceptions[vectorNo]);
     
-    while(1){   //freeze
-        if(dontmodify) break;
-    }
+    // while(1){   //freeze
+    //     if(dontmodify) break;
+    // }
+
+    halt((uint8_t)256);
 }
 
 
