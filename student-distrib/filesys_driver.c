@@ -46,14 +46,8 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     //go thru dir entries
     for(i = 0; i < bbl->dentry_count; i++){
         //get cur name
-//before this curname was '.'
         curname = (bbl->entries[i]).filename;
-//open directory fail here!!
-// entries are out of order
-// bbl->entries[0] is fish???
-//this happens after running 'cat'
-//now when trying to do syserr 3, entry 0 is 'ls'??
-//entries order gets all messed up too
+        
         //get cur length, files might have parts match
         // (frame == frame0.txt)
         curlen = strlen((char*)curname);
@@ -211,8 +205,8 @@ int32_t read_data (uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t lengt
 int32_t open_file(const uint8_t* filename){
     int j, rd;
     //get file dentry
-    dentry_t* fentry = &(bbl->entries[0]);
-    rd = read_dentry_by_name(filename, fentry);
+    dentry_t fentry;
+    rd = read_dentry_by_name(filename, &fentry);
 
     //first need to get pcb (process that called me)
     pcb_t* curpcb = &pcb_array[curr_pid]; //get curpid from syscall file
@@ -226,10 +220,10 @@ int32_t open_file(const uint8_t* filename){
     for(j=2; j < 8; j++){
         if(curpcb->fda[j].flags == 0){
             //put the file into the file array at this index
-            curpcb->fda[j].inode = fentry->inode_num;
+            curpcb->fda[j].inode = fentry.inode_num;
             curpcb->fda[j].file_position = 0;
             curpcb->fda[j].flags = 1;   //flags = 0 when open, flags = 1 when file here
-            curpcb->fda[j].file_type = fentry->filetype;
+            curpcb->fda[j].file_type = fentry.filetype;
             return j;
         }
     }

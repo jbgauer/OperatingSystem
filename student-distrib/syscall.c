@@ -308,11 +308,13 @@ int32_t open (const uint8_t* filename) {
         return -1;
     }
 
-    //need to set the file operations depending on file type
+    //open the file
     curpcb = &pcb_array[curr_pid];
     type = curpcb->fda[fdindex].file_type;
+    //set file as open (just in case)
+    curpcb->fda[fdindex].flags = 1;
 
-
+    //need to set the file operations depending on file type
     switch(type){
         case 0: //if type 0, then rtc
             curpcb->fda[fdindex].file_op_ptr = &fop_rtc;
@@ -366,6 +368,8 @@ int32_t close (int32_t fd) {
 
     //use the close operation from the file ops
     curpcb->fda[fd].file_op_ptr->close(fd);
+    //set file as closed
+    curpcb->fda[fd].flags = 0;
 
     return 0;
 }

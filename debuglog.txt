@@ -202,5 +202,7 @@ X getargs being filled with null
   (Alexandra)
   * bootblock just disappears from bbl entries after 'cat'
   * ls and syserr 3 fail because cannot find '.' (bbl) file
-  * its just gone??? also the entries order gets weird
+  ~ 30 mins, 2 line change
+  ~ was initializing fentry bad in open_file
+  (Alexandra)
   
