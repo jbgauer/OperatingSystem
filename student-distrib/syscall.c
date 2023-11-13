@@ -72,6 +72,7 @@ int32_t halt (uint8_t status) {
     
     /*Jump to execute return*/ 
     //also restores parent esp and ebp
+    putc('\n'); // newline after every executable
 
     asm volatile(
                  "movl %0, %%esp;" 
