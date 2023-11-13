@@ -206,11 +206,18 @@ X 'ls' and 'syserr 3' break after running 'cat'
   ~ 30 mins, 2 line change
   ~ was initializing fentry bad in open_file
   (Alexandra)
-  
+
 X fish not doing anything
   (Ben)
   * fish does nothing when called
-  ~ 1 hour, ~10 line change
+  ~ 30 mins, ~1 line change
+  ~ Bound of validity never met, incorrect bounds
+  (Kevin)
+
+X fish page faults
+  (Ben)
+  * page faults when fish is called 
+  ~ 30 mins, ~2 line change
   ~ TLB wasn't being flushed
   ~ index in page directory was 1 off
   (Kevin)
