@@ -143,12 +143,13 @@ X execute going past the end of the filename
   ~ Execute was being fed wrong input 
   (Jack)
 
-> read data fail
+X read data fail
   (Alexandra)
   * you must initialize buffer for read_data
   * right now I just did buf[4], we can change this later
   * (the PRGRM_IMG_START buffer works, could also change to be like this?)
   ~ 5 minutes, 1 line change
+  (Alexandra)
 
 X was boot looping, now page fault
   (Alexandra)
@@ -198,7 +199,7 @@ X getargs being filled with null
   ~ Had to increment cmdHold when changing from filename to arguments.
   (Jack)
 
-> 'ls' and 'syserr 3' break after running 'cat'
+X 'ls' and 'syserr 3' break after running 'cat'
   (Alexandra)
   * bootblock just disappears from bbl entries after 'cat'
   * ls and syserr 3 fail because cannot find '.' (bbl) file
@@ -206,3 +207,10 @@ X getargs being filled with null
   ~ was initializing fentry bad in open_file
   (Alexandra)
   
+X fish not doing anything
+  (Ben)
+  * fish does nothing when called
+  ~ 1 hour, ~10 line change
+  ~ TLB wasn't being flushed
+  ~ index in page directory was 1 off
+  (Kevin)
