@@ -63,7 +63,7 @@ int32_t halt (uint8_t status) {
     newEntry = combine_dir_entry(kerntry);
     pagedir[USER_SPACE] = newEntry;
 
-    page_table_vmem[0] = 0x00000006;
+    page_table_vmem[0] = 0x00000006;    // unmapping vid map page
     
     flush_tlb();
     
@@ -411,7 +411,7 @@ int32_t vidmap (uint8_t** screen_start) {
     uint32_t vidf;
     // uint32_t i;
     //Checks for bad input
-    if(screen_start == NULL || screen_start < (uint8_t**)(EIGHT_MB + FOUR_MB*curr_pid)) {
+    if(screen_start == NULL || screen_start < (uint8_t**)(EIGHT_MB)) {
         return -1;
     }
     
@@ -439,7 +439,7 @@ int32_t vidmap (uint8_t** screen_start) {
 
     flush_tlb();
     //Sets screen_start pointer to virtual memory of new page
-    *screen_start = (uint8_t*)VIRT_VID_MEM;
+    *screen_start = (uint8_t*)VIRT_VID_MEM; //set at 1GB in virtual memory
 
     return 0;
 }
