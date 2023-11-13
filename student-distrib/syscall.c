@@ -378,11 +378,11 @@ int32_t close (int32_t fd) {
 
 /*
  * getargs
- *   DESCRIPTION: 
- *   INPUTS:
+ *   DESCRIPTION: Copies arguments of current process into given user buffer.
+ *   INPUTS: user buffer (buf), number of bytes to copy to (nbytes)
  *   OUTPUTS: none
- *   RETURN VALUE: 
- *   SIDE EFFECTS: none
+ *   RETURN VALUE: 0 if success, -1 if fail
+ *   SIDE EFFECTS: copies arguments from exec into user buf.
  */
 int32_t getargs (uint8_t* buf, int32_t nbytes) {
     /*If invalid arguments*/
