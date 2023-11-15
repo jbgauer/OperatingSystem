@@ -47,6 +47,8 @@ term_read(int32_t fd, void* buf, int32_t nbytes) {
         /*failed*/
         return -1;
     }
+    //reset enter_flag
+    enter_flag = 0;
     //wait until enter is pressed
     while(!enter_flag) {
         ;
@@ -70,8 +72,6 @@ term_read(int32_t fd, void* buf, int32_t nbytes) {
     }
     keyboard_buf_index = 0;
     /*success*/
-    //reset enter_flag
-    enter_flag = 0;
     return i;
 }
 

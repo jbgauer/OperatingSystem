@@ -76,10 +76,6 @@ void keyboard_init(){
 void keyboard_handler(){
     uint8_t scan_code = inb(0x60); // port to receive scancodes
     int i;
-    // If keyboard buffer is at end
-    // if(keyboard_buf_index == keyboard_buf_size) {
-    //     keyboard_buf_index = 0;
-    // }
 
     switch(scan_code) {
         case 0x0E: 
@@ -95,12 +91,14 @@ void keyboard_handler(){
             break;
         case 0x0F:
             // Tab pressed
-            for(i = 0; i < TAB_SPACE; i++) {
-                if(keyboard_buf_index == 127) break;
-                keyboard_buf[keyboard_buf_index] = ' ';
-                keyboard_buf_index++;
-                putc(' ');
-            }   
+            if(enter_flag == 0) {
+                for(i = 0; i < TAB_SPACE; i++) {
+                    if(keyboard_buf_index == 127) break;
+                    keyboard_buf[keyboard_buf_index] = ' ';
+                    keyboard_buf_index++;
+                    putc(' ');
+                }   
+            }
             break;
         case 0x1C: 
             // Enter Pressed
@@ -149,7 +147,7 @@ void keyboard_handler(){
                 screen_y = 0;
                 update_cursor();
             }
-            else if(keyboard_buf_index < keyboard_buf_size-1) {
+            else if(keyboard_buf_index < keyboard_buf_size-1 && enter_flag == 0) {
             // If shifted character
             if((left_shift_flag || right_shift_flag) != caps_flag) {
                 if((scan_code < NUM_SCANCODES) && (scancodeTranslator[scan_code] != 0x0)){     // 0x0 is not mapped entry
