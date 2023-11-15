@@ -80,6 +80,7 @@ void rtc_handler(){
  */
 int32_t rtc_open (const uint8_t* filename){
 
+    //rtc_change_freq(MAX); // set frequency to maximum
     rtc_change_freq(MAX); // set frequency to maximum
     num_ticks = 1;
     return 0;
@@ -118,7 +119,7 @@ int32_t rtc_write (int32_t fd, const void* buf, int32_t nbytes){
 
     if(frequency > MAX || frequency < MIN) return -1;
 
-    num_ticks = MAX/frequency/2; // max/frequency ended up being off by a factor of 2
+    num_ticks = MAX/frequency; // max/frequency ended up being off by a factor of 2
 
     return 0;
 }
