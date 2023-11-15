@@ -1,5 +1,45 @@
 #include "terminal.h"
 #include "keyboard.h"
+
+
+/*
+ * terminals_init
+ *   DESCRIPTION: initialize terminals to not in use
+ *   INPUTS: none
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+ */
+void
+terminals_init() {
+    int i;
+    for(i = 0; i < MAX_TERMINALS; i++) {
+        terminal[i].in_use = 0;
+    }
+    curr_terminal = 0;
+}
+
+/*
+ * term_init
+ *   DESCRIPTION: initialize term structure
+ *   INPUTS: uint32_t - number for index of terminal to initialize
+ *   OUTPUTS: none
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+ */
+void
+term_init(uint32_t num) {
+    int i;
+    terminal[num].in_use = 1;
+    terminal[num].enter_flag = 0;
+    terminal[num].buf_i = 0;
+    terminal[num].scr_x = 0;
+    terminal[num].scr_y = 0;
+    for(i = 0; i < KEYBOARD_BUF_LEN; i++) {
+        terminal[num].key_buf[i] = 0;
+    }
+}
+
 /*
  * term_open
  *   DESCRIPTION: initialize term variables
@@ -42,22 +82,23 @@ term_read(int32_t fd, void* buf, int32_t nbytes) {
     int32_t i, j;    
     uint8_t en_flag = 0;
     char* buf1 = (char*)buf;
+    term_t* curr_term = &terminal[curr_terminal];
     /*check if buf is valid*/
     if(buf1 == NULL || (nbytes < 1)) {
         /*failed*/
         return -1;
     }
     //reset enter_flag
-    enter_flag = 0;
+    curr_term->enter_flag = 0;
     //wait until enter is pressed
-    while(!enter_flag) {
+    while(!curr_term->enter_flag) {
         ;
     }
     //user has hit enter
     /*Copy keyboard buff to user buff*/
     for(i = 0; i < nbytes; i++) {
-        buf1[i] = keyboard_buf[i];
-        if(keyboard_buf[i] == '\n') {
+        buf1[i] = curr_term->key_buf[i];
+        if(curr_term->key_buf[i] == '\n') {
             en_flag = 1;
             break;
         }
@@ -68,9 +109,9 @@ term_read(int32_t fd, void* buf, int32_t nbytes) {
     }
     //clear keyboard buf
     for(j = 0; j < KEYBOARD_BUF_LEN; j++) {
-        keyboard_buf[j] = 0; 
+        curr_term->key_buf[j] = 0; 
     }
-    keyboard_buf_index = 0;
+    curr_term->buf_i = 0;
     /*success*/
     return i;
 }
@@ -108,7 +149,7 @@ term_write(int32_t fd, const void* buf, int32_t nbytes) {
 }
 
 /*
- * term_write
+ * bad_write
  *   DESCRIPTION: returns negative one for when write is not allowed
  *   INPUTS: none
  *   OUTPUTS: none 
@@ -120,7 +161,7 @@ int32_t bad_write (int32_t fd, const void* buf, int32_t nbytes) {
 }
 
 /*
- * term_read
+ * bad_read
  *   DESCRIPTION: returns negative one for when read is not allowed
  *   INPUTS: none
  *   OUTPUTS: none 

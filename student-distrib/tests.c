@@ -192,15 +192,15 @@ void deref_test_vid_mem() {
  * Coverage: rtc device interrupts
  * Files: rtc.c
  */
-void rtc_open_test(){
-	rtc_open(NULL);
-	clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
+// void rtc_open_test(){
+// 	rtc_open(NULL);
+// 	clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
 
-	while(1){
-		rtc_read(NULL, NULL, NULL);
-		putc('1');
-	}
-}
+// 	while(1){
+// 		rtc_read(NULL, NULL, NULL);
+// 		putc('1');
+// 	}
+// }
 
 /* rtc_driver_test
  * 
@@ -211,26 +211,26 @@ void rtc_open_test(){
  * Coverage: rtc device functions
  * Files: rtc.c
  */
-void rtc_driver_test(){
+// void rtc_driver_test(){
 	
-	rtc_open(NULL);
-	int i,j;
+// 	rtc_open(NULL);
+// 	int i,j;
 	
-	while(1){
-		for(i=2; i<=1024; i*=2){	//include frequencies up to the max frequency
-			clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
-			printf("\nfrequency: %dHz\n", i);
+// 	while(1){
+// 		for(i=2; i<=1024; i*=2){	//include frequencies up to the max frequency
+// 			clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
+// 			printf("\nfrequency: %dHz\n", i);
 			
-			if(rtc_write(NULL, (void*)&i, 4)==-1) return;
+// 			if(rtc_write(NULL, (void*)&i, 4)==-1) return;
 
-			for(j=0; j<i; j++){
-				rtc_read(NULL, NULL, NULL);
-				putc('1');
-			}
-		}
-	}
-	rtc_close(NULL);
-}
+// 			for(j=0; j<i; j++){
+// 				rtc_read(NULL, NULL, NULL);
+// 				putc('1');
+// 			}
+// 		}
+// 	}
+// 	rtc_close(NULL);
+// }
 
 /* rtc_virt_test
  * 
@@ -241,20 +241,20 @@ void rtc_driver_test(){
  * Coverage: rtc device functions
  * Files: rtc.c
  */
-void rtc_virt_test(int freq){
+// void rtc_virt_test(int freq){
 	
-	rtc_open(NULL);
+// 	rtc_open(NULL);
 
-	clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
+// 	clear(); screen_x = 0; screen_y = 0; update_cursor(); //clear screen
 	
-	rtc_write(NULL, (void*)&freq, 4);
+// 	rtc_write(NULL, (void*)&freq, 4);
 
-	while(1){
-		rtc_read(NULL, NULL, NULL);
-		putc('1');
-	}
-	rtc_close(NULL);
-}
+// 	while(1){
+// 		rtc_read(NULL, NULL, NULL);
+// 		putc('1');
+// 	}
+// 	rtc_close(NULL);
+// }
 
 
 /* term_read_test

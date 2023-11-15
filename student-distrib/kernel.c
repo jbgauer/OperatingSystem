@@ -34,6 +34,10 @@ void entry(unsigned long magic, unsigned long addr) {
     /* Clear the screen. */
     clear();
 
+    // Initializes terminals
+    terminals_init();
+    term_init(0);
+
     /* Am I booted by a Multiboot-compliant boot loader? */
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
         printf("Invalid magic number: 0x%#x\n", (unsigned)magic);
@@ -156,6 +160,7 @@ void entry(unsigned long magic, unsigned long addr) {
      * PIC, any other initialization stuff... */
     keyboard_init();
     rtc_init();
+
 
     //initialize file system (before paging)
     filesys_init(memstart);
