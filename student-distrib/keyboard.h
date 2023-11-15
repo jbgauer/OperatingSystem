@@ -4,6 +4,7 @@
 #define _KEYBOARD_H
 
 #include "lib.h"
+#include "terminal.h"
 
 #define NUM_SCANCODES 83
 #define keyboard_buf_size 128

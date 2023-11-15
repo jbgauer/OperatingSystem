@@ -12,8 +12,9 @@ uint8_t left_shift_flag;
 uint8_t right_shift_flag;
 uint8_t caps_flag;
 uint8_t ctrl_flag;
+uint8_t alt_flag;
 
-
+// Scan code set 1
 char scancodeTranslator[NUM_SCANCODES] =       // only putting alphabet and numbers for now, mapping all other keys to show nothing (0x0)
 // 83 is all entries included lowercase and all numbers
 
@@ -57,6 +58,7 @@ void keyboard_init(){
     right_shift_flag = 0;
     caps_flag = 0;
     ctrl_flag = 0;
+    alt_flag = 0;
 }
 
 /*
@@ -122,6 +124,30 @@ void keyboard_handler(){
             if(caps_flag) caps_flag = 0;
             else caps_flag = 1;
             break;
+        case 0x38:
+            // alt pressed
+            alt_flag = 1;
+            break;
+        case 0x3B: 
+            // F1 pressed
+            if(alt_flag == 1) {
+                //Switch To terminal 0
+                change_terminal(0);
+            }
+            break;
+        case 0x3C:
+            // F2 pressed
+            if(alt_flag == 1) {
+                //Switch To terminal 1
+                change_terminal(1);
+            }
+            break;
+        case 0x3D:
+            // F3 pressed
+            if(alt_flag == 1) {
+                //Switch to terminal 2
+                change_terminal(2);
+            }
         case 0x9D:
             // Control released
             ctrl_flag = 0;
@@ -133,6 +159,10 @@ void keyboard_handler(){
         case 0xB6:
             // Right Shift released
             right_shift_flag = 0;
+            break;
+        case 0xB8:
+            // alt released
+            alt_flag = 0;
             break;
         default:
             // If ctrl+l or ctrl+L
