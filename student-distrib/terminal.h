@@ -2,9 +2,13 @@
 #define _TERMINAL_H
 
 #include "lib.h"
+#include "paging.h"
 
 #define KEYBOARD_BUF_LEN 128
 #define MAX_TERMINALS 3
+#define PAGE_SIZE 4096
+#define VIDEO_ADDR 0xB8000
+#define PAGE_SHIFT 12
 
 typedef struct {
     char key_buf[KEYBOARD_BUF_LEN];
@@ -21,6 +25,8 @@ int curr_terminal;
 
 void terminals_init();
 
+void change_terminal(int32_t term_id);
+
 void term_init(uint32_t num);
 
 int32_t term_open(const uint8_t* filename);
@@ -34,5 +40,7 @@ int32_t term_write(int32_t fd, const void* buf, int32_t nbytes);
 int32_t bad_write (int32_t fd, const void* buf, int32_t nbytes);
 
 int32_t bad_read (int32_t fd, void* buf, int32_t nbytes);
+
+
 
 #endif

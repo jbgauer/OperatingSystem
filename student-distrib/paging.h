@@ -8,6 +8,7 @@
 #include "types.h"
 #include "enable_paging.h"
 #include "lib.h"
+#include "syscall.h"
 
 // [PD index, PT index, pageoffset]
 // ^ this is what the virtual address will look like

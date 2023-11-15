@@ -30,6 +30,9 @@ terminals_init() {
 void
 term_init(uint32_t num) {
     int i;
+    uint32_t newEntry;
+    ptable_entry_t vidmem1, vidmem2, vidmem3;
+    
     terminal[num].in_use = 1;
     terminal[num].enter_flag = 0;
     terminal[num].buf_i = 0;
@@ -38,6 +41,50 @@ term_init(uint32_t num) {
     for(i = 0; i < KEYBOARD_BUF_LEN; i++) {
         terminal[num].key_buf[i] = 0;
     }
+
+    //set pages
+    vidmem1.m_addr = (VIDEO_ADDR + PAGE_SIZE)>>PAGE_SHIFT;
+    vidmem1.g = 0;
+    vidmem1.pat = 0;
+    vidmem1.d = 0;
+    vidmem1.a = 0;
+    vidmem1.pcd = 0;
+    vidmem1.pwt = 0;
+    vidmem1.us = 0;
+    vidmem1.rw = 1;
+    vidmem1.p = 1;
+    newEntry = combine_table_entry(vidmem1);
+    first_pagetable[(VIDEO_ADDR + PAGE_SIZE)>>PAGE_SHIFT] = newEntry;
+    //flush tlb
+    flush_tlb();
+    vidmem2.m_addr = (VIDEO_ADDR + 2*PAGE_SIZE)>>PAGE_SHIFT;
+    vidmem2.g = 0;
+    vidmem2.pat = 0;
+    vidmem2.d = 0;
+    vidmem2.a = 0;
+    vidmem2.pcd = 0;
+    vidmem2.pwt = 0;
+    vidmem2.us = 0;
+    vidmem2.rw = 1;
+    vidmem2.p = 1;
+    newEntry = combine_table_entry(vidmem1);
+    first_pagetable[(VIDEO_ADDR + 2*PAGE_SIZE)>>PAGE_SHIFT] = newEntry;
+    //flush tlb
+    flush_tlb();
+    vidmem3.m_addr = (VIDEO_ADDR + 3*PAGE_SIZE)>>PAGE_SHIFT;
+    vidmem3.g = 0;
+    vidmem3.pat = 0;
+    vidmem3.d = 0;
+    vidmem3.a = 0;
+    vidmem3.pcd = 0;
+    vidmem3.pwt = 0;
+    vidmem3.us = 0;
+    vidmem3.rw = 1;
+    vidmem3.p = 1;
+    newEntry = combine_table_entry(vidmem1);
+    first_pagetable[(VIDEO_ADDR + (3)*PAGE_SIZE)>>PAGE_SHIFT] = newEntry;
+    //flush tlb
+    flush_tlb();
 }
 
 /*
@@ -171,3 +218,38 @@ int32_t bad_write (int32_t fd, const void* buf, int32_t nbytes) {
 int32_t bad_read (int32_t fd, void* buf, int32_t nbytes) {
     return -1;
 }
+
+/*
+ * change_terminal
+ *   DESCRIPTION: changes terminal from current to new terminal, and prints it to screen.
+ *   INPUTS: term_id of the terminal you wish to change to
+ *   OUTPUTS: none 
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: saves current vidmem, loads in new vidmem, and changes all respective
+ *   variables.
+ */
+
+void change_terminal(int32_t term_id) {
+    //check if term_id is valid
+    if(term_id > 2 || term_id < 0 || term_id == curr_terminal) {
+        return;
+    }
+    
+    //old vidmem location
+    uint32_t old_vidmem = VIDEO_ADDR + (curr_terminal+1)*PAGE_SIZE;
+    //new vidmem location
+    uint32_t new_vidmem = VIDEO_ADDR + (term_id+1)*PAGE_SIZE;
+
+    //save vidmem
+    memcpy((char*)old_vidmem,(char*)VIDEO_ADDR, PAGE_SIZE);
+    //load in new vidmem
+    memcpy((char*)VIDEO_ADDR, (char*)new_vidmem, PAGE_SIZE);
+
+    //change current terminal
+    curr_terminal = term_id;
+    update_cursor();
+
+}
+
+
+
