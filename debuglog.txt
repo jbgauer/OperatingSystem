@@ -221,3 +221,10 @@ X fish page faults
   ~ TLB wasn't being flushed
   ~ index in page directory was 1 off
   (Kevin)
+--------------------
+
+--------------------
+DEBUG LOG 3.5:
+X Switching terminals page faults
+  (Ben)
+  * When typing alt+F1 it page faults
