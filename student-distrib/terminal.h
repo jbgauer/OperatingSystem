@@ -27,7 +27,7 @@ void terminals_init();
 
 void change_terminal(int32_t term_id);
 
-void term_init(uint32_t num);
+void term_init(uint32_t num, int screen_x, int screen_y);
 
 int32_t term_open(const uint8_t* filename);
 

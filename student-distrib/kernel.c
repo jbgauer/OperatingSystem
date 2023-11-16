@@ -36,7 +36,7 @@ void entry(unsigned long magic, unsigned long addr) {
 
     // Initializes terminals
     terminals_init();
-    term_init(0);
+    
 
     /* Am I booted by a Multiboot-compliant boot loader? */
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
@@ -167,7 +167,8 @@ void entry(unsigned long magic, unsigned long addr) {
 
     /* Initialize Paging Structure */
     page_init();
-
+    
+    term_init(0,0,22);
     initial_pcb_array();
 
     /* Enable interrupts */

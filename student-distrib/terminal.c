@@ -29,7 +29,7 @@ terminals_init() {
  *   SIDE EFFECTS: none
  */
 void
-term_init(uint32_t num) {
+term_init(uint32_t num, int screen_x, int screen_y) {
     int i;
     uint32_t newEntry;
     ptable_entry_t vidmem1;
@@ -37,8 +37,8 @@ term_init(uint32_t num) {
     terminal[num].in_use = 1;
     terminal[num].enter_flag = 0;
     terminal[num].buf_i = 0;
-    terminal[num].scr_x = 0;
-    terminal[num].scr_y = 0;
+    terminal[num].scr_x = screen_x;
+    terminal[num].scr_y = screen_y;
     for(i = 0; i < KEYBOARD_BUF_LEN; i++) {
         terminal[num].key_buf[i] = 0;
     }
