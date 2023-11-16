@@ -132,6 +132,9 @@ void keyboard_handler(){
             // F1 pressed
             if(alt_flag == 1) {
                 //Switch To terminal 0
+                if(terminal[0].in_use == 0) {
+                    term_init(0);
+                }
                 change_terminal(0);
             }
             break;
@@ -139,6 +142,9 @@ void keyboard_handler(){
             // F2 pressed
             if(alt_flag == 1) {
                 //Switch To terminal 1
+                if(terminal[1].in_use == 0) {
+                    term_init(1);
+                }
                 change_terminal(1);
             }
             break;
@@ -146,6 +152,9 @@ void keyboard_handler(){
             // F3 pressed
             if(alt_flag == 1) {
                 //Switch to terminal 2
+                if(terminal[2].in_use == 0) {
+                    term_init(2);
+                }
                 change_terminal(2);
             }
         case 0x9D:

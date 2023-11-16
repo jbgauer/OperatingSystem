@@ -17,6 +17,7 @@ terminals_init() {
         terminal[i].in_use = 0;
     }
     curr_terminal = 0;
+
 }
 
 /*
@@ -31,8 +32,8 @@ void
 term_init(uint32_t num) {
     int i;
     uint32_t newEntry;
-    ptable_entry_t vidmem1, vidmem2, vidmem3;
-    
+    ptable_entry_t vidmem1;
+    uint32_t test;
     terminal[num].in_use = 1;
     terminal[num].enter_flag = 0;
     terminal[num].buf_i = 0;
@@ -43,48 +44,22 @@ term_init(uint32_t num) {
     }
 
     //set pages
-    vidmem1.m_addr = (VIDEO_ADDR + PAGE_SIZE)>>PAGE_SHIFT;
+    vidmem1.m_addr = (VIDEO_ADDR + (num+1)*PAGE_SIZE)>>PAGE_SHIFT;
     vidmem1.g = 0;
     vidmem1.pat = 0;
     vidmem1.d = 0;
     vidmem1.a = 0;
     vidmem1.pcd = 0;
     vidmem1.pwt = 0;
-    vidmem1.us = 0;
+    vidmem1.us = 1;
     vidmem1.rw = 1;
     vidmem1.p = 1;
     newEntry = combine_table_entry(vidmem1);
-    first_pagetable[(VIDEO_ADDR + PAGE_SIZE)>>PAGE_SHIFT] = newEntry;
+
+    first_pagetable[(VIDEO_ADDR + (num+1)*PAGE_SIZE)>>PAGE_SHIFT] = newEntry;
     //flush tlb
     flush_tlb();
-    vidmem2.m_addr = (VIDEO_ADDR + 2*PAGE_SIZE)>>PAGE_SHIFT;
-    vidmem2.g = 0;
-    vidmem2.pat = 0;
-    vidmem2.d = 0;
-    vidmem2.a = 0;
-    vidmem2.pcd = 0;
-    vidmem2.pwt = 0;
-    vidmem2.us = 0;
-    vidmem2.rw = 1;
-    vidmem2.p = 1;
-    newEntry = combine_table_entry(vidmem1);
-    first_pagetable[(VIDEO_ADDR + 2*PAGE_SIZE)>>PAGE_SHIFT] = newEntry;
-    //flush tlb
-    flush_tlb();
-    vidmem3.m_addr = (VIDEO_ADDR + 3*PAGE_SIZE)>>PAGE_SHIFT;
-    vidmem3.g = 0;
-    vidmem3.pat = 0;
-    vidmem3.d = 0;
-    vidmem3.a = 0;
-    vidmem3.pcd = 0;
-    vidmem3.pwt = 0;
-    vidmem3.us = 0;
-    vidmem3.rw = 1;
-    vidmem3.p = 1;
-    newEntry = combine_table_entry(vidmem1);
-    first_pagetable[(VIDEO_ADDR + (3)*PAGE_SIZE)>>PAGE_SHIFT] = newEntry;
-    //flush tlb
-    flush_tlb();
+    
 }
 
 /*
