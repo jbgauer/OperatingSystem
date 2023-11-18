@@ -133,7 +133,7 @@ void keyboard_handler(){
             if(alt_flag == 1) {
                 //Switch To terminal 0
                 if(terminal[0].in_use == 0) {
-                    term_init(0);
+                    term_init(0, 0, 0);
                 }
                 change_terminal(0);
             }
@@ -143,7 +143,7 @@ void keyboard_handler(){
             if(alt_flag == 1) {
                 //Switch To terminal 1
                 if(terminal[1].in_use == 0) {
-                    term_init(1);
+                    term_init(1, 0, 0);
                 }
                 change_terminal(1);
             }
@@ -153,7 +153,7 @@ void keyboard_handler(){
             if(alt_flag == 1) {
                 //Switch to terminal 2
                 if(terminal[2].in_use == 0) {
-                    term_init(2);
+                    term_init(2, 0, 0);
                 }
                 change_terminal(2);
             }
