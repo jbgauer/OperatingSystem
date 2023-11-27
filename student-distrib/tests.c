@@ -465,7 +465,7 @@ void read_test() {
 	// uint8_t buf[50];
 	// int i;
 	// curr_pid = 0;
-	// pcb_init(0);
+	// pcb_init(0, curr_terminal);
 
 	// fd = open("frame0.txt"); //pcb at 0x407000
 	// bytes_read = read(fd, buf, 50); //pcb at 0x407000
@@ -488,7 +488,7 @@ void write_test(){
 	int bytes_read;
 	uint8_t buf[50] = "hello pain\n";
 	curr_pid = 0;
-	pcb_init(0);
+	pcb_init(0, curr_terminal);
 
 	bytes_read = write(1, buf, 20);
 }

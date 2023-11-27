@@ -33,7 +33,7 @@ term_init(uint32_t num, int screen_x, int screen_y) {
     int i;
     uint32_t newEntry;
     ptable_entry_t vidmem1;
-    uint32_t test;
+    //uint32_t test;
     terminal[num].in_use = 1;
     terminal[num].enter_flag = 0;
     terminal[num].buf_i = 0;
@@ -196,14 +196,13 @@ int32_t bad_read (int32_t fd, void* buf, int32_t nbytes) {
 
 /*
  * change_terminal
- *   DESCRIPTION: changes terminal from current to new terminal, and prints it to screen.
+ *   DESCRIPTION: changes terminal from current to different terminal, and prints it to screen.
  *   INPUTS: term_id of the terminal you wish to change to
  *   OUTPUTS: none 
  *   RETURN VALUE: none
  *   SIDE EFFECTS: saves current vidmem, loads in new vidmem, and changes all respective
  *   variables.
  */
-
 void change_terminal(int32_t term_id) {
     //check if term_id is valid
     if(term_id > 2 || term_id < 0 || term_id == curr_terminal) {

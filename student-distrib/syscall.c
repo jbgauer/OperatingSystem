@@ -45,8 +45,8 @@ int32_t halt (uint8_t status) {
 
     /*restore parent data*/
     parent_id = pcb_array[curr_pid].par_id;
+    terminal[pcb_array[curr_pid].term_id].t_pid = parent_id;
     curr_pid = parent_id;
-
     /*base pointer?*/
     /*restore parent paging*/
     //Set new page (first addr at 0x400)
@@ -98,6 +98,7 @@ int32_t halt (uint8_t status) {
  */
 int32_t
 execute(const uint8_t *command) {
+    int terminal_s = curr_terminal;
     uint8_t hold1[COMMAND_MAX];
     uint8_t *cmdHold;
     uint8_t *cmdArgs;
@@ -171,6 +172,7 @@ execute(const uint8_t *command) {
             break;
         }
     }
+    terminal[terminal_s].t_pid = curr_pid;
     //FAILED TO RUN (could be another error return (-2))
     if(i == PROG_MAX)
         return -1;
@@ -205,7 +207,7 @@ execute(const uint8_t *command) {
     if(curr_pid == 0) {
         par_pid = 0;
     }
-    pcb_init(par_pid);
+    pcb_init(par_pid, terminal_s);
     programs_running += 1;
     strcpy((char *)pcb_array[curr_pid].arg_array, (char*)cmdArgs);
      

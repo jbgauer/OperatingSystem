@@ -169,6 +169,8 @@ void entry(unsigned long magic, unsigned long addr) {
     page_init();
     
     term_init(0,0,22);
+    term_init(1,0,0);
+    term_init(2,0,0);
     initial_pcb_array();
 
     /* Enable interrupts */

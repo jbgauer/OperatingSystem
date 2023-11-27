@@ -17,11 +17,16 @@ typedef struct {
     uint8_t in_use;
     int scr_x;
     int scr_y;
+    int t_pid;
 } term_t;
 
 term_t terminal[MAX_TERMINALS];
 
 int curr_terminal;
+
+int curr_thread;
+
+void switch_thread(int thread_id);
 
 void terminals_init();
 
