@@ -221,6 +221,13 @@ X fish page faults
   ~ TLB wasn't being flushed
   ~ index in page directory was 1 off
   (Kevin)
+
+X pingpong and fish are too fast 
+  (Ben)
+  * too fast 
+  ~ 30 mins, 1 line change
+  ~ rtc frequency calculation being divided by two
+  (Kevin)
 --------------------
 
 --------------------
@@ -228,3 +235,10 @@ DEBUG LOG 3.5:
 X Switching terminals page faults
   (Ben)
   * When typing alt+F1 it page faults
+  ~ 2 hours, ~3 line change
+  ~ terminal page was being initialized before paging 
+  (Jack and Ben)
+
+- Can't switch back to terminal 0
+  (Ben)
+  * Switching between terminals 1 and 2 works, but not back to 0
