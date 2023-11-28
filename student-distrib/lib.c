@@ -38,7 +38,7 @@ void clear(void) {
  * Return Value: none
  * Function: updates cursor to new x,y */
 void update_cursor() {
-    term_t* curr_term = &terminal[curr_terminal];
+    term_t* curr_term = &terminal[curr_thread];
     uint16_t pos = curr_term->scr_y * NUM_COLS + curr_term->scr_x;
 
     outb(0x0F, 0x3D4);
@@ -58,6 +58,9 @@ void update_cursor() {
 void
 scroll_down() {
     int8_t *vidMemory = (char *)VIDEO;
+    if(curr_terminal != curr_thread) {
+        vidMemory = (char *)(VIDEO_ADDR + (curr_terminal+1)*PAGE_SIZE);
+    }
     int i;
     for(i = 80; i < NUM_ROWS * NUM_COLS; i++) {
         *(uint8_t *)(vidMemory+((i-80) << 1)) = *(uint8_t *)(vidMemory+(i << 1));
@@ -65,7 +68,7 @@ scroll_down() {
     }  
 
     for (i = ((NUM_ROWS-1) * NUM_COLS); i < NUM_ROWS * NUM_COLS; i++) {
-        *(uint8_t *)(video_mem + (i << 1)) = ' ';
+        *(uint8_t *)(vidMemory + (i << 1)) = ' ';
         *(uint8_t *)(video_mem + (i << 1) + 1) = ATTRIB;
     }
 }
@@ -217,7 +220,13 @@ int32_t puts(int8_t* s) {
  * Return Value: void
  *  Function: Output a character to the console */
 void putc(uint8_t c) {
-    term_t* curr_term = &terminal[curr_terminal];
+    term_t* curr_term = &terminal[curr_thread];
+    int8_t* curr_vid_mem = (char *)VIDEO;
+    if(curr_terminal != curr_thread) {
+        curr_vid_mem = (char *)(VIDEO_ADDR + (curr_terminal+1)*PAGE_SIZE);
+    }
+    
+
     if(c == '\n' || c == '\r') {
         if(curr_term->scr_y == 24) {
             scroll_down();
@@ -227,8 +236,8 @@ void putc(uint8_t c) {
         }
        curr_term->scr_x = 0;
     } else {
-        *(uint8_t *)(video_mem + ((NUM_COLS * curr_term->scr_y + curr_term->scr_x) << 1)) = c;
-        *(uint8_t *)(video_mem + ((NUM_COLS * curr_term->scr_y + curr_term->scr_x) << 1) + 1) = ATTRIB;
+        *(uint8_t *)(curr_vid_mem + ((NUM_COLS * curr_term->scr_y + curr_term->scr_x) << 1)) = c;
+        *(uint8_t *)(curr_vid_mem + ((NUM_COLS * curr_term->scr_y + curr_term->scr_x) << 1) + 1) = ATTRIB;
         curr_term->scr_x++;
         if(curr_term->scr_x >= NUM_COLS) {
             if(curr_term->scr_y == 24) {
