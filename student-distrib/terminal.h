@@ -16,7 +16,7 @@ typedef struct {
     uint8_t enter_flag;
     int scr_x;
     int scr_y;
-    int t_pid;
+    int t_pid; // pid of running process
 } term_t;
 
 term_t terminal[MAX_TERMINALS];
