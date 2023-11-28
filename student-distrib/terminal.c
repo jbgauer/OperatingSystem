@@ -1,25 +1,6 @@
 #include "terminal.h"
 #include "keyboard.h"
 
-
-/*
- * terminals_init
- *   DESCRIPTION: initialize terminals to not in use
- *   INPUTS: none
- *   OUTPUTS: none
- *   RETURN VALUE: none
- *   SIDE EFFECTS: none
- */
-void
-terminals_init() {
-    int i;
-    for(i = 0; i < MAX_TERMINALS; i++) {
-        terminal[i].in_use = 0;
-    }
-    curr_terminal = 0;
-
-}
-
 /*
  * term_init
  *   DESCRIPTION: initialize term structure
@@ -30,11 +11,11 @@ terminals_init() {
  */
 void
 term_init(uint32_t num, int screen_x, int screen_y) {
+    curr_terminal = num;
     int i;
     uint32_t newEntry;
     ptable_entry_t vidmem1;
     //uint32_t test;
-    terminal[num].in_use = 1;
     terminal[num].enter_flag = 0;
     terminal[num].buf_i = 0;
     terminal[num].scr_x = screen_x;
@@ -59,7 +40,10 @@ term_init(uint32_t num, int screen_x, int screen_y) {
     first_pagetable[(VIDEO_ADDR + (num+1)*PAGE_SIZE)>>PAGE_SHIFT] = newEntry;
     //flush tlb
     flush_tlb();
-    
+
+    uint8_t shellcmd[6] = "shell\0";
+    execute(shellcmd);
+
 }
 
 /*

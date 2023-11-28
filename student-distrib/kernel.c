@@ -34,10 +34,6 @@ void entry(unsigned long magic, unsigned long addr) {
     /* Clear the screen. */
     clear();
 
-    // Initializes terminals
-    terminals_init();
-    
-
     /* Am I booted by a Multiboot-compliant boot loader? */
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
         printf("Invalid magic number: 0x%#x\n", (unsigned)magic);
@@ -167,11 +163,15 @@ void entry(unsigned long magic, unsigned long addr) {
 
     /* Initialize Paging Structure */
     page_init();
-    
-    term_init(0,0,22);
-    term_init(1,0,0);
+
+    // Initializes terminals
     term_init(2,0,0);
+    term_init(1,0,0);
+    term_init(0,0,22);
+
     initial_pcb_array();
+
+    curr_thread = 0;
 
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your
@@ -186,11 +186,11 @@ void entry(unsigned long magic, unsigned long addr) {
     /* Run tests */
     launch_tests();
 #endif
-    /* Execute the first program ("shell") ... */
-    uint8_t shellcmd[6] = "shell\0";
-    while(1) {
-        execute(shellcmd);
-    }
+    // /* Execute the first program ("shell") ... */
+    // uint8_t shellcmd[6] = "shell\0";
+    // while(1) {
+    //     execute(shellcmd);
+    // }
 
     /* Spin (nicely, so we don't chew up cycles) */
     asm volatile (".1: hlt; jmp .1;");

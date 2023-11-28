@@ -172,6 +172,7 @@ execute(const uint8_t *command) {
             break;
         }
     }
+    // Changes terminal controlled pid
     terminal[terminal_s].t_pid = curr_pid;
     //FAILED TO RUN (could be another error return (-2))
     if(i == PROG_MAX)
