@@ -164,12 +164,12 @@ void entry(unsigned long magic, unsigned long addr) {
     /* Initialize Paging Structure */
     page_init();
 
+    initial_pcb_array();
+
     // Initializes terminals
     term_init(2,0,0);
     term_init(1,0,0);
     term_init(0,0,22);
-
-    initial_pcb_array();
 
     curr_thread = 0;
 

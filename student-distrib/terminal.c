@@ -40,10 +40,6 @@ term_init(uint32_t num, int screen_x, int screen_y) {
     first_pagetable[(VIDEO_ADDR + (num+1)*PAGE_SIZE)>>PAGE_SHIFT] = newEntry;
     //flush tlb
     flush_tlb();
-
-    uint8_t shellcmd[6] = "shell\0";
-    execute(shellcmd);
-
 }
 
 /*
