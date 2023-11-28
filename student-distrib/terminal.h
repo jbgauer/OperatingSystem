@@ -14,7 +14,6 @@ typedef struct {
     char key_buf[KEYBOARD_BUF_LEN];
     uint8_t buf_i;
     uint8_t enter_flag;
-    uint8_t in_use;
     int scr_x;
     int scr_y;
     int t_pid;
@@ -22,13 +21,11 @@ typedef struct {
 
 term_t terminal[MAX_TERMINALS];
 
-int curr_terminal;
+int curr_terminal;  // the visible terminal
 
-int curr_thread;
+int curr_thread;    // terminal scheduler is updating
 
-void switch_thread(int thread_id);
-
-void terminals_init();
+void switch_thread();
 
 void change_terminal(int32_t term_id);
 
