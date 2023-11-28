@@ -239,6 +239,6 @@ X Switching terminals page faults
   ~ terminal page was being initialized before paging 
   (Jack and Ben)
 
-- Can't switch back to terminal 0
+- Cursor on other terminals isn't correct attribute color
   (Ben)
-  * Switching between terminals 1 and 2 works, but not back to 0
+  *Color of flashing cursor is white on terminal 1 and 2, but purple (correct) on terminal 0
