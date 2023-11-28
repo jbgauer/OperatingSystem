@@ -16,7 +16,13 @@ void switch_thread() {
     
     // curr_pid = terminal[curr_thread].t_pid;
 
+    // // spawn shell if pcb is not in use
+    // if (pcb_array[curr_pid].in_use == 0){
 
+    //     uint8_t shellcmd[6] = "shell\0";
+    //     execute(shellcmd);
+
+    // }
 
 
     // // Context Switch
@@ -54,6 +60,9 @@ void switch_thread() {
 
     // // tss
     // // Restore TSS contents relevant to Process and store in pcb
+
+    // tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
+    // tss.ss0  = KERNEL_DS;
 
     // // set up paging for new process
 
