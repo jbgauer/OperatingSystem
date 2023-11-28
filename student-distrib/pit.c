@@ -32,7 +32,9 @@ void pit_init() {
  */
 void pit_handler() {
     cli();
+    
+    // switch_thread((curr_thread+1)%3);   //go to next thread
     send_eoi(PIT_IRQ);
-    //schedule();
+    
     sti();
 }

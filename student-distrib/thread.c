@@ -16,6 +16,9 @@ void switch_thread(int thread_id) {
     // Switch current process id
     curr_pid = terminal[thread_id].t_pid;
 
+
+    curr_thread += 1;
+
     // Context Switch
 
 
