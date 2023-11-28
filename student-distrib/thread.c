@@ -7,38 +7,60 @@
 /*
  * switch_thread
  *   DESCRIPTION: switches process context from one thread to another
- *   INPUTS: int - thread_id: index of thread in terminal array
+ *   INPUTS: 
  *   OUTPUTS: none 
  *   RETURN VALUE: none
  *   SIDE EFFECTS: Context switch so that current process being executed switches 
  */
-void switch_thread(int thread_id) {
-    // Switch current process id
-    curr_pid = terminal[thread_id].t_pid;
-
-
-    curr_thread += 1;
-
-    // Context Switch
-
-
-    // Store contents from TSS to enable restoration of Process state for the next time slice
+void switch_thread() {
+    
+    // curr_pid = terminal[curr_thread].t_pid;
 
 
 
-    /*
-    Utilize the kernel stack (think about what you did for HALT)
-    You will be using assembly to do the context switch
-    Switch ESP/EBP to next process’ kernel stack
-    Restore next process’ TSS
-    Flush TLB on process switch
-    */
 
-   // to switch to next process:
-   // set up paging, change current process id
+    // // Context Switch
 
-   // push current context information to its kernel stack
 
-    // tss
-    // Restore TSS contents relevant to Process and store in pcb
+    // // Store contents from TSS to enable restoration of Process state for the next time slice
+
+    // // saving esp, ebp of finishing process
+    // asm volatile(
+    //              "movl %%esp, %0;" 
+    //              "movl %%ebp, %1;" 
+    //              :
+    //              :"r"(pcb_array[curr_pid].stack_ptr), "r"(pcb_array[curr_pid].base_ptr)
+    //              :
+    //              );   
+
+    
+
+    // // update thread to the new one
+    // curr_thread = (curr_thread+1)%3;
+    // curr_pid = terminal[curr_thread].t_pid;
+
+    // // Switch ESP/EBP to next process’ kernel stack
+
+
+    // asm volatile(
+    //         "movl %0, %%esp;" 
+    //         "movl %1, %%ebp;" 
+    //         :
+    //         :"r"(pcb_array[curr_pid].stack_ptr), "r"(pcb_array[curr_pid].base_ptr), "r"((uint32_t)status)
+    //         :"eax"
+    //         );
+
+    // // Restore next process’ TSS
+
+    // // tss
+    // // Restore TSS contents relevant to Process and store in pcb
+
+    // // set up paging for new process
+
+    // // Flush TLB on process switch
+
+
+
+
+
 }
