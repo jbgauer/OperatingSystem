@@ -19,10 +19,10 @@ void switch_thread() {
     // not sure if using correct esp, ebp
     // not sure when to sent_eoi
 
-    uint32_t pid = terminal[curr_thread].t_pid;
+    uint32_t terminal_pid = terminal[curr_thread].t_pid;
 
     // spawn shell if pcb is not in use
-    if (pcb_array[pid].in_use == 0){
+    if (pcb_array[curr_thread].in_use == 0){
 
         uint8_t shellcmd[6] = "shell\0";
         execute(shellcmd);
@@ -40,14 +40,14 @@ void switch_thread() {
                  "movl %%esp, %0;" 
                  "movl %%ebp, %1;" 
                  :
-                 :"r"(pcb_array[curr_pid].stack_ptr), "r"(pcb_array[curr_pid].base_ptr)
+                 :"r"(pcb_array[terminal_pid].stack_ptr), "r"(pcb_array[terminal_pid].base_ptr)
                  :"esp", "ebp"
                  );   
 
 
     // update thread to the new one
     curr_thread = (curr_thread+1)%3;
-    curr_pid = terminal[curr_thread].t_pid;
+    terminal_pid = terminal[curr_thread].t_pid;
 
     
 
@@ -58,7 +58,7 @@ void switch_thread() {
     pdir_entry_t kerntry;
 
     //Set new page (first addr at 0x400)
-    pageHold = curr_pid;
+    pageHold = terminal_pid;
     pageHold += PAGES_DEFAULT_USE;
     kerntry.p_addr = pageHold << KENTRY_SHIFT;
     kerntry.ps = 1;
@@ -80,7 +80,7 @@ void switch_thread() {
     // tss
     // Restore TSS contents relevant to Process and store in pcb
 
-    tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
+    tss.esp0 = (uint32_t)pcb_array[terminal_pid].stack_ptr;
     tss.ss0  = KERNEL_DS;
 
     // Switch ESP/EBP to next process’ kernel stack
@@ -88,7 +88,7 @@ void switch_thread() {
             "movl %0, %%esp;" 
             "movl %1, %%ebp;" 
             :
-            :"r"(pcb_array[curr_pid].stack_ptr), "r"(pcb_array[curr_pid].base_ptr)
+            :"r"(pcb_array[terminal_pid].stack_ptr), "r"(pcb_array[terminal_pid].base_ptr)
             :"esp", "ebp"
             );
 
