@@ -65,7 +65,7 @@ int32_t halt (uint8_t status) {
     newEntry = combine_dir_entry(kerntry);
     pagedir[USER_SPACE] = newEntry;
 
-    page_table_vmem[0] = 0x00000006;    // unmapping vid map page
+    page_table_vmem[curr_thread] = 0x00000006;    // unmapping vid map page
     
     flush_tlb();
     
