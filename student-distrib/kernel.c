@@ -15,6 +15,7 @@
 #include "filesys_driver.h"
 
 #include "syscall.h"
+#include "pit.h"
 
 #define RUN_TESTS
 
@@ -173,6 +174,8 @@ void entry(unsigned long magic, unsigned long addr) {
 
     curr_thread = 0;
 
+    pit_init();
+
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your
      * IDT correctly otherwise QEMU will triple fault and simple close
@@ -187,9 +190,9 @@ void entry(unsigned long magic, unsigned long addr) {
     launch_tests();
 #endif
     // /* Execute the first program ("shell") ... */
-    uint8_t shellcmd[6] = "shell\0";
+    // uint8_t shellcmd[6] = "shell\0";
     // while(1) {
-    execute(shellcmd);
+    // execute(shellcmd);
     // }
 
     /* Spin (nicely, so we don't chew up cycles) */

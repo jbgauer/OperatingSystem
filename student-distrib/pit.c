@@ -12,6 +12,7 @@
  */
 void pit_init() {
     //set channel 0
+    printf("hi");
     outb(0x36, PIT_CMD);
     //set PIT reload value
     //get top 8 of def_freq/our_freq (10 milliseconds)
@@ -32,7 +33,7 @@ void pit_init() {
  */
 void pit_handler() {
     cli();
-    
+    // printf("pit");
     // switch_thread();   //go to next thread
     send_eoi(PIT_IRQ);
     
