@@ -58,7 +58,7 @@ void init_idt(){
     SET_IDT_ENTRY (idt[0x0e], page_fault);
     SET_IDT_ENTRY (idt[0x11], alignnment_check);
 
-    // SET_IDT_ENTRY(idt[0x20], PIT_handler); 
+    SET_IDT_ENTRY(idt[0x20], pit_handler); 
     
     SET_IDT_ENTRY(idt[0x21], keyboard_interrupt_handler); 
 

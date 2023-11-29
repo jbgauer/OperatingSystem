@@ -9,6 +9,7 @@
 #include "rtc.h"
 
 #include "syscall.h"
+#include "pit.h"
 
 void init_idt();
 
