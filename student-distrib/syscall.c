@@ -443,7 +443,7 @@ int32_t vidmap (uint8_t** screen_start) {
     vidmem.p = 1;
     vidf = combine_table_entry(vidmem);
 
-    //Sets page table entry 0 to video memory
+    //Sets page table entry of currently running thread to video memory
     page_table_vmem[curr_thread] = vidf;
 
     //Sets page directory entry with user level set to 1, present set to 1, and r/w set to 1
@@ -451,7 +451,7 @@ int32_t vidmap (uint8_t** screen_start) {
 
     flush_tlb();
     //Sets screen_start pointer to virtual memory of new page
-    *screen_start = (uint8_t*)(VIRT_VID_MEM+0x1000*(curr_thread)); //set at 1GB+1kB*thread_number in virtual memory
+    *screen_start = (uint8_t*)(VIRT_VID_MEM+0x1000*(curr_thread)); //set at 1GB+4kB*thread_number in virtual memory
 
     return 0;
 }
