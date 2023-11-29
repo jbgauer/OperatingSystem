@@ -32,9 +32,10 @@ void pit_init() {
  */
 void pit_handler() {
     cli();
-    // printf("pit");
-    switch_thread();   //go to next thread
+
     send_eoi(PIT_IRQ);
+    switch_thread();   //go to next thread
+    
     
     sti();
 }
