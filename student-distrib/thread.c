@@ -3,6 +3,7 @@
  */
 
 #include "terminal.h"
+#include "pit.h"
 
 /*
  * switch_thread
@@ -14,10 +15,13 @@
  */
 void switch_thread() {
     
-    // curr_pid = terminal[curr_thread].t_pid;
+    // uint32_t pid = terminal[curr_thread].t_pid;
 
     // // spawn shell if pcb is not in use
-    // if (pcb_array[curr_pid].in_use == 0){
+    // if (pcb_array[pid].in_use == 0){
+
+
+    //     send_eoi(PIT_IRQ);
 
     //     uint8_t shellcmd[6] = "shell\0";
     //     execute(shellcmd);
@@ -52,9 +56,16 @@ void switch_thread() {
     //         "movl %0, %%esp;" 
     //         "movl %1, %%ebp;" 
     //         :
-    //         :"r"(pcb_array[curr_pid].stack_ptr), "r"(pcb_array[curr_pid].base_ptr), "r"((uint32_t)status)
-    //         :"eax"
+    //         :"r"(pcb_array[curr_pid].stack_ptr), "r"(pcb_array[curr_pid].base_ptr)
+    //         :
     //         );
+
+    // // Paging:
+    // // change virtual program image to point to next program in physical mem
+    // // redirect the program image
+    
+
+
 
     // // Restore next process’ TSS
 
@@ -64,7 +75,7 @@ void switch_thread() {
     // tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
     // tss.ss0  = KERNEL_DS;
 
-    // // set up paging for new process
+    
 
     // // Flush TLB on process switch
 

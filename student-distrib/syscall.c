@@ -19,6 +19,8 @@ file_op_t fop_file = {.read = read_file, .write = write_file, .open = open_file,
  *   SIDE EFFECTS: none
  */
 int32_t halt (uint8_t status) {
+    
+    // cli();
     uint32_t parent_id;
     int i;
     uint8_t shellcmd[6] = "shell\0";
@@ -74,6 +76,7 @@ int32_t halt (uint8_t status) {
     //also restores parent esp and ebp
     putc('\n'); // newline after every executable
 
+    // sti();
     asm volatile(
                  "movl %0, %%esp;" 
                  "movl %1, %%ebp;" 
@@ -98,6 +101,7 @@ int32_t halt (uint8_t status) {
  */
 int32_t
 execute(const uint8_t *command) {
+    // cli();
     int terminal_s = curr_terminal;
     uint8_t hold1[COMMAND_MAX];
     uint8_t *cmdHold;
