@@ -111,7 +111,7 @@ execute(const uint8_t *command) {
     //dentry will cause page fault if null, always initialize it to something
     pdir_entry_t kerntry;
 
-    asm volatile("movl %%ebp, %0;":"=r"(pcb_array[curr_pid].base_ptr));
+    // asm volatile("movl %%ebp, %0;":"=r"(pcb_array[curr_pid].base_ptr));
 
     if(command == NULL) {
         return -1;
@@ -411,7 +411,7 @@ int32_t getargs (uint8_t* buf, int32_t nbytes) {
  *   SIDE EFFECTS: Creates new user level page
  */
 int32_t vidmap (uint8_t** screen_start) {
-    uint32_t vidf;
+    
     // uint32_t i;
     //Checks for bad input
     if(screen_start == NULL || screen_start < (uint8_t**)(EIGHT_MB)) {
@@ -419,9 +419,13 @@ int32_t vidmap (uint8_t** screen_start) {
     }
     
     //Creates new page for user level access to video memory
+    uint32_t vidf;
     ptable_entry_t vidmem;
 
     vidmem.m_addr = 0xB8;
+    if(curr_terminal != curr_thread){
+        vidmem.m_addr += curr_terminal+1;
+    }
     vidmem.g = 0;
     vidmem.pat = 0;
     vidmem.d = 0;
@@ -433,7 +437,6 @@ int32_t vidmap (uint8_t** screen_start) {
     vidmem.p = 1;
     vidf = combine_table_entry(vidmem);
 
-    
     //Sets page table entry 0 to video memory
     page_table_vmem[0] = vidf;
 
@@ -470,3 +473,5 @@ int32_t set_handler(int32_t signum, void* handler_address) {
 int32_t sigreturn (void) {
     return -1;
 }
+
+
