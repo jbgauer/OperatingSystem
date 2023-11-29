@@ -24,9 +24,6 @@ void switch_thread() {
     // spawn shell if pcb is not in use
     if (pcb_array[pid].in_use == 0){
 
-
-        send_eoi(PIT_IRQ);
-
         uint8_t shellcmd[6] = "shell\0";
         execute(shellcmd);
 
