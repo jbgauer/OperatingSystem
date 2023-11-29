@@ -194,6 +194,42 @@ void change_terminal(int32_t term_id) {
     //new vidmem location
     uint32_t new_vidmem = VIDEO_ADDR + (term_id+1)*PAGE_SIZE;
 
+    //Changes vidmap paging
+    uint32_t vidf;
+    ptable_entry_t vidmem;
+
+    //Changes physical address of the vidmap page of the outgoing terminal
+    if(page_table_vmem[curr_terminal] && 1 == 1) {
+        vidmem.m_addr = 0xB8+curr_terminal+1;
+        vidmem.g = 0;
+        vidmem.pat = 0;
+        vidmem.d = 0;
+        vidmem.a = 0;
+        vidmem.pcd = 0;
+        vidmem.pwt = 0;
+        vidmem.us = 1;
+        vidmem.rw = 1;
+        vidmem.p = 1;
+        vidf = combine_table_entry(vidmem);
+        page_table_vmem[curr_terminal] = vidf;
+    }
+
+    //Changes physical address of the vidmap page of the incoming terminal
+    if(page_table_vmem[term_id] && 1 == 1) {
+        vidmem.m_addr = 0xB8;
+        vidmem.g = 0;
+        vidmem.pat = 0;
+        vidmem.d = 0;
+        vidmem.a = 0;
+        vidmem.pcd = 0;
+        vidmem.pwt = 0;
+        vidmem.us = 1;
+        vidmem.rw = 1;
+        vidmem.p = 1;
+        vidf = combine_table_entry(vidmem);
+        page_table_vmem[term_id] = vidf;
+    }
+
     //save vidmem
     memcpy((char*)old_vidmem,(char*)VIDEO_ADDR, PAGE_SIZE);
     //load in new vidmem
