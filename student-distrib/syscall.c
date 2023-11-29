@@ -226,7 +226,9 @@ execute(const uint8_t *command) {
     tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
     //change ss0
     tss.ss0 = KERNEL_DS; 
+
     sti();
+
     // IRET 
     iret_context(*((uint32_t*)new_buf));
 
@@ -442,14 +444,14 @@ int32_t vidmap (uint8_t** screen_start) {
     vidf = combine_table_entry(vidmem);
 
     //Sets page table entry 0 to video memory
-    page_table_vmem[curr_thread+1] = vidf;
+    page_table_vmem[curr_thread] = vidf;
 
     //Sets page directory entry with user level set to 1, present set to 1, and r/w set to 1
     pagedir[VIRT_VID_MEM_DIR] = ((unsigned int)page_table_vmem) | 7;
 
     flush_tlb();
     //Sets screen_start pointer to virtual memory of new page
-    *screen_start = (uint8_t*)(VIRT_VID_MEM+0x1000*(curr_thread+1)); //set at 1GB+1kB*thread_number in virtual memory
+    *screen_start = (uint8_t*)(VIRT_VID_MEM+0x1000*(curr_thread)); //set at 1GB+1kB*thread_number in virtual memory
 
     return 0;
 }
