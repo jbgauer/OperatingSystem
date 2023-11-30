@@ -89,6 +89,7 @@ void page_init(){
 
     load_page_directory(&pagedir[0]);
     enable_paging();
+    flush_tlb();
 }
 
 /*

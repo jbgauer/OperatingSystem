@@ -28,8 +28,6 @@ int32_t halt (uint8_t status) {
     // uint8_t *buf;
     // dentry_t *dentry;
     pdir_entry_t kerntry;
-
-    //uint8_t shellcmd[5] = "shell";
     
     if(programs_running > 0){
         pcb_array[curr_pid].in_use = 0;
@@ -76,11 +74,11 @@ int32_t halt (uint8_t status) {
     //also restores parent esp and ebp
     putc('\n'); // newline after every executable
 
-    sti();
     asm volatile(
                  "movl %0, %%esp;" 
                  "movl %1, %%ebp;" 
                  "movl %2, %%eax;"
+                 "sti;"
                  "jmp  execute_return"
                  :
                  :"r"(pcb_array[curr_pid].stack_ptr), "r"(pcb_array[curr_pid].base_ptr), "r"((uint32_t)status)
