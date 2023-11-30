@@ -212,6 +212,7 @@ void change_terminal(int32_t term_id) {
         vidmem.p = 1;
         vidf = combine_table_entry(vidmem);
         page_table_vmem[curr_terminal] = vidf;
+        flush_tlb();
     }
 
     //Changes physical address of the vidmap page of the incoming terminal
@@ -228,6 +229,7 @@ void change_terminal(int32_t term_id) {
         vidmem.p = 1;
         vidf = combine_table_entry(vidmem);
         page_table_vmem[term_id] = vidf;
+        flush_tlb();
     }
 
     //save vidmem
