@@ -22,7 +22,6 @@ int32_t num_ticks;
  */
 // code modified from OSDEV wiki on RTC
 void rtc_init(){
-    cli();
     outb(REG_B, INDEX_PORT);		// select register B, and disable NMI
     char prev=inb(RW_PORT);	// read the current value of register B
     outb(REG_B, INDEX_PORT);		// set the index again (a read will reset the index to register D)
@@ -36,7 +35,6 @@ void rtc_init(){
     num_ticks = 1;
 
     enable_irq(8);     //8 is rtc interrupt number
-    sti();
 }
 
 /*
