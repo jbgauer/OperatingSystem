@@ -73,12 +73,11 @@ int32_t halt (uint8_t status) {
     /*Jump to execute return*/ 
     //also restores parent esp and ebp
     putc('\n'); // newline after every executable
-
+    sti();
     asm volatile(
                  "movl %0, %%esp;" 
                  "movl %1, %%ebp;" 
                  "movl %2, %%eax;"
-                 "sti;"
                  "jmp  execute_return"
                  :
                  :"r"(pcb_array[curr_pid].stack_ptr), "r"(pcb_array[curr_pid].base_ptr), "r"((uint32_t)status)
@@ -221,7 +220,8 @@ execute(const uint8_t *command) {
 
     /*tss*/
     //change esp0 to the value the stack pointer 
-    tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
+    //tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
+    tss.esp0 = ((0x00800000 - 4 - 0x200 * curr_pid));
     //change ss0
     tss.ss0 = KERNEL_DS; 
 

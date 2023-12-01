@@ -84,7 +84,7 @@ term_read(int32_t fd, void* buf, int32_t nbytes) {
     int32_t i, j;    
     uint8_t en_flag = 0;
     char* buf1 = (char*)buf;
-    term_t* curr_term = &terminal[pcb_array[curr_pid].term_id];
+    term_t* curr_term = &terminal[curr_thread];
     /*check if buf is valid*/
     if(buf1 == NULL || (nbytes < 1)) {
         /*failed*/

@@ -21,35 +21,42 @@ void switch_thread() {
 
     uint32_t terminal_pid = terminal[curr_thread].t_pid;
 
+    // saving esp, ebp of finishing process
+    asm volatile(
+                 "movl %%esp, %0;" 
+                 "movl %%ebp, %1;"
+                 :
+                 :"r"(pcb_array[terminal_pid].stack_ptr), "r"(pcb_array[terminal_pid].base_ptr)
+                 :"%esp", "%ebp"
+                 ); 
+    
+    
+
+    
     // spawn shell if pcb is not in use
     if (pcb_array[curr_thread].in_use == 0){
 
         uint8_t shellcmd[6] = "shell\0";
         execute(shellcmd);
+        
 
-    }
+    } else {
 
+    
 
     // Context Switch
 
 
     // Store contents from TSS to enable restoration of Process state for the next time slice
-
-    // saving esp, ebp of finishing process
-    asm volatile(
-                 "movl %%esp, %0;" 
-                 "movl %%ebp, %1;" 
-                 :
-                 :"r"(pcb_array[terminal_pid].stack_ptr), "r"(pcb_array[terminal_pid].base_ptr)
-                 :"esp", "ebp"
-                 );   
-
-
-    // update thread to the new one
-    curr_thread = (curr_thread+1)%3;
-    terminal_pid = terminal[curr_thread].t_pid;
+        
 
     
+    // update thread to the new one
+        curr_thread = (curr_thread+1)%3;
+        terminal_pid = terminal[curr_thread].t_pid;
+    
+
+
 
     // Paging:
     // change virtual program image to point to next program in physical mem
@@ -80,18 +87,23 @@ void switch_thread() {
     // tss
     // Restore TSS contents relevant to Process and store in pcb
 
-    tss.esp0 = (uint32_t)pcb_array[terminal_pid].stack_ptr;
+   // tss.esp0 = (uint32_t)pcb_array[terminal_pid].stack_ptr;
+    tss.esp0 = ((0x00800000 - 4 - 0x200 * curr_pid));
     tss.ss0  = KERNEL_DS;
 
     // Switch ESP/EBP to next process’ kernel stack
     asm volatile(
             "movl %0, %%esp;" 
             "movl %1, %%ebp;" 
+            //"sti;"
+            "leave;"
+            "ret;"
             :
             :"r"(pcb_array[terminal_pid].stack_ptr), "r"(pcb_array[terminal_pid].base_ptr)
-            :"esp", "ebp"
+            :"%esp", "%ebp"
             );
+    }
 
-
+    return;
 
 }
