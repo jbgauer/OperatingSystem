@@ -70,3 +70,4 @@ INTERRUPTWRAPPER (rtc_interrupt_handler, rtc_handler);
 
 INTERRUPTWRAPPER (keyboard_interrupt_handler, keyboard_handler);
 
+INTERRUPTWRAPPER(pit_interrupt_handler, pit_handler)

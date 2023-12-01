@@ -5,6 +5,7 @@
 
 #include "exceptions.h"
 #include "keyboard.h"
+#include "pit.h"
 
 
 // handler wrappers for exceptions
@@ -34,6 +35,8 @@ void rtc_interrupt_handler();
 // handler wrapper for keyboard interrupts
 void keyboard_interrupt_handler();
 
+// handler wrapper for pit interrupts
+void pit_interrupt_handler();
 
 
 #endif
