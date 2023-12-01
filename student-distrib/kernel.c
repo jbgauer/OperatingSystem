@@ -175,21 +175,22 @@ void entry(unsigned long magic, unsigned long addr) {
     curr_thread = 0;
 
     pit_init();
+    
 
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your
      * IDT correctly otherwise QEMU will triple fault and simple close
      * without showing you any output */
     printf("\nEnabling Interrupts\n");
-    
+    curr_thread = -1;
     //printf("");
     sti();
     
-
 #ifdef RUN_TESTS
     /* Run tests */
     launch_tests();
 #endif
+    
     // /* Execute the first program ("shell") ... */
     // uint8_t shellcmd[6] = "shell\0";
     // while(1) {

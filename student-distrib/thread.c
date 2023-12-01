@@ -20,7 +20,6 @@ void switch_thread() {
     // not sure when to sent_eoi
 
     uint32_t terminal_pid = terminal[curr_thread].t_pid;
-
     // saving esp, ebp of finishing process
     asm volatile(
                  "movl %%esp, %0;" 
@@ -31,19 +30,16 @@ void switch_thread() {
                  ); 
     
     
-    
+    curr_thread = (curr_thread+1)%3;
+    terminal_pid = terminal[curr_thread].t_pid;
 
-    
     // spawn shell if pcb is not in use
-    if (pcb_array[curr_thread].in_use == 0){
-        curr_thread = (curr_thread+1)%3;
-        terminal_pid = terminal[curr_thread].t_pid;
+    if (pcb_array[curr_thread].in_use == 0) {
+
         uint8_t shellcmd[6] = "shell\0";
         execute(shellcmd);
        
     } else {
-
-    
 
         // Context Switch
 
@@ -53,8 +49,6 @@ void switch_thread() {
 
     
         // update thread to the new one
-        curr_thread = (curr_thread+1)%3;
-        terminal_pid = terminal[curr_thread].t_pid;
 
 
 
