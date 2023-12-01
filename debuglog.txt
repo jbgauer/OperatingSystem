@@ -241,4 +241,8 @@ X Switching terminals page faults
 
 - Cursor on other terminals isn't correct attribute color
   (Ben)
-  *Color of flashing cursor is white on terminal 1 and 2, but purple (correct) on terminal 0
+  * Color of flashing cursor is white on terminal 1 and 2, but purple (correct) on terminal 0
+
+^ When switching between terminal screens the other screen isn't being updated
+  (Ben)
+  * Has something to do with putc not putting to the correct video memory or something

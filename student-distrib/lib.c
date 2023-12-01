@@ -38,7 +38,7 @@ void clear(void) {
  * Return Value: none
  * Function: updates cursor to new x,y */
 void update_cursor() {
-    term_t* curr_term = &terminal[curr_thread];
+    term_t* curr_term = &terminal[curr_terminal];
     uint16_t pos = curr_term->scr_y * NUM_COLS + curr_term->scr_x;
 
     outb(0x0F, 0x3D4);
@@ -69,7 +69,7 @@ scroll_down() {
 
     for (i = ((NUM_ROWS-1) * NUM_COLS); i < NUM_ROWS * NUM_COLS; i++) {
         *(uint8_t *)(vidMemory + (i << 1)) = ' ';
-        *(uint8_t *)(video_mem + (i << 1) + 1) = ATTRIB;
+        *(uint8_t *)(vidMemory + (i << 1) + 1) = ATTRIB;
     }
 }
 
