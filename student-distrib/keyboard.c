@@ -81,7 +81,7 @@ void keyboard_handler(){
                 curr_term->buf_i--;
                 curr_term->key_buf[curr_term->buf_i] = 0;
                 curr_term->scr_x--;
-                putc(' ');
+                putk(' ');
                 curr_term->scr_x--;
                 update_cursor();
             }
@@ -93,7 +93,7 @@ void keyboard_handler(){
                     if(curr_term->buf_i == 127) break;
                     curr_term->key_buf[curr_term->buf_i] = ' ';
                     curr_term->buf_i++;
-                    putc(' ');
+                    putk(' ');
                 }   
             }
             break;
@@ -104,7 +104,7 @@ void keyboard_handler(){
                 curr_term->buf_i = 128;
                 curr_term->enter_flag = 1;
                 // scroll_down();
-                putc('\n');
+                putk('\n');
             }
             break;
         case 0x1D:
@@ -187,14 +187,14 @@ void keyboard_handler(){
                 if((scan_code < NUM_SCANCODES) && (scancodeTranslator[scan_code] != 0x0)){     // 0x0 is not mapped entry
                     curr_term->key_buf[curr_term->buf_i] = shifted_scancodeTranslator[scan_code];
                     curr_term->buf_i++;
-                    putc(shifted_scancodeTranslator[scan_code]);
+                    putk(shifted_scancodeTranslator[scan_code]);
                 }
             }
             // If non shifted character
             else if((scan_code < NUM_SCANCODES) && (scancodeTranslator[scan_code] != 0x0)){     // 0x0 is not mapped entry
                 curr_term->key_buf[curr_term->buf_i] = scancodeTranslator[scan_code];
                 curr_term->buf_i++;
-                putc(scancodeTranslator[scan_code]);
+                putk(scancodeTranslator[scan_code]);
             }
             }
         }
