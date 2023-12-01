@@ -31,15 +31,16 @@ void switch_thread() {
                  ); 
     
     
+    
 
     
     // spawn shell if pcb is not in use
     if (pcb_array[curr_thread].in_use == 0){
-
+        curr_thread = (curr_thread+1)%3;
+        terminal_pid = terminal[curr_thread].t_pid;
         uint8_t shellcmd[6] = "shell\0";
         execute(shellcmd);
-        
-
+       
     } else {
 
     
@@ -54,7 +55,6 @@ void switch_thread() {
         // update thread to the new one
         curr_thread = (curr_thread+1)%3;
         terminal_pid = terminal[curr_thread].t_pid;
-    
 
 
 
@@ -90,20 +90,20 @@ void switch_thread() {
         // tss.esp0 = (uint32_t)pcb_array[terminal_pid].stack_ptr;
         tss.esp0 = ((0x00800000 - 4 - 0x200 * terminal_pid));
         tss.ss0  = KERNEL_DS;
-
+        sti();
         // Switch ESP/EBP to next process’ kernel stack
         asm volatile(
                 "movl %0, %%esp;" 
                 "movl %1, %%ebp;" 
-                //"sti;"
                 "leave;"
                 "ret;"
                 :
                 :"r"(pcb_array[terminal_pid].stack_ptr), "r"(pcb_array[terminal_pid].base_ptr)
                 :"%esp", "%ebp"
                 );
+        
     }
-
+    
     return;
 
 }
