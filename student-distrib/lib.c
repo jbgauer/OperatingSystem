@@ -59,7 +59,7 @@ void
 scroll_down() {
     int8_t *vidMemory = (char *)VIDEO;
     if(curr_terminal != curr_thread) {
-        vidMemory = (char *)(VIDEO_ADDR + (curr_terminal+1)*PAGE_SIZE);
+        vidMemory = (char *)(VIDEO_ADDR + (curr_thread+1)*PAGE_SIZE);
     }
     int i;
     for(i = 80; i < NUM_ROWS * NUM_COLS; i++) {
@@ -223,7 +223,7 @@ void putc(uint8_t c) {
     term_t* curr_term = &terminal[curr_thread];
     int8_t* curr_vid_mem = (char *)VIDEO;
     if(curr_terminal != curr_thread) {
-        curr_vid_mem = (char *)(VIDEO_ADDR + (curr_terminal+1)*PAGE_SIZE);
+        curr_vid_mem = (char *)(VIDEO_ADDR + (curr_thread+1)*PAGE_SIZE);
     }
     
 
