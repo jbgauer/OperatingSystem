@@ -44,64 +44,64 @@ void switch_thread() {
 
     
 
-    // Context Switch
+        // Context Switch
 
 
-    // Store contents from TSS to enable restoration of Process state for the next time slice
+        // Store contents from TSS to enable restoration of Process state for the next time slice
         
 
     
-    // update thread to the new one
+        // update thread to the new one
         curr_thread = (curr_thread+1)%3;
         terminal_pid = terminal[curr_thread].t_pid;
     
 
 
 
-    // Paging:
-    // change virtual program image to point to next program in physical mem
-    // redirect the program image
-    uint32_t newEntry, pageHold; 
-    pdir_entry_t kerntry;
+        // Paging:
+        // change virtual program image to point to next program in physical mem
+        // redirect the program image
+        uint32_t newEntry, pageHold; 
+        pdir_entry_t kerntry;
 
-    //Set new page (first addr at 0x400)
-    pageHold = terminal_pid;
-    pageHold += PAGES_DEFAULT_USE;
-    kerntry.p_addr = pageHold << KENTRY_SHIFT;
-    kerntry.ps = 1;
-    kerntry.a = 0;
-    kerntry.pcd = 0;
-    kerntry.pwt = 0;
-    kerntry.us = 1;
-    kerntry.rw = 1;
-    kerntry.p = 1;
-    newEntry = combine_dir_entry(kerntry);
-    pagedir[USER_SPACE] = newEntry;
+        //Set new page (first addr at 0x400)
+        pageHold = terminal_pid;
+        pageHold += PAGES_DEFAULT_USE;
+        kerntry.p_addr = pageHold << KENTRY_SHIFT;
+        kerntry.ps = 1;
+        kerntry.a = 0;
+        kerntry.pcd = 0;
+        kerntry.pwt = 0;
+        kerntry.us = 1;
+        kerntry.rw = 1;
+        kerntry.p = 1;
+        newEntry = combine_dir_entry(kerntry);
+        pagedir[USER_SPACE] = newEntry;
     
-    // Flush TLB on process switch
-    flush_tlb();
+        // Flush TLB on process switch
+        flush_tlb();
 
     
-    // Restore next process’ TSS
+        // Restore next process’ TSS
 
-    // tss
-    // Restore TSS contents relevant to Process and store in pcb
+        // tss
+        // Restore TSS contents relevant to Process and store in pcb
 
-   // tss.esp0 = (uint32_t)pcb_array[terminal_pid].stack_ptr;
-    tss.esp0 = ((0x00800000 - 4 - 0x200 * curr_pid));
-    tss.ss0  = KERNEL_DS;
+        // tss.esp0 = (uint32_t)pcb_array[terminal_pid].stack_ptr;
+        tss.esp0 = ((0x00800000 - 4 - 0x200 * terminal_pid));
+        tss.ss0  = KERNEL_DS;
 
-    // Switch ESP/EBP to next process’ kernel stack
-    asm volatile(
-            "movl %0, %%esp;" 
-            "movl %1, %%ebp;" 
-            //"sti;"
-            "leave;"
-            "ret;"
-            :
-            :"r"(pcb_array[terminal_pid].stack_ptr), "r"(pcb_array[terminal_pid].base_ptr)
-            :"%esp", "%ebp"
-            );
+        // Switch ESP/EBP to next process’ kernel stack
+        asm volatile(
+                "movl %0, %%esp;" 
+                "movl %1, %%ebp;" 
+                //"sti;"
+                "leave;"
+                "ret;"
+                :
+                :"r"(pcb_array[terminal_pid].stack_ptr), "r"(pcb_array[terminal_pid].base_ptr)
+                :"%esp", "%ebp"
+                );
     }
 
     return;

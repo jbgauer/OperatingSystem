@@ -67,7 +67,8 @@ int32_t halt (uint8_t status) {
     
     flush_tlb();
     
-    tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
+   // tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
+    tss.esp0 = ((0x00800000 - 4 - 0x200 * terminal[curr_thread].t_pid));
     tss.ss0  = KERNEL_DS;
     
     /*Jump to execute return*/ 
