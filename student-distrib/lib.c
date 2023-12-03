@@ -84,6 +84,7 @@ void update_cursor() {
  */
 void
 scroll_down() {
+    cli();
     int8_t *vidMemory = (char *)VIDEO;
     if(curr_terminal != curr_thread) {
         vidMemory = (char *)(VIDEO_ADDR + (curr_thread+1)*PAGE_SIZE);
@@ -98,6 +99,7 @@ scroll_down() {
         *(uint8_t *)(vidMemory + (i << 1)) = ' ';
         *(uint8_t *)(vidMemory + (i << 1) + 1) = ATTRIB[curr_thread];
     }
+    sti();
 }
 
 /*
