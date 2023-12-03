@@ -3,7 +3,12 @@
 #include "rtc.h"
 #include "i8259.h"
 
+
+volatile int interrupt_flag;
+
 static int32_t log(int32_t n);
+
+
 
 /*
  * rtc_init
@@ -19,7 +24,13 @@ void rtc_init(){
     char prev=inb(RW_PORT);	// read the current value of register B
     outb(REG_B, INDEX_PORT);		// set the index again (a read will reset the index to register D)
     outb(prev|0x40, RW_PORT);	// write the previous value ORed with 0x40. This turns on bit 6 of register B
+
     // default frequency set
+    
+    interrupt_flag = 1;     // set high
+    
+    terminal[curr_thread].count = 0;
+    terminal[curr_thread].num_ticks = 1;
 
     enable_irq(8);     //8 is rtc interrupt number
 }
@@ -33,7 +44,7 @@ void rtc_init(){
  *   SIDE EFFECTS: none
  */
 void rtc_handler(){
-    int i;
+    
     // printf("RTC ");
 
     // test_interrupts();
@@ -42,14 +53,9 @@ void rtc_handler(){
     outb(REG_C, INDEX_PORT);	// select register C
     inb(RW_PORT);		// just throw away contents
 
-    for(i = 0; i < 3; i++) {
-        terminal[i].count += 1;
-        if(terminal[i].count == terminal[i].num_ticks) {
-            terminal[i].count = 0;
-            terminal[i].rtc_flag = 1;
-        }
-    }
+    interrupt_flag = 0; // clear flag
 
+    terminal[curr_thread].count += 1;
 
     send_eoi(8);
 }
@@ -86,9 +92,8 @@ int32_t rtc_open (const uint8_t* filename){
  *   SIDE EFFECTS: none
  */
 int32_t rtc_read (int32_t fd, void* buf, int32_t nbytes){
-    // terminal[curr_thread].count = 0;
-    terminal[curr_thread].rtc_flag = 0;
-    while(terminal[curr_thread].rtc_flag != 1);
+    terminal[curr_thread].count = 0;
+    while(terminal[curr_thread].count != terminal[curr_thread].num_ticks);
     return 0;
 }
 
