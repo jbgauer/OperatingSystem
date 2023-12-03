@@ -70,15 +70,15 @@ void pit_handler() {
     
     curr_thread = (curr_thread+1)%3;
     terminal_pid = terminal[curr_thread].t_pid;
-    curr_pid = terminal_pid;
+    
     // spawn shell if pcb is not in use
     if (pit_counter < 3) {
+        curr_pid = curr_thread;
         pit_counter++;
-      //  terminal[curr_thread].t_pid = curr_thread;
         execute(shellcmd);
        
     } else {
-
+        curr_pid = terminal_pid;
         // Context Switch
 
         // Paging:
