@@ -173,9 +173,8 @@ void entry(unsigned long magic, unsigned long addr) {
     term_init(0,0,22);
 
     curr_thread = 0;
-
+    curr_pid = 0;
     pit_init();
-    
 
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your
@@ -186,11 +185,11 @@ void entry(unsigned long magic, unsigned long addr) {
     //printf("");
     sti();
     
+
 #ifdef RUN_TESTS
     /* Run tests */
     launch_tests();
 #endif
-    
     // /* Execute the first program ("shell") ... */
     // uint8_t shellcmd[6] = "shell\0";
     // while(1) {

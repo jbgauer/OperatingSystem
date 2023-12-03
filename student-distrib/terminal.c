@@ -187,7 +187,6 @@ void change_terminal(int32_t term_id) {
     cli();
     //check if term_id is valid
     if(term_id > 2 || term_id < 0 || term_id == curr_terminal) {
-        sti();
         return;
     }
     

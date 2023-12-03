@@ -74,12 +74,11 @@ int32_t halt (uint8_t status) {
     /*Jump to execute return*/ 
     //also restores parent esp and ebp
     putc('\n'); // newline after every executable
-    
+    sti();
     asm volatile(
                  "movl %0, %%esp;" 
                  "movl %1, %%ebp;" 
                  "movl %2, %%eax;"
-                 "sti;"
                  "jmp  execute_return"
                  :
                  :"r"(pcb_array[curr_pid].stack_ptr), "r"(pcb_array[curr_pid].base_ptr), "r"((uint32_t)status)
@@ -161,21 +160,18 @@ execute(const uint8_t *command) {
         sti();
         return -1;
     }
-        
     if(read_data(dentry.inode_num,0,buf,4) == -1) {
         sti();
         return -1;
-    } 
-        
+    }
     if(buf[0] != 0x7f || buf[1] != 0x45 || buf[2] != 0x4C || buf[3] != 0x46){
         sti();
         return -1;
-    } 
-        
-    if(dentry.filetype != 2){
+    }
+    if(dentry.filetype != 2) {
         sti();
         return -1;
-    } 
+    }
         
 
     /*set up program paging*/
@@ -194,9 +190,7 @@ execute(const uint8_t *command) {
     if(i == PROG_MAX){
         sti();
         return -1;
-    } 
-        
-
+    }
     //pages in use
     pageHold = curr_pid;
     pageHold += PAGES_DEFAULT_USE;
