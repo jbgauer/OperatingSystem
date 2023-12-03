@@ -20,14 +20,15 @@ file_op_t fop_stdout = {.read = bad_read, .write = term_write, .open = term_open
  */
 file_op_t std_file_op;
 void pcb_init(uint32_t par_process_num, uint32_t terminal_id) {
-    int curr_proc = curr_pid;
+    int curr_proc = terminal[curr_thread].t_pid;
     int j;
     pcb_t* new_pcb = &pcb_array[curr_proc];
     new_pcb->in_use = 1;
     new_pcb->par_id = par_process_num;
     new_pcb->stack_ptr = EIGHT_MB - (EIGHT_KB*curr_proc) - 4;
     new_pcb->base_ptr = EIGHT_MB - (EIGHT_KB*curr_proc) - 4;
-
+    // new_pcb->sch_base_ptr = EIGHT_MB - (EIGHT_KB*curr_proc) - 4;
+    // new_pcb->sch_stack_ptr = EIGHT_MB - (EIGHT_KB*curr_proc) - 4;
     new_pcb->term_id = terminal_id;
 
     //set fda[0] == stdin

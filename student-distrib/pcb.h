@@ -34,6 +34,8 @@ typedef struct {
     uint32_t in_use;                // 1 if in use, 0 if not in use
     uint32_t stack_ptr;             // Holds current stack position of process
     uint32_t base_ptr;              // Holds current base position of process
+    uint32_t sch_base_ptr;
+    uint32_t sch_stack_ptr;
     uint32_t par_id;                // parent process number
     uint8_t arg_array[128];         // holds the arguments 
     //uint8_t shell_flag;           // 1 if shell, 0 if not

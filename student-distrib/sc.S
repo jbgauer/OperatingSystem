@@ -30,7 +30,7 @@ syscall_handler:
 
     cmpl $0, %eax        /* no 0 entry in sys call table */
     je   invalid_syscall 
-
+    sti
     call *sys_call_table(, %eax, 4)   /* 4 bytes per entry */
     jmp  exit
 

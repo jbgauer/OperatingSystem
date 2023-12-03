@@ -68,17 +68,18 @@ int32_t halt (uint8_t status) {
     flush_tlb();
     
    // tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
-    tss.esp0 = ((0x00800000 - 4 - 0x200 * terminal[curr_thread].t_pid));
+    tss.esp0 = ((0x00800000 - 4 - 0x2000 * curr_pid));
     tss.ss0  = KERNEL_DS;
     
     /*Jump to execute return*/ 
     //also restores parent esp and ebp
     putc('\n'); // newline after every executable
-    sti();
+    
     asm volatile(
                  "movl %0, %%esp;" 
                  "movl %1, %%ebp;" 
                  "movl %2, %%eax;"
+                 "sti;"
                  "jmp  execute_return"
                  :
                  :"r"(pcb_array[curr_pid].stack_ptr), "r"(pcb_array[curr_pid].base_ptr), "r"((uint32_t)status)
@@ -116,6 +117,7 @@ execute(const uint8_t *command) {
     asm volatile("movl %%ebp, %0;":"=r"(pcb_array[curr_pid].base_ptr));
 
     if(command == NULL) {
+        sti();
         return -1;
     }
     cmdHold = hold1;
@@ -155,14 +157,26 @@ execute(const uint8_t *command) {
 
     /*Executable Check*/
     //set dentry
-    if(read_dentry_by_name(file, &dentry) == -1)
+    if(read_dentry_by_name(file, &dentry) == -1) {
+        sti();
         return -1;
-    if(read_data(dentry.inode_num,0,buf,4) == -1) 
+    }
+        
+    if(read_data(dentry.inode_num,0,buf,4) == -1) {
+        sti();
         return -1;
-    if(buf[0] != 0x7f || buf[1] != 0x45 || buf[2] != 0x4C || buf[3] != 0x46)
+    } 
+        
+    if(buf[0] != 0x7f || buf[1] != 0x45 || buf[2] != 0x4C || buf[3] != 0x46){
+        sti();
         return -1;
-    if(dentry.filetype != 2)
+    } 
+        
+    if(dentry.filetype != 2){
+        sti();
         return -1;
+    } 
+        
 
     /*set up program paging*/
     par_pid = curr_pid;
@@ -177,8 +191,11 @@ execute(const uint8_t *command) {
     // Changes terminal controlled pid
     terminal[curr_thread].t_pid = curr_pid;
     //FAILED TO RUN (could be another error return (-2))
-    if(i == PROG_MAX)
+    if(i == PROG_MAX){
+        sti();
         return -1;
+    } 
+        
 
     //pages in use
     pageHold = curr_pid;
@@ -222,7 +239,7 @@ execute(const uint8_t *command) {
     /*tss*/
     //change esp0 to the value the stack pointer 
     //tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
-    tss.esp0 = ((0x00800000 - 4 - 0x200 * curr_pid));
+    tss.esp0 = ((0x00800000 - 4 - 0x2000 * curr_pid));
     //change ss0
     tss.ss0 = KERNEL_DS; 
 

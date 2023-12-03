@@ -1,6 +1,8 @@
 
 #include "pit.h"
+#include "pcb.h"
 
+uint32_t pit_count = 0;
 
 /*
  * pit_init
@@ -34,7 +36,29 @@ void pit_handler() {
     cli();
 
     send_eoi(PIT_IRQ);
-    switch_thread();   //go to next thread
+    // if(pit_count < 3) {
+    //     pit_count++;
+    //     if(pcb_array[0].in_use == 1) {
+    //         curr_thread = (curr_thread+1)%3;
+    //     }
+    //     terminal[curr_thread].t_pid = curr_thread;
+    //     uint8_t shellcmd[6] = "shell\0";
+    //     execute(shellcmd);
+        
+    // } else {
+    
+    
+   switch_thread();   //go to next thread
+    // if(pit_count < 9) {
+    //     printf(" curr_thread is : %d ", curr_thread);
+    //     printf("pcb_array[curr_thread].stack_ptr = %d", pcb_array[curr_thread].stack_ptr);
+    //     printf("\n");
+    //     printf("pcb_array[curr_thread].base_ptr = %d", pcb_array[curr_thread].base_ptr);
+    //     switch_thread();   //go to next thread
+    //     printf(" switched thread to : %d", curr_thread);
+
+    // }
+    
     
     
     sti();

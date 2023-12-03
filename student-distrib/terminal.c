@@ -184,8 +184,10 @@ int32_t bad_read (int32_t fd, void* buf, int32_t nbytes) {
  *   variables.
  */
 void change_terminal(int32_t term_id) {
+    cli();
     //check if term_id is valid
     if(term_id > 2 || term_id < 0 || term_id == curr_terminal) {
+        sti();
         return;
     }
     
@@ -240,7 +242,7 @@ void change_terminal(int32_t term_id) {
     //change current terminal
     curr_terminal = term_id;
     update_cursor();
-
+    sti();
 }
 
 

@@ -70,6 +70,7 @@ void keyboard_init(){
  *   SIDE EFFECTS: prints alphanumeric characters when keys are pressed
  */
 void keyboard_handler(){
+    cli();
     uint8_t scan_code = inb(0x60); // port to receive scancodes
     int i;
     term_t* curr_term = &terminal[curr_terminal];
@@ -198,7 +199,7 @@ void keyboard_handler(){
             }
             }
         }
-
+    sti();
     send_eoi(1);
 }
 
