@@ -17,6 +17,8 @@ typedef struct {
     int scr_x;
     int scr_y;
     int t_pid; // pid of running process
+    volatile int count;
+    int num_ticks;
 } term_t;
 
 term_t terminal[MAX_TERMINALS];

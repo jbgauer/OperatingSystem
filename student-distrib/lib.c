@@ -45,7 +45,6 @@ void clear(void) {
 void clear_1(void) {
     int32_t i;
     for (i = 0; i < NUM_ROWS * NUM_COLS; i++) {
-        *(uint8_t *)(video_mem1 + (i << 1)) = ' ';
         *(uint8_t *)(video_mem1 + (i << 1) + 1) = ATTRIB[1];
     }
 }
@@ -57,7 +56,6 @@ void clear_1(void) {
 void clear_2(void) {
     int32_t i;
     for (i = 0; i < NUM_ROWS * NUM_COLS; i++) {
-        *(uint8_t *)(video_mem2 + (i << 1)) = ' ';
         *(uint8_t *)(video_mem2 + (i << 1) + 1) = ATTRIB[2];
     }
 }

@@ -8,9 +8,7 @@ volatile int interrupt_flag;
 
 static int32_t log(int32_t n);
 
-//global vars for virtualization
-volatile int32_t count;
-int32_t num_ticks; 
+
 
 /*
  * rtc_init
@@ -31,8 +29,8 @@ void rtc_init(){
     
     interrupt_flag = 1;     // set high
     
-    count = 0;
-    num_ticks = 1;
+    terminal[curr_thread].count = 0;
+    terminal[curr_thread].num_ticks = 1;
 
     enable_irq(8);     //8 is rtc interrupt number
 }
@@ -57,7 +55,7 @@ void rtc_handler(){
 
     interrupt_flag = 0; // clear flag
 
-    count += 1;
+    terminal[curr_thread].count += 1;
 
     send_eoi(8);
 }
@@ -80,7 +78,7 @@ int32_t rtc_open (const uint8_t* filename){
 
     //rtc_change_freq(MAX); // set frequency to maximum
     rtc_change_freq(MAX); // set frequency to maximum
-    num_ticks = 1;
+    terminal[curr_thread].num_ticks = 1;
     return 0;
 }
 
@@ -94,8 +92,8 @@ int32_t rtc_open (const uint8_t* filename){
  *   SIDE EFFECTS: none
  */
 int32_t rtc_read (int32_t fd, void* buf, int32_t nbytes){
-    count = 0;
-    while(count != num_ticks);
+    terminal[curr_thread].count = 0;
+    while(terminal[curr_thread].count != terminal[curr_thread].num_ticks);
     return 0;
 }
 
@@ -117,7 +115,7 @@ int32_t rtc_write (int32_t fd, const void* buf, int32_t nbytes){
 
     if(frequency > MAX || frequency < MIN) return -1;
 
-    num_ticks = MAX/frequency; // max/frequency ended up being off by a factor of 2
+    terminal[curr_thread].num_ticks = MAX/frequency; // max/frequency ended up being off by a factor of 2
 
     return 0;
 }

@@ -24,6 +24,9 @@ term_init(uint32_t num, int screen_x, int screen_y) {
         terminal[num].key_buf[i] = 0;
     }
 
+    terminal[num].count = 0;
+    terminal[num].num_ticks = 1;
+
     //set pages
     vidmem1.m_addr = (VIDEO_ADDR + (num+1)*PAGE_SIZE)>>PAGE_SHIFT;
     vidmem1.g = 0;
