@@ -239,6 +239,12 @@ X Switching terminals page faults
   ~ terminal page was being initialized before paging 
   (Jack and Ben)
 
+X PIT causing issues to programs running without scheduling enabled
+  (Kevin)
+  * page faulting when executing programs
+  ~ 2 hours, 10 line change
+  ~ PIT handler was not wrapped before placing it in the idt designated entry
+
 - Cursor on other terminals isn't correct attribute color
   (Ben)
   * Color of flashing cursor is white on terminal 1 and 2, but purple (correct) on terminal 0
