@@ -20,6 +20,7 @@ term_init(uint32_t num, int screen_x, int screen_y) {
     terminal[num].buf_i = 0;
     terminal[num].scr_x = screen_x;
     terminal[num].scr_y = screen_y;
+    terminal[num].programs_running = 0;
     for(i = 0; i < KEYBOARD_BUF_LEN; i++) {
         terminal[num].key_buf[i] = 0;
     }

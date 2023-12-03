@@ -14,6 +14,7 @@ typedef struct {
     char key_buf[KEYBOARD_BUF_LEN];
     uint8_t buf_i;
     uint8_t enter_flag;
+    uint32_t programs_running;      // # of programs running
     int scr_x;
     int scr_y;
     int t_pid; // pid of running process

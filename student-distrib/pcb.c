@@ -26,7 +26,7 @@ void pcb_init(uint32_t par_process_num, uint32_t terminal_id) {
     new_pcb->par_id = par_process_num;
     new_pcb->stack_ptr = EIGHT_MB - (EIGHT_KB*curr_pid) - 4;
     new_pcb->base_ptr = EIGHT_MB - (EIGHT_KB*curr_pid) - 4;
-
+    new_pcb->programs_running = 0;
     new_pcb->term_id = terminal_id;
 
     //set fda[0] == stdin

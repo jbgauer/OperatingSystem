@@ -1,6 +1,6 @@
 #include "syscall.h"
 
-uint32_t programs_running = 0;
+
 
 // file operations pointers
 
@@ -29,16 +29,16 @@ int32_t halt (uint8_t status) {
     // dentry_t *dentry;
     pdir_entry_t kerntry;
     
-    if(programs_running > 0){
+    if(terminal[curr_thread].programs_running > 0){
         pcb_array[curr_pid].in_use = 0;
-        programs_running -= 1;
+        terminal[curr_thread].programs_running -= 1;
     }
     /*close any relevant FDs*/
     for(i = 0; i < FILE_MAX; i++) {
         close_file(i);
     }
 
-    if(programs_running == 0){
+    if(terminal[curr_thread].programs_running == 0){
         execute(shellcmd);
     }
 
@@ -82,7 +82,7 @@ int32_t halt (uint8_t status) {
                  "jmp  execute_return"
                  :
                  :"r"(pcb_array[curr_pid].stack_ptr), "r"(pcb_array[curr_pid].base_ptr), "r"((uint32_t)status)
-                 :"eax"
+                 :"esp", "ebp", "eax"
                  );
 
     return -1;
@@ -222,7 +222,7 @@ execute(const uint8_t *command) {
         par_pid = 0;
     }
     pcb_init(par_pid, terminal_s);
-    programs_running += 1;
+    terminal[curr_thread].programs_running += 1;
     strcpy((char *)pcb_array[curr_pid].arg_array, (char*)cmdArgs);
      
     /*context switch (IN x86)*/
