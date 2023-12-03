@@ -67,8 +67,7 @@ int32_t halt (uint8_t status) {
     
     flush_tlb();
     
-   // tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
-    tss.esp0 = ((0x00800000 - 4 - 0x2000 * curr_pid));
+    tss.esp0 = ((EIGHT_MB - (EIGHT_KB*curr_pid) - 4));
     tss.ss0  = KERNEL_DS;
     
     /*Jump to execute return*/ 
@@ -232,8 +231,7 @@ execute(const uint8_t *command) {
 
     /*tss*/
     //change esp0 to the value the stack pointer 
-    //tss.esp0 = (uint32_t)pcb_array[curr_pid].stack_ptr;
-    tss.esp0 = ((0x00800000 - 4 - 0x2000 * curr_pid));
+    tss.esp0 = ((EIGHT_MB - (EIGHT_KB*curr_pid) - 4));
     //change ss0
     tss.ss0 = KERNEL_DS; 
 
@@ -288,7 +286,7 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes) {
  *   SIDE EFFECTS: might copy the input buffer
  */
 int32_t write (int32_t fd, const void* buf, int32_t nbytes) {
-    // printf("%s",buf);
+ 
     
     pcb_t* curpcb;
     //file_op_t fops;

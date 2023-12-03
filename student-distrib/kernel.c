@@ -185,7 +185,7 @@ void entry(unsigned long magic, unsigned long addr) {
      * without showing you any output */
     printf("\nEnabling Interrupts\n");
     curr_thread = -1;
-    //printf("");
+
     sti();
     
 
@@ -193,12 +193,7 @@ void entry(unsigned long magic, unsigned long addr) {
     /* Run tests */
     launch_tests();
 #endif
-    // /* Execute the first program ("shell") ... */
-    // uint8_t shellcmd[6] = "shell\0";
-    // while(1) {
-    // execute(shellcmd);
-    // }
-
+ 
     /* Spin (nicely, so we don't chew up cycles) */
     asm volatile (".1: hlt; jmp .1;");
 }

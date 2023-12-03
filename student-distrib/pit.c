@@ -37,33 +37,14 @@ void pit_handler() {
     uint8_t shellcmd[6] = "shell\0";
     pdir_entry_t kerntry;
     send_eoi(PIT_IRQ);
-   // switch_thread();   //go to next thread
-    
-    // not sure if using correct esp, ebp
-    // not sure when to sent_eoi
-    //pit_counter++;
+
     if(curr_thread != -1) {
         terminal_pid = terminal[curr_thread].t_pid;
     
     // saving esp, ebp of finishing process   
-        // asm volatile(
-        //             "movl %%esp, %0;" 
-        //             "movl %%ebp, %1;"
-        //             :"=r"(pcb_array[terminal_pid].stack_ptr), "=r"(pcb_array[terminal_pid].base_ptr)
-        //             :
-        //             :"%esp", "%ebp"
-        //             ); 
-
         asm volatile("movl %%esp, %0;":"=r"(pcb_array[terminal_pid].stack_ptr));
         asm volatile("movl %%ebp, %0;":"=r"(pcb_array[terminal_pid].base_ptr));
     } else { 
-        // asm volatile(
-        //             "movl %%esp, %0;" 
-        //             "movl %%ebp, %1;"
-        //             :
-        //             :"=r"(pcb_array[0].stack_ptr), "=r"(pcb_array[0].base_ptr)
-        //             :"%esp", "%ebp"
-        //             ); 
         asm volatile("movl %%esp, %0;":"=r"(pcb_array[0].stack_ptr));
         asm volatile("movl %%ebp, %0;":"=r"(pcb_array[0].base_ptr));
     }
@@ -101,13 +82,9 @@ void pit_handler() {
         // Flush TLB on process switch
         flush_tlb();
 
-    
         // Restore next process’ TSS
-
-        // tss.esp0 = (uint32_t)pcb_array[terminal_pid].stack_ptr;
-        tss.esp0 = ((0x00800000 - 4 - 0x2000 * terminal_pid));
-        //tss.ss0  = KERNEL_DS;
-        
+        tss.esp0 = ((EIGHT_MB - (EIGHT_KB*terminal_pid) - 4));
+ 
         // Switch ESP/EBP to next process’ kernel stack
         asm volatile(
                 "movl %0, %%esp;" 
