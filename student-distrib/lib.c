@@ -4,9 +4,11 @@
 #include "lib.h"
 
 #define VIDEO       0xB8000
+#define VIDEO1      0xBA000
+#define VIDEO2      0xBB000
 #define NUM_COLS    80
 #define NUM_ROWS    25
-#define ATTRIB      0x09 //0x7
+// #define ATTRIB      0x09 //0x7
 //0 - black
 //1 - blue
 //2 - green
@@ -17,9 +19,12 @@
 //7 - white
 //8 - grey
 //9 - violet
+int ATTRIB[3] = {0x09, 0x02, 0x03};
 
-
+ 
 static char* video_mem = (char *)VIDEO;
+static char* video_mem1 = (char *)VIDEO1;
+static char* video_mem2 = (char *)VIDEO2;
 
 /* void clear(void);
  * Inputs: void
@@ -29,7 +34,31 @@ void clear(void) {
     int32_t i;
     for (i = 0; i < NUM_ROWS * NUM_COLS; i++) {
         *(uint8_t *)(video_mem + (i << 1)) = ' ';
-        *(uint8_t *)(video_mem + (i << 1) + 1) = ATTRIB;
+        *(uint8_t *)(video_mem + (i << 1) + 1) = ATTRIB[curr_thread];
+    }
+}
+
+/* void clear_1(void);
+ * Inputs: void
+ * Return Value: none
+ * Function: Clears video memory */
+void clear_1(void) {
+    int32_t i;
+    for (i = 0; i < NUM_ROWS * NUM_COLS; i++) {
+        *(uint8_t *)(video_mem1 + (i << 1)) = ' ';
+        *(uint8_t *)(video_mem1 + (i << 1) + 1) = ATTRIB[1];
+    }
+}
+
+/* void clear_2(void);
+ * Inputs: void
+ * Return Value: none
+ * Function: Clears video memory */
+void clear_2(void) {
+    int32_t i;
+    for (i = 0; i < NUM_ROWS * NUM_COLS; i++) {
+        *(uint8_t *)(video_mem2 + (i << 1)) = ' ';
+        *(uint8_t *)(video_mem2 + (i << 1) + 1) = ATTRIB[2];
     }
 }
 
@@ -69,7 +98,7 @@ scroll_down() {
 
     for (i = ((NUM_ROWS-1) * NUM_COLS); i < NUM_ROWS * NUM_COLS; i++) {
         *(uint8_t *)(vidMemory + (i << 1)) = ' ';
-        *(uint8_t *)(vidMemory + (i << 1) + 1) = ATTRIB;
+        *(uint8_t *)(vidMemory + (i << 1) + 1) = ATTRIB[curr_thread];
     }
 }
 
@@ -92,7 +121,7 @@ scroll_down_key() {
 
     for (i = ((NUM_ROWS-1) * NUM_COLS); i < NUM_ROWS * NUM_COLS; i++) {
         *(uint8_t *)(vidMemory + (i << 1)) = ' ';
-        *(uint8_t *)(vidMemory + (i << 1) + 1) = ATTRIB;
+        *(uint8_t *)(vidMemory + (i << 1) + 1) = ATTRIB[curr_thread];
     }
 }
 
@@ -260,7 +289,7 @@ void putc(uint8_t c) {
        curr_term->scr_x = 0;
     } else {
         *(uint8_t *)(curr_vid_mem + ((NUM_COLS * curr_term->scr_y + curr_term->scr_x) << 1)) = c;
-        *(uint8_t *)(curr_vid_mem + ((NUM_COLS * curr_term->scr_y + curr_term->scr_x) << 1) + 1) = ATTRIB;
+        *(uint8_t *)(curr_vid_mem + ((NUM_COLS * curr_term->scr_y + curr_term->scr_x) << 1) + 1) = ATTRIB[curr_thread];
         curr_term->scr_x++;
         if(curr_term->scr_x >= NUM_COLS) {
             if(curr_term->scr_y == 24) {
@@ -293,7 +322,7 @@ void putk(uint8_t c) {
        curr_term->scr_x = 0;
     } else {
         *(uint8_t *)(curr_vid_mem + ((NUM_COLS * curr_term->scr_y + curr_term->scr_x) << 1)) = c;
-        *(uint8_t *)(curr_vid_mem + ((NUM_COLS * curr_term->scr_y + curr_term->scr_x) << 1) + 1) = ATTRIB;
+        *(uint8_t *)(curr_vid_mem + ((NUM_COLS * curr_term->scr_y + curr_term->scr_x) << 1) + 1) = ATTRIB[curr_terminal];
         curr_term->scr_x++;
         if(curr_term->scr_x >= NUM_COLS) {
             if(curr_term->scr_y == 24) {

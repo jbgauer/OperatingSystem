@@ -176,6 +176,9 @@ void entry(unsigned long magic, unsigned long addr) {
     curr_pid = 0;
     pit_init();
 
+    clear_1();
+    clear_2();
+
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your
      * IDT correctly otherwise QEMU will triple fault and simple close
