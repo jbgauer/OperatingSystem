@@ -1,12 +1,12 @@
 --------------------
 FORMATTING:
 X description of bug (X means resolved, > means in progress, - means recorded)
-    (who recorded the bug)
+  (who recorded the bug)
   * bullet points list notes about bug
   * if you add notes, put your name like this (Name)
   ~ how long it took to solve bug, and how many lines were changed
   ~ type of bug and how it was fixed
-    (who fixed the bug)
+  (who fixed the bug)
 --------------------
 
 --------------------
@@ -18,23 +18,26 @@ X nothing is being updated in the OS after doing make dep and sudo make
   * cp: cannot remove ‘./mp3.img’: Text file busy
   ~ 10 mins
   ~ algorithmic, was not closing test_debug when executing make commands
-    (Kevin)
+  (Kevin)
 
 X divide by zero exception is not triggered
   (Kevin)
   ~ 20 min, 1 line change
   ~ algorithmic, did not change present bit to 1 for idt entry
+  (Kevin)
 
 X keyboard outputting wrong values per key press
   (Kevin)
   ~ 30 mins, 3 line change
   ~ algorithmic, misunderstood keyboard documentation
+  (Kevin)
 
 X rtc handler does not execute
   (Kevin)
   ~ 1 hour, 20 line change
   ~ algorithmic, had to use inline assembly to wrap rtc handler
-
+  (Kevin)
+  
 X "Enabling Interrupts" won't print after page_init
   (Alexandra)
   * when stepping thru in gdb everything looks fine
@@ -117,20 +120,23 @@ X Backspace possible even before start of user entered space
   ~ 5 minutes, 1 line change
   ~ Algorithmic, fixed by checking against first location of keyboard buffer so that it 
     couldn't go before the zero index of keyboard buffer
+  (Ben)
 
 X Enter possible even before terminal read previous keyboard buffer
+  (Jack)
   * It was possible for the user to print the new line character by clicking enter even 
     before the terminal read the previous keyboard buffer
   ~ 5 minutes, 2 line change
   ~ Algorithmic, fixed by checking if enter flag was already 1 before new line character 
     would be generated
+  (Ben)
 
 X read goes beyond end of file and sometimes page fault
-   (Alexandra)
+  (Alexandra)
   * indexing for buffer was wrong
   ~ 30 mins, 10 line change
   ~ algorithmic, was skipping parts of the buffer because of block offset
-   (Alexandra)
+  (Alexandra)
 --------------------
 
 --------------------
@@ -239,16 +245,64 @@ X Switching terminals page faults
   ~ terminal page was being initialized before paging 
   (Jack and Ben)
 
+X Cursor on other terminals isn't correct attribute color
+  (Ben)
+  * Color of flashing cursor is white on terminal 1 and 2, but purple (correct) on terminal 0
+  ~ 10 minutes, ~ 15 line change
+  ~ Created functions that would fill video mem temp pages with correct attribute color
+  (Ben)
+
 X PIT causing issues to programs running without scheduling enabled
   (Kevin)
   * page faulting when executing programs
   ~ 2 hours, 10 line change
   ~ PIT handler was not wrapped before placing it in the idt designated entry
+  (Kevin) 
 
-- Cursor on other terminals isn't correct attribute color
-  (Ben)
-  * Color of flashing cursor is white on terminal 1 and 2, but purple (correct) on terminal 0
-
-^ When switching between terminal screens the other screen isn't being updated
+X When switching between terminal screens the other screen isn't being updated
   (Ben)
   * Has something to do with putc not putting to the correct video memory or something
+  ~ 1 hour, ~50-100 line change
+  ~ putc needed to be changed to update the currently running thread
+  (Ben and Jack)
+
+X page faulting when switching between threads
+  (Ben)
+  * No clue why, but it always page faults and has to restart the shell on each terminal
+  * After two straight days of trying to figure this out, we still haven't been able to
+  ~ 15 hours, 1 line change
+  ~ in the inline assembly when we were saving ebp and esp we didn't have =r for the variable
+  (Jack)
+
+X pingpong and some other functions wouldn't run
+  (Ben)
+  * Probably issue with rtc virtualization
+  ~ 30 minutes, 20 line change
+  ~ Added rtc virtualization variables to each terminal, made rtc virtualization terminal specific
+  (Ben)
+
+X Shells spilling into each other and not running properly the first couple times
+  (Jack)
+  * When typing in terminal 1 it spills to terminal 0, and doesn't allow shell to run in terminal 0 
+    until it is run in terminal 1
+  ~ 1 hour, ~3 line change 
+  ~ Updated curr_pid in pit handler properly
+  (Jack)
+
+X New line spilling over
+  (Jack)
+  * When counter or pingpong running on two terminals, switching between them causes new lines on
+    the terminal it switches to
+  ~ 10 minutes, 2 line change
+  ~ Added cli and sti to scroll down function so that it isnt interrupted when scrolling is happening
+  (Ben)
+
+X First exit base shell page faulting
+  (Jack)
+  * When exiting base shell for first time it page faults
+  ~ 15 minutes, 3 line change
+  ~ programs running was used as condition for re-executing base shell, but when program is running
+    on other terminals programs running counter wont be 0 so no re-execute
+  ~ Added per-terminal program counters to account for this
+  (Jack)
+  
